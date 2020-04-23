@@ -12,7 +12,7 @@ import SwiftKeychainWrapper
 class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDelegate {
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var background: UIImageView!
-    @IBOutlet weak var border: UIImageView!
+//    @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var removeAdsLabel: UILabel!
     @IBOutlet weak var removeAdsButton: UIButton!
@@ -28,6 +28,7 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     @IBOutlet weak var contentViewHCipad: NSLayoutConstraint!
     @IBOutlet weak var howItWorksTopCipad: NSLayoutConstraint!
     @IBOutlet weak var bigTextHCipad: NSLayoutConstraint!
+    let application = UIApplication.shared
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -41,7 +42,7 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
             contentViewHC.constant = 2050
         } else if screenH > 1000 {//ipads
             background.image = UIImage(named: "Info/background-ipad")
-            border.image = UIImage(named: "border-ipad")
+//            border.image = UIImage(named: "border-ipad")
             if screenH > 1300 {//ipad 12.9
                 howItWorksTopCipad.constant = 60
                 bigTextHCipad.constant = 400
@@ -92,11 +93,13 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     @IBAction func toolbarButtonTapped(_ sender: Any) {
         view.endEditing(true)
     }
+    @IBAction func websiteButtonTapped(_ sender: Any) {
+        let webURL = NSURL(string: "https://www.galactic-hunter.com/")!
+        application.open(webURL as URL)
+    }
     @IBAction func fbButtonTapped(_ sender: Any) {
         let appURL = NSURL(string: "facebook://www.facebook.com/galactichunter")!
         let webURL = NSURL(string: "https://www.facebook.com/galactichunter")!
-        let application = UIApplication.shared
-
         if application.canOpenURL(appURL as URL) {
             application.open(appURL as URL)
         } else {
@@ -106,8 +109,6 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     @IBAction func instaButtonTapped(_ sender: Any) {
         let appURL = NSURL(string: "instagram://www.instagram.com/galactic.hunter/?hl=en")!
         let webURL = NSURL(string: "https://www.instagram.com/galactic.hunter/?hl=en")!
-        let application = UIApplication.shared
-
         if application.canOpenURL(appURL as URL) {
             application.open(appURL as URL)
         } else {
@@ -117,8 +118,6 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     @IBAction func ytButtonTapped(_ sender: Any) {
         let appURL = NSURL(string: "youtube://www.youtube.com/channel/UC5okGNy061H18Qv4B8pKKhA")!
         let webURL = NSURL(string: "https://www.youtube.com/channel/UC5okGNy061H18Qv4B8pKKhA")!
-        let application = UIApplication.shared
-
         if application.canOpenURL(appURL as URL) {
             application.open(appURL as URL)
         } else {
