@@ -1,0 +1,6 @@
+framework module Pods_My_Astro_Journal {
+  umbrella header "Pods-My Astro Journal-umbrella.h"
+
+  export *
+  module * { export * }
+}
