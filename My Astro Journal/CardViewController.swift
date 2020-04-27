@@ -143,22 +143,22 @@ class CardViewController: UIViewController {
     func moveR(_: Bool) {
         for view in views{view.frame.origin.x -= screenW * 2}
         catalogVC!.swipeDir = "right"
-        UIView.animate(withDuration: 0.3, animations: {for view in self.views{view.frame.origin.x += screenW}}, completion: nil)
+        UIView.animate(withDuration: 0.2, animations: {for view in self.views{view.frame.origin.x += screenW}}, completion: nil)
     }
     func moveL(_: Bool) {
         for view in views{view.frame.origin.x += screenW * 2}
         catalogVC!.swipeDir = "left"
-        UIView.animate(withDuration: 0.3, animations: {for view in self.views{view.frame.origin.x -= screenW}}, completion: nil)
+        UIView.animate(withDuration: 0.2, animations: {for view in self.views{view.frame.origin.x -= screenW}}, completion: nil)
     }
     @IBAction func cardSwiped(_ gesture: UIGestureRecognizer) {
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             switch swipeGesture.direction {
                 case UISwipeGestureRecognizer.Direction.right:
                     if catalogVC!.curCardInd == 0 {break}
-                    UIView.animate(withDuration: 0.3, animations: {for view in self.views{view.frame.origin.x += screenW}}, completion: moveR)
+                    UIView.animate(withDuration: 0.2, animations: {for view in self.views{view.frame.origin.x += screenW}}, completion: moveR)
                 case UISwipeGestureRecognizer.Direction.left:
                     if catalogVC!.curCardInd == catalogVC!.cardLastInd {break}
-                    UIView.animate(withDuration: 0.3, animations: {for view in self.views{view.frame.origin.x -= screenW}}, completion: moveL)
+                    UIView.animate(withDuration: 0.2, animations: {for view in self.views{view.frame.origin.x -= screenW}}, completion: moveL)
                 default:
                     break
             }

@@ -22,7 +22,7 @@ class CongratsViewController: UIViewController {
                 print(Error!)
             } else {
                 self.keysData = snapshot!.data()!
-                storage.child(snapshot!.data()!["imageKey"] as! String).getData(maxSize: 1024 * 1024 * 3) {imageData, Error in
+                storage.child(snapshot!.data()!["imageKey"] as! String).getData(maxSize: imgMaxByte) {imageData, Error in
                     if let Error = Error {
                         print("no image data for featured entry", Error)
                         return

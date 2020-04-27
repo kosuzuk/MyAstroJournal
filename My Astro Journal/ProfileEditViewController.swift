@@ -12,7 +12,7 @@ import SwiftKeychainWrapper
 class ProfileEditViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UITextViewDelegate, UIScrollViewDelegate {
     var profileViewController: ProfileViewController?
     @IBOutlet weak var background: UIImageView!
-    @IBOutlet weak var border: UIImageView!
+//    @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var imageView: UIImageView!
@@ -39,8 +39,10 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
     @IBOutlet weak var doneButton: UIButton!
     @IBOutlet var toolbar: UIToolbar!
     @IBOutlet weak var userImageTopCipad: NSLayoutConstraint!
+    @IBOutlet weak var userImageLeadingCipad: NSLayoutConstraint!
     @IBOutlet weak var userImageWCipad: NSLayoutConstraint!
     @IBOutlet weak var favObjTopCipad: NSLayoutConstraint!
+    @IBOutlet weak var favObjTrailingCipad: NSLayoutConstraint!
     @IBOutlet weak var dividerTopCipad: NSLayoutConstraint!
     @IBOutlet weak var mountFieldWC: NSLayoutConstraint!
     var userData: Dictionary<String, Any>! = nil
@@ -68,15 +70,17 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
         }
         else if screenH > 1000 {//ipads
             background.image = UIImage(named: "Profile/background-ipad")
-            border.image = UIImage(named: "border-ipad")
+//            border.image = UIImage(named: "border-ipad")
             if screenH < 1100 {//9.7
                 dividerTopCipad.constant = 5
             }
             else if screenH > 1150 {//11 and 12.9
                 userImageTopCipad.constant = 90
                 if screenH > 1300 {//12.9
-                    favObjTopCipad.constant = 40
                     userImageWCipad.constant = 250
+                    userImageLeadingCipad.constant = 140
+                    favObjTopCipad.constant = 40
+                    favObjTrailingCipad.constant = 140
                     dividerTopCipad.constant = 100
                 }
             }
@@ -182,21 +186,24 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
     }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let newImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            self.dismiss(animated: true, completion: nil)
-            let resizeRes = resizeByByte(img: newImage, maxByte: 1024 * 1024 * 3)
-            if resizeRes == nil {
-                let alertController = UIAlertController(title: "Error", message: "The image size is too big. Please choose another image. Max size: 7 MB", preferredStyle: .alert)
-                let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-                alertController.addAction(defaultAction)
-                self.present(alertController, animated: true, completion: nil)
-            } else {
-                imageData = resizeRes![0]
-                compressedImageData = resizeRes![1]
-                self.removeImageButton.isHidden = false
-                imageViewLabel.isHidden = true
-                imageView.image = newImage
-                imageAdded = true
-            }
+            self.dismiss(animated: true, completion: {
+                let processRes = processImage(inpImg: newImage)
+                if processRes == nil {
+                    let alertController = UIAlertController(title: "Error", message: imageTooBigMessage, preferredStyle: .alert)
+                    let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                    alertController.addAction(defaultAction)
+                    self.present(alertController, animated: true, completion: nil)
+                } else {
+                    let processedImage = (processRes![0] as! UIImage)
+                    let processResCompressed = processImageAndResize(inpImg: processedImage, resizeTo: CGSize(width: iodUserIconSize, height: iodUserIconSize), clip: true)
+                    self.imageData = (processRes![1] as! Data)
+                    self.compressedImageData = (processResCompressed![1] as! Data)
+                    self.imageView.image = processedImage
+                    self.removeImageButton.isHidden = false
+                    self.imageViewLabel.isHidden = true
+                    self.imageAdded = true
+                }
+            })
         } else {
             self.dismiss(animated: true, completion: nil)
         }

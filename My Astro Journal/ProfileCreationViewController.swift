@@ -124,20 +124,23 @@ class ProfileCreationViewController: UIViewController, UINavigationControllerDel
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let newImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            self.dismiss(animated: true, completion: nil)
-            let resizeRes = resizeByByte(img: newImage, maxByte: 1024 * 1024 * 3)
-            if resizeRes == nil {
-                let alertController = UIAlertController(title: "Error", message: "The image size is too big. Please choose another image. Max size: 7 MB", preferredStyle: .alert)
-                let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-                alertController.addAction(defaultAction)
-                self.present(alertController, animated: true, completion: nil)
-            } else {
-                imageData = resizeRes![0]
-                compressedImageData = resizeRes![1]
-                imageViewLabel.isHidden = true
-                imageView.image = newImage
-                removeImageButton.isHidden = false
-            }
+            self.dismiss(animated: true, completion: {
+                let processRes = processImage(inpImg: newImage)
+                if processRes == nil {
+                    let alertController = UIAlertController(title: "Error", message: imageTooBigMessage, preferredStyle: .alert)
+                    let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                    alertController.addAction(defaultAction)
+                    self.present(alertController, animated: true, completion: nil)
+                } else {
+                    let processedImage = (processRes![0] as! UIImage)
+                    let processResCompressed = processImageAndResize(inpImg: processedImage, resizeTo: CGSize(width: iodUserIconSize, height: iodUserIconSize), clip: true)
+                    self.imageData = (processRes![1] as! Data)
+                    self.compressedImageData = (processResCompressed![1] as! Data)
+                    self.imageView.image = processedImage
+                    self.removeImageButton.isHidden = false
+                    self.imageViewLabel.isHidden = true
+                }
+            })
         } else {
             self.dismiss(animated: true, completion: nil)
         }
