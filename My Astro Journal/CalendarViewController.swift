@@ -71,7 +71,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     var newEntryDate = ""
     var newEntryIndexPathRow = 0
     var newImage: UIImage? = nil
-    var editedEntryDate = ""
+    var imageChangedDate = ""
     var cardUnlocked = ""
     var entryToShowDate = ""
     var selectedEntryList: [[String: Any]] = []
@@ -184,7 +184,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         yearDropDown!.bottomOffset = CGPoint(x: 0, y: 25)
         yearDropDown!.anchorView = yearButton
         
-        for item in [selectDateText, cancelButton, showEarlierMonthButton, todayButton, monthButton, yearButton, calendarsListView, imageOfDayMainLabel, imageOfDayImageView] {
+        for item in [antoinePowersButton, selectDateText, cancelButton, showEarlierMonthButton, todayButton, monthButton, yearButton, calendarsListView, imageOfDayMainLabel, imageOfDayImageView] {
             item!.isHidden = true
         }
         imageOfDayImageView.isUserInteractionEnabled = false
@@ -202,8 +202,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
         dateToday += String(dateComps.day!)
         dateToday += String(yearTodayInt)
-        newEntries = [:]
-        deletedEntries = [:]
         Timer.scheduledTimer(timeInterval: TimeInterval(60), target: self, selector: #selector(checkDayChange), userInfo: nil,  repeats: true)
         let userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
         db.collection("userData").document(userKey).getDocument(completion: {(QuerySnapshot, Error) in
@@ -241,7 +239,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                             continue
                         }
                         let imageRef = storage.child(imageKey)
-                        imageRef.getData(maxSize: 1024 * 1024 * 3) {data, Error in
+                        imageRef.getData(maxSize: imgMaxByte) {data, Error in
                             if let Error = Error {
                                 print(Error)
                                 return
@@ -270,9 +268,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                     db.collection("userData").document(userKey).updateData(["featuredAlertDates": alertDates])
                 }
                 self.userAlertDates = alertDates
-                if (userData["email"] as! String) != "nevadaastrophotography@gmail.com" {
-                    self.antoinePowersButton.isHidden = true
-                } else {
+                if (userData["email"] as! String) == "nevadaastrophotography@gmail.com" {
+                    self.antoinePowersButton.isHidden = false
                     db.collection("iodDeletedNotifications").addSnapshotListener(includeMetadataChanges: true, listener: {(snapshot, Error) in
                         if Error != nil {
                             print(Error!)
@@ -412,7 +409,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                     return
                 }
                 let imageRef = storage.child(iodImageKey)
-                imageRef.getData(maxSize: 1024 * 1024 * 3) {imageData, Error in
+                imageRef.getData(maxSize: imgMaxByte) {imageData, Error in
                     if let Error = Error {
                         print("no image data for featured entry", Error)
                         noIodData()
@@ -536,12 +533,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         calendarWCipad.constant = calendarSize
         calendarHCipad.constant = calendarSize * 0.83
         jevc = nil
-        if editedEntryDate != "" {
-            imageDict[editedEntryDate] = newImage
+        if imageChangedDate != "" {
+            imageDict[imageChangedDate] = newImage
             newImage = nil
             if newEntryIndexPathRow + 1 > numMonths {
                 numMonths = newEntryIndexPathRow + 1
-                firstJournalEntryDate = editedEntryDate
+                firstJournalEntryDate = imageChangedDate
                 addDropDownData()
                 monthDropDown!.selectionAction = {(index: Int, item: String) in
                     self.scrollToCalendar()
@@ -551,7 +548,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 }
                 newEntryIndexPathRow = 0
             }
-            editedEntryDate = ""
+            imageChangedDate = ""
         }
         if cardUnlocked != "" {
             showUnlockAnimation(cardUnlocked)

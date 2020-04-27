@@ -10,12 +10,6 @@ import UIKit
 import FirebaseFirestore
 import SwiftKeychainWrapper
 
-extension Bool {
-    static func ^ (left: Bool, right: Bool) -> Bool {
-        return left != right
-    }
-}
-
 infix operator £
 //returns true if time1 is earlier than time2
 func £(comment1: Dictionary<String, String>, comment2: Dictionary<String, String>) -> Bool {
@@ -26,7 +20,8 @@ func £(comment1: Dictionary<String, String>, comment2: Dictionary<String, Strin
     let d1 = Int(time1.prefix(2))!
     let d2 = Int(time2.prefix(2))!
     if d1 != d2 {
-        return (abs(d1 - d2) > 1) ^ (d1 < d2)
+        //xor
+        return (abs(d1 - d2) > 1) ^^ (d1 < d2)
     }
     let h1 = Int(time1.suffix(8).prefix(2))!
     let h2 = Int(time2.suffix(8).prefix(2))!
@@ -258,7 +253,7 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
                         self.userImage.image = UIImage(named: "ImageOfTheDay/placeholderProfileImage")!
                     } else {
                         let imageRef = storage.child(imageKey)
-                        imageRef.getData(maxSize: 1024 * 1024 * 3) {imageData, Error in
+                        imageRef.getData(maxSize: imgMaxByte) {imageData, Error in
                             if let Error = Error {
                                 print(Error)
                                 return
@@ -340,7 +335,7 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
                     setUserInfo(key: self.currentUserKey, name: currentUserName, img: UIImage(named: "ImageOfTheDay/placeholderProfileImage")!)
                 } else {
                     let imageRef = storage.child(imageKey)
-                    imageRef.getData(maxSize: 1024 * 1024 * 3) {imageData, Error in
+                    imageRef.getData(maxSize: imgMaxByte) {imageData, Error in
                         if Error == nil {
                             setUserInfo(key: self.currentUserKey, name: currentUserName, img: UIImage(data: imageData!)!)
                         }
@@ -392,7 +387,7 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
                             if imageKey == "" {
                                 setUserInfo(key:userKey, name: userName, img: UIImage(named: "ImageOfTheDay/placeholderProfileImage")!)
                             } else {
-                                storage.child(imageKey).getData(maxSize: 1024 * 1024 * 3) {imageData, Error in
+                                storage.child(imageKey).getData(maxSize: imgMaxByte) {imageData, Error in
                                     if Error == nil {
                                         setUserInfo(key:userKey, name: userName, img: UIImage(data: imageData!)!)
                                     }

@@ -43,7 +43,7 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
         for i in curEntryRangeInPage.startIndex..<curEntryRangeInPage.endIndex {
             if savedEntryImageData[i] == nil {
                 let imageKey = (allEntryData[i]["mainImageKey"] as! String)
-                storage.child(imageKey).getData(maxSize: 1024 * 1024 * 3) {data, Error in
+                storage.child(imageKey).getData(maxSize: imgMaxByte) {data, Error in
                     if let Error = Error {
                         print(Error)
                         return
@@ -326,7 +326,7 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
                 db.collection("journalEntries").document(entryKey).setData(["data": entryListData], merge: true)
                 //check if image still exists in db
                 let imageRef = storage.child(self.entryDataToSetAsIod["mainImageKey"] as! String)
-                imageRef.getData(maxSize: 1024 * 1024 * 3) {data, Error in
+                imageRef.getData(maxSize: imgMaxByte) {data, Error in
                     if Error != nil {
                         let alertController = UIAlertController(title: "User deleted image", message: "User has deleted the image you just picked!", preferredStyle: .alert)
                         let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)

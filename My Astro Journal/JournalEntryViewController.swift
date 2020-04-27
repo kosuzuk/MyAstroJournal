@@ -111,7 +111,7 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
         let mainImageKey = entryData["mainImageKey"] as! String
         if mainImageKey != "" {
             let imageRef = storage.child(mainImageKey)
-            imageRef.getData(maxSize: 1024 * 1024 * 3) {data, Error in
+            imageRef.getData(maxSize: imgMaxByte) {data, Error in
                 if let Error = Error {
                     print(Error)
                     return
@@ -135,7 +135,7 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
         if imageKeyList != [] {
             for (i, imageKey) in imageKeyList.enumerated() {
                 let imageRef = storage.child(imageKey)
-                imageRef.getData(maxSize: 1024 * 1024 * 3) {data, Error in
+                imageRef.getData(maxSize: imgMaxByte) {data, Error in
                     if let Error = Error {
                         print(Error)
                         return

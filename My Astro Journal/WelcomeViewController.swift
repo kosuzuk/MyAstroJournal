@@ -37,19 +37,17 @@ let settings = FirestoreSettings()
 let screenW = UIScreen.main.bounds.width
 let screenH = UIScreen.main.bounds.height
 let monthNames = ["January", "Feburary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-
 var firstTime = false
 var dateToday = ""
 var featuredImageDate = ""
-
-//communicate between entries and catalog
-var newEntries: [String: [String]] = Dictionary()
-var deletedEntries: [String: [String]] = Dictionary()
-var newEntriesPhoto: [String: [String]] = Dictionary()
-var deletedEntriesPhoto: [String: [String]] = Dictionary()
-
 //communicate between profile and calendar view if featured user changes username
 var newIodUserName = ""
+//max image size to push and pull from db is 3MB
+let imgMaxByte: Int64 = 1024 * 1024 * 3
+let calCellSize = 50
+let iodUserIconSize = 30
+let maxSize = 700
+let imageTooBigMessage = "The image size is too big. Please choose another image."
 
 func formatLoadingIcon(icon: UIActivityIndicatorView) -> UIActivityIndicatorView {
     icon.center = CGPoint(x: screenW / 2, y: screenH / 2 - 75)
@@ -60,26 +58,48 @@ func formatLoadingIcon(icon: UIActivityIndicatorView) -> UIActivityIndicatorView
     return icon
 }
 
-func resizeByByte(img: UIImage?, maxByte: Int) -> [Data]? {
-    if img == nil {
-        return nil
+infix operator ^^
+extension Bool {
+    static func ^^(a:Bool, b:Bool) -> Bool {
+        return a != b
+    }
+}
+
+func processImageAndResize(inpImg: UIImage, resizeTo: CGSize, clip: Bool) -> [Any]? {
+    var img = inpImg
+    var factor = CGFloat(0.0)
+    if clip ^^ (img.size.width / resizeTo.width > img.size.height / resizeTo.height) {
+        factor = resizeTo.width / img.size.width
+    } else {
+        factor = resizeTo.height / img.size.height
+    }
+    let newSize = CGSize(width: img.size.width * factor, height: img.size.height * factor)
+    let renderer = UIGraphicsImageRenderer(size: newSize)
+    img = renderer.image { (context) in
+        img.draw(in: CGRect(origin: .zero, size: newSize))
+    }
+    let imgData = img.jpegData(compressionQuality: 0.4)!
+    return [img, imgData]
+}
+
+func processImage(inpImg: UIImage) -> [Any]? {
+    var img = inpImg
+    if Int(img.size.width) > maxSize || Int(img.size.height) > maxSize {
+        let res = processImageAndResize(inpImg: img, resizeTo: CGSize(width: maxSize, height: maxSize), clip: false)
+        img = res![0] as! UIImage
     }
     var quality: CGFloat = 1
-    var imgData = img!.jpegData(compressionQuality: 1)!
+    var imgData = img.jpegData(compressionQuality: 1)!
     var imgByte = imgData.count
-    while imgByte > Int(1024 * 1024 * 0.7) && quality >= 0 {
+    while imgByte > Int(1024 * 1024 * 0.7) && quality > 0 {
         quality -= 0.2
-        imgData = img!.jpegData(compressionQuality: quality)!
+        imgData = img.jpegData(compressionQuality: quality)!
         imgByte = imgData.count
     }
-    if imgByte > maxByte {
+    if imgByte > imgMaxByte {
         return nil
     }
-    var compressedImgData = imgData
-    if quality > 0.1 {
-        compressedImgData = img!.jpegData(compressionQuality: 0)!
-    }
-    return [imgData, compressedImgData]
+    return [img, imgData]
 }
 
 func isEarlierDate(date1: String, date2: String) -> Bool {
@@ -142,12 +162,14 @@ func formatTarget(inputTarget: String) -> String {
     res = ""
     var ascVal: UInt8 = 0
     for c in target {
+        if c.asciiValue == nil {continue}
         ascVal = c.asciiValue!
         //include alphanumerics only
         if (ascVal > 96 && ascVal < 123) || (ascVal > 47 && ascVal < 58) {
             res.append(c)
         }
     }
+    if res == "" {return inputTarget}
     res = res.uppercased()
     if res.prefix(7) == "MESSIER" {
         res = "M" + res.suffix(res.count - 7)

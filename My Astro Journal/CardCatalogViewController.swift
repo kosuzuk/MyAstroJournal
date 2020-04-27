@@ -21,13 +21,12 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
     @IBOutlet weak var cvTrailingCipad: NSLayoutConstraint!
     @IBOutlet weak var cvLeadingCipad: NSLayoutConstraint!
     var group = ""
-    var userData: Dictionary<String, Any>? = nil
-    var cardTargetDatesDict = Dictionary<String, [String]>()
-    var photoCardTargetDatesDict = Dictionary<String, [String]>()
+    var cardTargetDatesDict: [String: [String]] = [:]
+    var photoCardTargetDatesDict: [String: [String]] = [:]
     var availableCards: [String] = []
     var cardsToDisplay: [String] = []
     var numUnlockedCards = 0
-    var userKey = ""
+    var loaded = false
     var showingCard = false
     var curCardInd = 0
     var cardLastInd = 0
@@ -66,7 +65,24 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
             }
         }
     }
-    var loaded = false
+    var dictChanged = false {
+        didSet {
+            if dictChanged {
+                if showingCard {
+                    cardVC!.removeAnimate()
+                }
+                cardCollectionView.reloadData()
+                numUnlockedCards = 0
+                for card in availableCards {
+                    if photoCardTargetDatesDict[card] != nil {
+                        numUnlockedCards += 1
+                    }
+                }
+                self.unlockedLabel.text = "Cards Unlocked: " + String(numUnlockedCards) + "/" + String(availableCards.count)
+                dictChanged = false
+            }
+        }
+    }
     var cgvc: CardGroupsViewController? = nil
     var cardVC: CardViewController? = nil
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -105,18 +121,6 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
         }
         cardsToDisplay = availableCards
         cardLastInd = availableCards.count - 1
-        cardTargetDatesDict = userData!["cardTargetDates"] as! [String: [String]]
-        photoCardTargetDatesDict = userData!["photoCardTargetDates"] as! [String: [String]]
-        let dropDown = VPAutoComplete()
-        dropDown.dataSource = ["Messier", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"]
-        dropDown.onTextField = searchField
-        dropDown.onView = self.view
-        dropDown.show {(str, index) in
-            self.searchField.text = str
-            if str != "Messier" {self.search()}
-        }
-        dropDown.frame.origin.y = 120
-        dropDown.cellHeight = 34
         cardCollectionView.reloadData()
         numUnlockedCards = 0
         for card in availableCards {
@@ -129,52 +133,6 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
         resetButton.isHidden = true
         searchIcon.isHidden = true
         cardCollectionView.isHidden = true
-    }
-    func earlierDate(dateA: String, dateB: String) -> Bool {
-        let yearA = dateA.suffix(4)
-        let monthA = dateA.prefix(2)
-        let dayA = dateA.prefix(4).suffix(2)
-        let yearB = dateB.suffix(4)
-        let monthB = dateB.prefix(2)
-        let dayB = dateB.prefix(4).suffix(2)
-        if yearA < yearB || (yearA == yearB && monthA < monthB) || (yearA == yearB && monthA == monthB && dayA < dayB) {
-            return true
-        } else {
-            return false
-        }
-    }
-    func updateDict(tempDict: inout Dictionary<String, [String]>, dict: inout Dictionary<String, [String]>, inc: Bool) {
-        for (target, newDates) in tempDict {
-            if !availableCards.contains(target) {
-                continue
-            }
-            var targetDates = dict[target]
-            for newDate in newDates {
-                if (inc && targetDates == nil) {
-                    targetDates = [newDate]
-                } else {
-                    for i in 0...targetDates!.count - 1 {
-                        if inc {
-                            if i == targetDates!.count || earlierDate(dateA: targetDates![i], dateB: newDate) {
-                                targetDates?.insert(newDate, at: i)
-                                break
-                            }
-                        } else {
-                            if targetDates![i] == newDate {
-                                targetDates!.remove(at: i)
-                                break
-                            }
-                        }
-                    }
-                }
-            }
-            if targetDates == [] {
-                dict.removeValue(forKey: target)
-            } else {
-                dict[target] = targetDates
-            }
-        }
-        tempDict = Dictionary()
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
@@ -205,43 +163,6 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
             loaded = true
         }
         searchField.resignFirstResponder()
-        if showingCard {
-            let otherTarget = doubleTargets[cardVC!.target] ?? "none"
-            if newEntries[cardVC!.target] != nil || deletedEntries[cardVC!.target] != nil || newEntries[otherTarget] != nil || deletedEntries[otherTarget] != nil || newEntriesPhoto[cardVC!.target] != nil || deletedEntriesPhoto[cardVC!.target] != nil || newEntriesPhoto[otherTarget] != nil || deletedEntriesPhoto[otherTarget] != nil{
-                cardVC!.removeAnimate()
-            }
-        }
-        var dictChanged = false
-        if newEntries.count != 0 {
-            updateDict(tempDict: &newEntries, dict: &cardTargetDatesDict, inc: true)
-            dictChanged = true
-        }
-        if newEntriesPhoto.count != 0 {
-            updateDict(tempDict: &newEntriesPhoto, dict: &photoCardTargetDatesDict, inc: true)
-            dictChanged = true
-        }
-        if deletedEntries.count != 0 {
-            updateDict(tempDict: &deletedEntries, dict: &cardTargetDatesDict, inc: false)
-            dictChanged = true
-        }
-        if deletedEntriesPhoto.count != 0 {
-            updateDict(tempDict: &deletedEntriesPhoto, dict: &photoCardTargetDatesDict, inc: false)
-            dictChanged = true
-        }
-        if dictChanged {
-            cardCollectionView.reloadData()
-            numUnlockedCards = 0
-            for card in availableCards {
-                if photoCardTargetDatesDict[card] != nil {
-                    numUnlockedCards += 1
-                }
-            }
-            self.unlockedLabel.text = "Cards Unlocked: " + String(numUnlockedCards) + "/" + String(availableCards.count)
-            
-            userData!["cardTargetDates"] = self.cardTargetDatesDict
-            userData!["photoCardTargetDates"] = self.photoCardTargetDatesDict
-            cgvc!.userData = userData
-        }
     }
     override func viewDidLayoutSubviews() {
         if screenH > 1300 {//ipad 12.9
@@ -285,12 +206,14 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
             }
         }
         cardCollectionView.reloadData()
+        cardLastInd = cardsToDisplay.count - 1
     }
     @IBAction func resetTapped(_ sender: Any) {
         searchField.text = ""
         searchField.resignFirstResponder()
         cardsToDisplay = availableCards
         cardCollectionView.reloadData()
+        cardLastInd = availableCards.count - 1
     }
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         searchField.resignFirstResponder()
@@ -331,6 +254,7 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
         if dateList != nil {
             c.journalEntryDateList = dateList!
         }
+        let userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
         c.userKey = userKey
         c.catalogVC = self
         c.didMove(toParent: self)

@@ -57,7 +57,7 @@ class ImageOfDayViewerViewController: UIViewController, UICollectionViewDelegate
                 self.iodKeysList.sort(by: ¡)
                 self.numImages = self.iodKeysList.endIndex
                 for entry in self.iodKeysList {
-                    storage.child(entry["imageKey"] as! String).getData(maxSize: 1024 * 1024 * 3) {data, Error in
+                    storage.child(entry["imageKey"] as! String).getData(maxSize: imgMaxByte) {data, Error in
                         if Error == nil {
                             self.entryImageDataListTemp.append(["featuredDate": entry["featuredDate"] as! String, "imageData": UIImage(data: data!)!])
                             self.numImagesLoaded += 1

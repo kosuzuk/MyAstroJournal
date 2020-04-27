@@ -18,10 +18,11 @@ class CardGroupsViewController: UIViewController {
     @IBOutlet weak var galaxiesWC: NSLayoutConstraint!
     @IBOutlet weak var messierWCipad: NSLayoutConstraint!
     @IBOutlet weak var galaxiesWCipad: NSLayoutConstraint!
-    var userKey = ""
-    var userData: Any? = nil
     var groupChosen = ""
     var doneLoading = false
+    var photoCardTargetDatesDict: [String: [String]]? = nil
+    var cardTargetDatesDict: [String: [String]]? = nil
+    var catalogVC: CardCatalogViewController? = nil
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -55,29 +56,44 @@ class CardGroupsViewController: UIViewController {
                 galaxiesWCipad.constant *= 1.45
             }
         }
-        userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
-        let docRef = db.collection("userData").document(userKey)
-        docRef.getDocument(completion: {(QuerySnapshot, Error) in
+        let userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
+        db.collection("userData").document(userKey).addSnapshotListener (includeMetadataChanges: true, listener: {(snapshot, Error) in
             if Error != nil {
                 print(Error!)
             } else {
-                self.userData = QuerySnapshot!.data()!
+                if (snapshot?.metadata.isFromCache)! {
+                    return
+                }
+                let data = snapshot!.data()!
+                //initial pull
+                if self.cardTargetDatesDict == nil {
+                    self.photoCardTargetDatesDict = (data["photoCardTargetDates"]! as! [String: [String]])
+                    self.cardTargetDatesDict = (data["cardTargetDates"]! as! [String: [String]])
+                    self.doneLoading = true
+                    loadingIcon.stopAnimating()
+                } else {
+                    //check if user entered or deleted entries
+                    let newPhotoCardTargetDates = data["photoCardTargetDates"]! as! [String: [String]]
+                    let newCardTargetDates = data["cardTargetDates"]! as! [String: [String]]
+                    if self.photoCardTargetDatesDict != newPhotoCardTargetDates || self.cardTargetDatesDict != newCardTargetDates {
+                        self.photoCardTargetDatesDict = newPhotoCardTargetDates
+                        self.cardTargetDatesDict = newCardTargetDates
+                        self.catalogVC?.photoCardTargetDatesDict = newPhotoCardTargetDates
+                        self.catalogVC?.cardTargetDatesDict = newCardTargetDates
+                        self.catalogVC?.dictChanged = true
+                    }
+                }
             }
         })
-        newEntries = [:]
-        deletedEntries = [:]
-        newEntriesPhoto = [:]
-        deletedEntriesPhoto = [:]
-        doneLoading = true
-        loadingIcon.stopAnimating()
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination as? CardCatalogViewController
         if vc != nil {
-            vc?.userKey = userKey
-            vc?.userData = (userData as! Dictionary<String, Any>)
             vc?.group = groupChosen
+            vc?.photoCardTargetDatesDict = photoCardTargetDatesDict!
+            vc?.cardTargetDatesDict = cardTargetDatesDict!
             vc?.cgvc = self
+            catalogVC = vc
         }
     }
     func callPerformSegue(groupName: String) {

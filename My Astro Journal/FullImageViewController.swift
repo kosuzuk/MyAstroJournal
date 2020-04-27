@@ -1,8 +1,6 @@
 import UIKit
 class FullImageViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var imageViewWC: NSLayoutConstraint!
-    @IBOutlet weak var imageViewHC: NSLayoutConstraint!
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
