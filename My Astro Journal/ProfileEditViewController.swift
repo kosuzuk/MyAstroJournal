@@ -13,7 +13,7 @@ import SwiftKeychainWrapper
 class ProfileEditViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UITextViewDelegate, UIScrollViewDelegate {
     var profileViewController: ProfileViewController?
     @IBOutlet weak var background: UIImageView!
-//    @IBOutlet weak var border: UIImageView!
+    @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var imageView: UIImageView!
@@ -73,7 +73,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
         }
         else if screenH > 1000 {//ipads
             background.image = UIImage(named: "Profile/background-ipad")
-//            border.image = UIImage(named: "border-ipad")
+            border.image = UIImage(named: "border-ipad")
             updateEmailTrailingC.constant = 60
             if screenH < 1100 {//9.7
                 dividerTopCipad.constant = 5

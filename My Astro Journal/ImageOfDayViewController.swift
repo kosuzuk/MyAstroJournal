@@ -44,7 +44,7 @@ func £(comment1: Dictionary<String, String>, comment2: Dictionary<String, Strin
 class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIScrollViewDelegate {
     @IBOutlet var toolbar: UIToolbar!
     @IBOutlet weak var background: UIImageView!
-//    @IBOutlet weak var border: UIImageView!
+    @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var targetField: UILabel!
     @IBOutlet weak var dateField: UILabel!
@@ -468,7 +468,7 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
         }
         if screenH > 1000 {//ipads
             background.image = UIImage(named: "ViewEntry/background-ipad")
-//            border.image = UIImage(named: "border-ipad")
+            border.image = UIImage(named: "border-ipad")
             let scale = imageView.bounds.width * 0.6
             imageViewHCipad.constant = scale
             contentViewHCipad.constant = 1480 + scale

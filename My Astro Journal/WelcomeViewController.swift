@@ -195,7 +195,7 @@ func formattedTargetToTargetName(target: String) -> String {
 class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollViewDelegate, MFMailComposeViewControllerDelegate {
     @IBOutlet weak var welcomeView: UIView!
     @IBOutlet weak var background: UIImageView!
-//    @IBOutlet weak var border: UIImageView!
+    @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var signUpEmailField: UITextField!
@@ -226,7 +226,7 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
             welcomeLabelLeadingC.constant = 43
         } else if screenH > 1000 {//ipads
             background.image = UIImage(named: "Welcome/background-ipad")
-//            border.image = UIImage(named: "border-ipad")
+            border.image = UIImage(named: "border-ipad")
             forgotEmailTopC.constant = 50
             if screenH > 1050 {//10.5, 11, 12,9
                 paragraphTopCipad.constant = screenH * 0.05
