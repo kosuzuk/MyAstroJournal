@@ -307,6 +307,12 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         memoriesField.autocapitalizationType = .none
         memoriesField.autocorrectionType = .yes
         endNoInput()
+        if firstTime {
+            let alertController = UIAlertController(title: "Tutorial", message: "First, add the object's name on the top left, the constellation should be recognized automatically! Then, input the time, location, equipment used, and write down your memories from the night. Check Observed if you have seen the object through an eyepiece, and Photographed if you have captured the target and are proud of the result! Besides your final image, you can also add 3 extra photographs from the night. ", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return imageList.count
@@ -669,11 +675,9 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         db.collection("userData").document(userKey).setData(["featuredAlertDates": alertDates, "userDataCopyKeys": [featuredDate: FieldValue.delete()]], merge: true)
         db.collection("userData").document(copyKey).delete()
         
-        var t = target
-        if t == "" {t = formattedTarget}
         if isEarlierDate(date1: dateToday, date2: featuredDate) {
             //notify Antoine
-            db.collection("iodDeletedNotifications").document(featuredDate).setData(["target": t])
+            db.collection("iodDeletedNotifications").document(featuredDate).setData(["target": formattedTarget])
         }
     }
     func processDone() {
@@ -1095,7 +1099,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
     func processDelete(_ alertAction: UIAlertAction) {
         view.addSubview(formatLoadingIcon(icon: loadingIcon))
         loadingIcon.startAnimating()
-        let formattedTarget = formatTarget(inputTarget: targetField.text!)
+        formattedTarget = formatTarget(inputTarget: targetField.text!)
         //these targets appear together
         otherTarget = doubleTargets[formattedTarget] ?? ""
         let entryDoc = db.collection("journalEntries").document(userKey + entryDate)

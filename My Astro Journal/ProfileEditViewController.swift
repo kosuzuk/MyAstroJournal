@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 import SwiftKeychainWrapper
 
 class ProfileEditViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UITextViewDelegate, UIScrollViewDelegate {
@@ -45,6 +46,8 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
     @IBOutlet weak var favObjTrailingCipad: NSLayoutConstraint!
     @IBOutlet weak var dividerTopCipad: NSLayoutConstraint!
     @IBOutlet weak var mountFieldWC: NSLayoutConstraint!
+    @IBOutlet weak var updateEmailTrailingC: NSLayoutConstraint!
+    var userKey = ""
     var userData: Dictionary<String, Any>! = nil
     var image: UIImage! = nil
     var imageAdded = false
@@ -71,6 +74,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
         else if screenH > 1000 {//ipads
             background.image = UIImage(named: "Profile/background-ipad")
 //            border.image = UIImage(named: "border-ipad")
+            updateEmailTrailingC.constant = 60
             if screenH < 1100 {//9.7
                 dividerTopCipad.constant = 5
             }
@@ -279,10 +283,9 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
             print("Error! should not reach this clause!")
             return
         }
-        let docKey = KeychainWrapper.standard.string(forKey: "dbKey")!
         if (userData["userName"] as! String) != newUserName {
             KeychainWrapper.standard.set(newUserName, forKey: "userName")
-            db.collection("basicUserData").document(docKey).setData(["userName": newUserName], merge: true)
+            db.collection("basicUserData").document(userKey).setData(["userName": newUserName], merge: true)
             //update userName field in their journal entries so that Antoine can find entries by userName in db
             db.collection("journalEntries").whereField("userName", isEqualTo: (userData["userName"] as! String)).getDocuments(completion: {(QuerySnapshot, Error) in
                 if Error != nil {
@@ -306,7 +309,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
                 db.collection("userData").document(key).setData(["userName": newUserName, "websiteName": websiteField.text!, "instaUsername": instaField.text!, "youtubeChannel": youtubeField.text!, "fbPage": fbField.text!, "userBio": bioField.text!], merge: true)
             }
         }
-        db.collection("userData").document(docKey).setData(newUserData, merge: true) {err in
+        db.collection("userData").document(userKey).setData(newUserData, merge: true) {err in
             if let err = err {
                 print("Error updating user Data: \(err)")
             } else {
@@ -344,8 +347,8 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
             pvc!.userData = newUserData
             pvc!.newImage = imageView.image
             if (imageState == "image added") {
-                db.collection("userData").document(docKey).setData(["profileImageKey": imageKey, "compressedProfileImageKey": compressedImageKey], merge: true)
-                db.collection("basicUserData").document(docKey).setData(["compressedProfileImageKey": compressedImageKey], merge: true)
+                db.collection("userData").document(userKey).setData(["profileImageKey": imageKey, "compressedProfileImageKey": compressedImageKey], merge: true)
+                db.collection("basicUserData").document(userKey).setData(["compressedProfileImageKey": compressedImageKey], merge: true)
                 if userDataCopyToChangeKeys.count != 0 {
                     for key in userDataCopyToChangeKeys {
                         db.collection("userData").document(key).setData(["profileImageKey": imageKey], merge: true)
@@ -377,8 +380,8 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
             newUserData["compressedProfileImageKey"] = ""
             pvc!.userData = newUserData
             pvc!.newImage = UIImage(named: "ImageOfTheDay/placeholderProfileImage")
-            db.collection("userData").document(docKey).setData(["profileImageKey": "", "compressedProfileImageKey": ""], merge: true)
-            db.collection("basicUserData").document(docKey).setData(["compressedProfileImageKey": ""], merge: true)
+            db.collection("userData").document(userKey).setData(["profileImageKey": "", "compressedProfileImageKey": ""], merge: true)
+            db.collection("basicUserData").document(userKey).setData(["compressedProfileImageKey": ""], merge: true)
             if userDataCopyToChangeKeys.count != 0 {
                 for key in userDataCopyToChangeKeys {
                     db.collection("userData").document(key).setData(["profileImageKey": ""], merge: true)
@@ -397,6 +400,32 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
             }
             compressedDataRef.delete {error in}
         }
+    }
+    @IBAction func updateEmailButtonTapped(_ sender: Any) {
+        let alertController = UIAlertController(title: "Update Email", message: "Enter a new email address:", preferredStyle: .alert)
+        let confirmAction = UIAlertAction(title: "confirm", style: .destructive, handler: {(alertAction) in
+            let currentUser = Auth.auth().currentUser
+            currentUser!.updateEmail(to: alertController.textFields![0].text!) {error in
+                if error != nil {
+                    let alertController = UIAlertController(title: "Error", message: error!.localizedDescription, preferredStyle: .alert)
+                    let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                    alertController.addAction(defaultAction)
+                    self.present(alertController, animated: true, completion: nil)
+                } else {
+                    db.collection("userData").document(self.userKey).setData(["email": alertController.textFields![0].text!], merge: true)
+                    print("email changed")
+                    let alertController = UIAlertController(title: "Success", message: "Your email has been successfully updated.", preferredStyle: .alert)
+                    let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                    alertController.addAction(defaultAction)
+                    self.present(alertController, animated: true, completion: nil)
+                }
+            }
+        })
+        let cancelAction = UIAlertAction(title: "cancel", style: .cancel, handler: nil)
+        alertController.addAction(confirmAction)
+        alertController.addAction(cancelAction)
+        alertController.addTextField {(textField) in}
+        self.present(alertController, animated: true, completion: nil)
     }
 }
 

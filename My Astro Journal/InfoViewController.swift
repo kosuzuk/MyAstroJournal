@@ -14,9 +14,6 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     @IBOutlet weak var background: UIImageView!
 //    @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var removeAdsLabel: UILabel!
-    @IBOutlet weak var removeAdsButton: UIButton!
-    @IBOutlet weak var removeAdsDesc: UITextView!
     @IBOutlet weak var expandLabel: UILabel!
     @IBOutlet weak var expandButton: UIButton!
     @IBOutlet weak var messageField: UITextView!
@@ -24,7 +21,6 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     @IBOutlet weak var thankYouMessage: UILabel!
     @IBOutlet var toolbar: UIToolbar!
     @IBOutlet weak var contentViewHC: NSLayoutConstraint!
-    
     @IBOutlet weak var contentViewHCipad: NSLayoutConstraint!
     @IBOutlet weak var howItWorksTopCipad: NSLayoutConstraint!
     @IBOutlet weak var bigTextHCipad: NSLayoutConstraint!
@@ -36,10 +32,10 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         if screenH < 600 {//iphone SE, 5s
-            contentViewHC.constant = 2110
+            contentViewHC.constant = 2310
             expandLabel.text = "expand catalog"
         } else if screenW < 400 {//iphone 8, 11
-            contentViewHC.constant = 2050
+            contentViewHC.constant = 2200
         } else if screenH > 1000 {//ipads
             background.image = UIImage(named: "Info/background-ipad")
 //            border.image = UIImage(named: "border-ipad")
@@ -56,9 +52,6 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         sendMessageButton.isHidden = true
         messageField.autocapitalizationType = .none
         messageField.autocorrectionType = .yes
-        removeAdsLabel.isHidden = true
-        removeAdsButton.isHidden = true
-        removeAdsDesc.isHidden = true
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
@@ -92,6 +85,24 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     }
     @IBAction func toolbarButtonTapped(_ sender: Any) {
         view.endEditing(true)
+    }
+    @IBAction func paypalButtonTapped(_ sender: Any) {
+        let appURL = NSURL(string: "paypal://www.paypal.me/AntoineGrelin")!
+        let webURL = NSURL(string: "https://www.paypal.me/AntoineGrelin")!
+        if application.canOpenURL(appURL as URL) {
+            application.open(appURL as URL)
+        } else {
+            application.open(webURL as URL)
+        }
+    }
+    @IBAction func patreonButtonTapped(_ sender: Any) {
+        let appURL = NSURL(string: "patreon://www.patreon.com/Galactic_Hunter")!
+        let webURL = NSURL(string: "https://www.patreon.com/Galactic_Hunter")!
+        if application.canOpenURL(appURL as URL) {
+            application.open(appURL as URL)
+        } else {
+            application.open(webURL as URL)
+        }
     }
     @IBAction func websiteButtonTapped(_ sender: Any) {
         let webURL = NSURL(string: "https://www.galactic-hunter.com/")!
