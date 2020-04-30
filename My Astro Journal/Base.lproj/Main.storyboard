@@ -6534,6 +6534,9 @@
                                     </mask>
                                 </variation>
                             </scrollView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="border" translatesAutoresizingMaskIntoConstraints="NO" id="Cle-Cf-AJf">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="1647"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -6543,11 +6546,14 @@
                             <constraint firstItem="Wbc-1I-ij8" firstAttribute="top" secondItem="KKx-9M-NbC" secondAttribute="top" id="AKZ-5b-Pc0"/>
                             <constraint firstItem="Wbc-1I-ij8" firstAttribute="leading" secondItem="KKx-9M-NbC" secondAttribute="leading" id="CtK-vx-QtI"/>
                             <constraint firstItem="Wbc-1I-ij8" firstAttribute="top" secondItem="KKx-9M-NbC" secondAttribute="top" id="DIk-Eh-owo"/>
+                            <constraint firstItem="Cle-Cf-AJf" firstAttribute="leading" secondItem="KKx-9M-NbC" secondAttribute="leading" id="GHM-MJ-hiI"/>
                             <constraint firstItem="KKx-9M-NbC" firstAttribute="trailing" secondItem="dha-2o-QLi" secondAttribute="trailing" constant="172" id="KmO-vM-tjX">
                                 <variation key="heightClass=regular-widthClass=regular" constant="0.0"/>
                             </constraint>
                             <constraint firstItem="dha-2o-QLi" firstAttribute="top" secondItem="KKx-9M-NbC" secondAttribute="top" id="NEt-hG-TfA"/>
+                            <constraint firstItem="Cle-Cf-AJf" firstAttribute="bottom" secondItem="KKx-9M-NbC" secondAttribute="bottom" id="NKK-OV-nbP"/>
                             <constraint firstItem="Wbc-1I-ij8" firstAttribute="trailing" secondItem="KKx-9M-NbC" secondAttribute="trailing" id="S2C-bD-I89"/>
+                            <constraint firstItem="Cle-Cf-AJf" firstAttribute="trailing" secondItem="KKx-9M-NbC" secondAttribute="trailing" id="TTM-8v-L2T"/>
                             <constraint firstItem="Wbc-1I-ij8" firstAttribute="bottom" secondItem="KKx-9M-NbC" secondAttribute="bottom" id="Wjj-JZ-vt5"/>
                             <constraint firstItem="dha-2o-QLi" firstAttribute="top" secondItem="KKx-9M-NbC" secondAttribute="top" id="czE-jY-NSI"/>
                             <constraint firstItem="KKx-9M-NbC" firstAttribute="trailing" secondItem="Wbc-1I-ij8" secondAttribute="trailing" id="dGd-Gd-AfL"/>
@@ -6555,6 +6561,7 @@
                             <constraint firstItem="KKx-9M-NbC" firstAttribute="bottom" secondItem="dha-2o-QLi" secondAttribute="bottom" constant="372.5" id="mXW-yg-i8r">
                                 <variation key="heightClass=regular-widthClass=regular" constant="0.0"/>
                             </constraint>
+                            <constraint firstItem="Cle-Cf-AJf" firstAttribute="top" secondItem="KKx-9M-NbC" secondAttribute="top" id="tdD-EF-jNw"/>
                             <constraint firstItem="dha-2o-QLi" firstAttribute="bottom" secondItem="Wbc-1I-ij8" secondAttribute="bottom" id="vor-dT-Zpy"/>
                             <constraint firstItem="dha-2o-QLi" firstAttribute="trailing" secondItem="KKx-9M-NbC" secondAttribute="trailing" id="wNG-Ha-Zqh"/>
                         </constraints>
@@ -6598,7 +6605,7 @@
                         <outlet property="background" destination="dha-2o-QLi" id="THG-qS-hmf"/>
                         <outlet property="bioField" destination="QUN-CJ-piX" id="hzW-YH-STT"/>
                         <outlet property="bioTrailingCipad" destination="dZi-xS-fcI" id="GiM-2L-MiE"/>
-                        <outlet property="border" destination="dha-2o-QLi" id="48O-mq-2g3"/>
+                        <outlet property="border" destination="Cle-Cf-AJf" id="j0K-TG-heQ"/>
                         <outlet property="cameraField" destination="6aK-rK-jcT" id="u1J-uD-klc"/>
                         <outlet property="circle1TrailingC" destination="ygr-1F-Idp" id="gMb-Hz-C5F"/>
                         <outlet property="circle2LeadingC" destination="2E1-eV-Dsi" id="YQb-iR-sOo"/>
@@ -6688,7 +6695,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2728.125" y="-860.15625"/>
+            <point key="canvasLocation" x="2728" y="-860.83743842364538"/>
         </scene>
         <!--Journal Entry View Controller-->
         <scene sceneID="KfS-iT-OND">
