@@ -1,6 +1,6 @@
 import UIKit
 class CardUnlockedViewController: UIViewController {
-    @IBOutlet weak var unlockedLabel: UILabel!
+    @IBOutlet weak var unlockedLabel: UIImageView!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var unlockedDateLabel: UILabel!
     @IBOutlet weak var imageViewWC: NSLayoutConstraint!
@@ -28,7 +28,6 @@ class CardUnlockedViewController: UIViewController {
             imageViewHC.constant = 522
         }
         else if screenH > 700 {//ipads
-            unlockedLabel.font = unlockedLabel.font.withSize(64)
             unlockedDateLabel.font = unlockedDateLabel.font.withSize(17)
             if screenW > 1000 {//ipad 12.9
                 imageViewWCipad.constant = 616

@@ -27,6 +27,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var showEarlierMonthButton: UIButton!
     @IBOutlet weak var calendarsListView: UITableView!
     @IBOutlet weak var imageOfDayImageView: UIImageView!
+    @IBOutlet weak var imageOfDayLight: UIImageView!
     @IBOutlet weak var imageOfDayMainLabel: UILabel!
     @IBOutlet weak var imageOfDayLabel: UILabel!
     @IBOutlet weak var antoinePowersButton: UIButton!
@@ -44,6 +45,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var imageOfDayBottomC: NSLayoutConstraint!
     @IBOutlet weak var imageOfDayBottomCipad: NSLayoutConstraint!
     @IBOutlet weak var imageOfDayWC: NSLayoutConstraint!
+    @IBOutlet weak var imageOfDayLightWC: NSLayoutConstraint!
     var monthDropDown: DropDown? = nil
     var yearDropDown: DropDown? = nil
     var firstJournalEntryDate = ""
@@ -184,7 +186,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         yearDropDown!.bottomOffset = CGPoint(x: 0, y: 25)
         yearDropDown!.anchorView = yearButton
         
-        for item in [antoinePowersButton, selectDateText, cancelButton, showEarlierMonthButton, todayButton, monthButton, yearButton, calendarsListView, imageOfDayMainLabel, imageOfDayImageView] {
+        for item in [antoinePowersButton, selectDateText, cancelButton, showEarlierMonthButton, todayButton, monthButton, yearButton, calendarsListView, imageOfDayImageView, imageOfDayLight, imageOfDayMainLabel, imageOfDayLabel] {
             item!.isHidden = true
         }
         imageOfDayImageView.isUserInteractionEnabled = false
@@ -279,7 +281,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                             }
                             var deletedStr = ""
                             for doc in snapshot!.documents {
-                                deletedStr += doc.documentID + ": " + String(doc.data()["formattedTarget"] as! String) + "\n"
+                                deletedStr += doc.documentID + ": " + String(doc.data()["target"] as! String) + "\n"
                                 db.collection("iodDeletedNotifications").document(doc.documentID).delete()
                             }
                             if deletedStr != "" {
@@ -433,7 +435,11 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                         }
                         var iodTarget = (data!["data"] as! [Dictionary<String, Any>])[iodKeysData["journalEntryInd"] as! Int]["formattedTarget"] as! String
                         iodTarget = formattedTargetToTargetName(target: iodTarget)
-                        self.imageOfDayLabel.text = iodTarget + " by " + (data!["userName"] as! String)
+                        self.imageOfDayLabel.text = iodTarget + " by " + (data!["userName"] as! String) + " "
+                        let font = UIFont(name: self.imageOfDayLabel.font.fontName, size: self.imageOfDayLabel.font.pointSize)
+                        let fontAttributes = [NSAttributedString.Key.font: font]
+                        let size = (self.imageOfDayLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
+                        self.imageOfDayLightWC.constant = size.width + 30
                         self.imageOfDayTarget = iodTarget
                     }
                 })
@@ -479,7 +485,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
             alertController.addAction(defaultAction)
             self.present(alertController, animated: true, completion: nil)
-            firstTime = false
         }
     }
     @objc func checkDayChange() {
@@ -556,11 +561,15 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
         calendarsListView.reloadData()
         endNoInput()
-        for item in [todayButton, monthButton, yearButton, calendarsListView, imageOfDayMainLabel, imageOfDayImageView] {
+        for item in [todayButton, monthButton, yearButton, calendarsListView, imageOfDayImageView, imageOfDayLight, imageOfDayMainLabel, imageOfDayLabel] {
             item!.isHidden = false
         }
         if newIodUserName != "" {
-            imageOfDayLabel.text = imageOfDayTarget + " by " + newIodUserName
+            imageOfDayLabel.text = imageOfDayTarget + " by " + newIodUserName + " "
+            let font = UIFont(name: self.imageOfDayLabel.font.fontName, size: self.imageOfDayLabel.font.pointSize)
+            let fontAttributes = [NSAttributedString.Key.font: font]
+            let size = (self.imageOfDayLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
+            self.imageOfDayLightWC.constant = size.width + 30
             newIodUserName = ""
         }
         iodvc = nil

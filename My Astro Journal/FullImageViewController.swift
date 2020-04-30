@@ -1,6 +1,11 @@
 import UIKit
+import AVFoundation;
+
 class FullImageViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var removeButton: UIButton!
+    @IBOutlet weak var removeButtonTopC: NSLayoutConstraint!
+    @IBOutlet weak var removeButtonTrailingC: NSLayoutConstraint!
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -10,6 +15,7 @@ class FullImageViewController: UIViewController {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
         imageView.layer.shadowOpacity = 0.8
         showAnimate()
+        removeButton.isHidden = true
     }
 
     func showAnimate() {
@@ -19,6 +25,14 @@ class FullImageViewController: UIViewController {
             self.view.alpha = 1.0
             self.view.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
         })
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        let imageFrame = AVMakeRect(aspectRatio: imageView.image!.size, insideRect: imageView.bounds)
+        removeButtonTopC.constant = imageFrame.origin.y
+        removeButtonTrailingC.constant = imageFrame.origin.x
+        removeButton.isHidden = false
     }
     
     func removeAnimate() {

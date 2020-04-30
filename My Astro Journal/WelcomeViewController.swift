@@ -11,6 +11,7 @@ import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
 import SwiftKeychainWrapper
+import MessageUI
 
 let MessierTargets = ["M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "M10", "M11", "M12", "M13", "M14", "M15", "M16", "M17", "M18", "M19", "M20", "M21", "M22", "M23", "M24", "M25", "M26", "M27", "M28", "M29", "M30", "M31", "M32", "M33", "M34", "M35", "M36", "M37", "M38", "M39", "M40", "M41", "M42", "M43", "M44", "M45", "M46", "M47", "M48", "M49", "M50", "M51", "M52", "M53", "M54", "M55", "M56", "M57", "M58", "M59", "M60", "M61", "M62", "M63", "M64", "M65", "M66", "M67", "M68", "M69", "M70", "M71", "M72", "M73", "M74", "M75", "M76", "M77", "M78", "M79", "M80", "M81", "M82", "M83", "M84",  "M85", "M86", "M87", "M88", "M89", "M90", "M91", "M92", "M93", "M94", "M95", "M96", "M97", "M98", "M99", "M100", "M101", "M102", "M103", "M104", "M105", "M106", "M107", "M108", "M109", "M110"]
 let NGCTargets = ["NGC104", "NGC281", "NGC292", "NGC869", "NGC884", "NGC1499", "NGC1977", "NGC2024", "NGC2070", "NGC2237", "NGC2244", "NGC2264", "NGC2359", "NGC2392", "NGC3372", "NGC3628", "NGC4565", "NGC4631", "NGC5128", "NGC5139", "NGC6543", "NGC6888", "NGC6946", "NGC6960", "NGC6974", "NGC6992", "NGC7000", "NGC7023", "NGC7293", "NGC7380", "NGC7635"]
@@ -191,10 +192,10 @@ func formattedTargetToTargetName(target: String) -> String {
     return res
 }
 
-class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollViewDelegate {
+class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollViewDelegate, MFMailComposeViewControllerDelegate {
     @IBOutlet weak var welcomeView: UIView!
     @IBOutlet weak var background: UIImageView!
-    @IBOutlet weak var border: UIImageView!
+//    @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var signUpEmailField: UITextField!
@@ -209,6 +210,7 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
     @IBOutlet weak var paragraphTopCipad: NSLayoutConstraint!
     @IBOutlet weak var signUpButtonTrailingC: NSLayoutConstraint!
     @IBOutlet weak var loginButtonTrailingC: NSLayoutConstraint!
+    @IBOutlet weak var forgotEmailTopC: NSLayoutConstraint!
     var activeField: UIView? = nil
     
     override func viewDidLoad() {
@@ -224,7 +226,8 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
             welcomeLabelLeadingC.constant = 43
         } else if screenH > 1000 {//ipads
             background.image = UIImage(named: "Welcome/background-ipad")
-            border.image = UIImage(named: "border-ipad")
+//            border.image = UIImage(named: "border-ipad")
+            forgotEmailTopC.constant = 50
             if screenH > 1050 {//10.5, 11, 12,9
                 paragraphTopCipad.constant = screenH * 0.05
             }
@@ -329,7 +332,12 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
             endNoInput()
         } else {
             Auth.auth().createUser(withEmail: signUpEmailField.text!.lowercased(), password: signUpPasswordField.text!) { (user, error) in
-                if error == nil {
+                if error != nil {
+                    let alertController = UIAlertController(title: "Error", message: error?.localizedDescription, preferredStyle: .alert)
+                    let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                    alertController.addAction(defaultAction)
+                    self.present(alertController, animated: true, completion: nil)
+                } else {
                     self.signUpButton.isHidden = true
                     self.loginButton.isHidden = true
                     var newDataRef: DocumentReference? = nil
@@ -342,11 +350,6 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
                         }
                     }
                     self.performSegue(withIdentifier: "welcomeToProfileCreation", sender: self)
-                } else {
-                    let alertController = UIAlertController(title: "Error", message: error?.localizedDescription, preferredStyle: .alert)
-                    let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-                    alertController.addAction(defaultAction)
-                    self.present(alertController, animated: true, completion: nil)
                 }
                 endNoInput()
             }
@@ -355,7 +358,13 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
     @IBAction func logInButtonTapped(_ sender: Any) {
         startNoInput()
         Auth.auth().signIn(withEmail: logInEmailField.text!, password: logInPasswordField.text!) {(user, error) in
-            if error == nil {
+            if error != nil {
+                let alertController = UIAlertController(title: "Error", message: error?.localizedDescription, preferredStyle: .alert)
+                let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                
+                alertController.addAction(defaultAction)
+                self.present(alertController, animated: true, completion: nil)
+            } else {
                 self.signUpButton.isHidden = true
                 self.loginButton.isHidden = true
                 db.collection("userData").whereField("email", isEqualTo: self.logInEmailField.text!.lowercased()).limit(to: 1).getDocuments(completion: {(QuerySnapshot, Error) in
@@ -373,14 +382,42 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
                         }
                     }
                 })
-            } else {
-                let alertController = UIAlertController(title: "Error", message: error?.localizedDescription, preferredStyle: .alert)
+            }
+            endNoInput()
+        }
+    }
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+    @IBAction func forgotEmailButtonTapped(_ sender: Any) {
+        func composeEmail() {
+            if MFMailComposeViewController.canSendMail() {
+                let mailComposerVC = MFMailComposeViewController()
+                mailComposerVC.mailComposeDelegate = (self as MFMailComposeViewControllerDelegate)
+                mailComposerVC.setToRecipients(["nevadaastrophotography@gmail.com"])
+                mailComposerVC.setSubject("Forgot Email")
+                mailComposerVC.setMessageBody("", isHTML: false)
+                self.present(mailComposerVC, animated: true, completion: nil)
+            }
+        }
+        let alertController = UIAlertController(title: "Forgot Email", message: "Please send an email to: nevadaastrophotography@gmail.com to recover your email. Please give us information such as username, description of profile image, etc. or contact Antoine the STUD", preferredStyle: .alert)
+        let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: {(alertAction) in composeEmail()})
+        alertController.addAction(defaultAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+    @IBAction func resetPasswordButtonTapped(_ sender: Any) {
+        Auth.auth().sendPasswordReset(withEmail: logInEmailField.text!) {error in
+            if error != nil {
+                let alertController = UIAlertController(title: "Error", message: error!.localizedDescription + " Please fix it in the email field.", preferredStyle: .alert)
                 let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-                
+                alertController.addAction(defaultAction)
+                self.present(alertController, animated: true, completion: nil)
+            } else {
+                let alertController = UIAlertController(title: "Email Sent", message: "A password reset email has been sent to your inbox.", preferredStyle: .alert)
+                let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
                 alertController.addAction(defaultAction)
                 self.present(alertController, animated: true, completion: nil)
             }
-            endNoInput()
         }
     }
 }

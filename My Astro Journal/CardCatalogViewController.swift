@@ -133,6 +133,12 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
         resetButton.isHidden = true
         searchIcon.isHidden = true
         cardCollectionView.isHidden = true
+        if firstTime {
+            let alertController = UIAlertController(title: "Tutorial", message: "This is where you will find your collection of cards. Cards unlock after entering new entries with images you are proud of. In the future,  each unlocked card will have their own page full of information!", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)

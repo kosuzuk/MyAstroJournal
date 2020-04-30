@@ -67,8 +67,10 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
     @IBOutlet weak var youtubeWCipad: NSLayoutConstraint!
     @IBOutlet weak var youtubeTrailingCipad: NSLayoutConstraint!
     @IBOutlet weak var fbWCipad: NSLayoutConstraint!
+    @IBOutlet weak var favObjTrailingCipad: NSLayoutConstraint!
     @IBOutlet weak var dividerTopC: NSLayoutConstraint!
     @IBOutlet weak var dividerTopCipad: NSLayoutConstraint!
+    @IBOutlet weak var eqLabelTopCipad: NSLayoutConstraint!
     @IBOutlet weak var circleTopC: NSLayoutConstraint!
     @IBOutlet weak var circleBottomC: NSLayoutConstraint!
     @IBOutlet weak var circleTrailingC: NSLayoutConstraint!
@@ -76,6 +78,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
     @IBOutlet weak var userImageTopCipad: NSLayoutConstraint!
     @IBOutlet weak var circleTopCipad: NSLayoutConstraint!
     @IBOutlet weak var circleBottomCipad: NSLayoutConstraint!
+    var userKey = ""
     var userData: Dictionary<String, Any>! = nil
     var eqFields: [UILabel] = []
     let application = UIApplication.shared
@@ -135,7 +138,10 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                 if screenH > 1300 {//12.9
                     userImageWCipad.constant = 250
                     userImageLeadingCipad.constant = 110
+                    websiteLeadingCipad.constant = 50
+                    favObjTrailingCipad.constant = 160
                     dividerTopCipad.constant = 70
+                    eqLabelTopCipad.constant = 40
                 }
             }
         }
@@ -152,16 +158,23 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
         userImage.layer.borderColor = UIColor.orange.cgColor
         editButton.isHidden = true
         userBio.textContainerInset.top = 0
-        var userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
+        userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
         if keyForDifferentProfile != "" {
             userKey = keyForDifferentProfile
-            editButton.isHidden = true
             logOutButton.isHidden = true
         }
         websiteButton.isHidden = true
         instaButton.isHidden = true
         youtubeButton.isHidden = true
         fbButton.isHidden = true
+        userName.adjustsFontSizeToFitWidth = true
+        userName.minimumScaleFactor = 0.6
+        if firstTime {
+            let alertController = UIAlertController(title: "Tutorial", message: "This is your profile! Add some information about yourself and save your equipment for easy access when entering new entries.\nYour bio, profile picture, social media links and stats will be visible to the public when one of your images is featured as Image of the Week!", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
         let docRef = db.collection("userData").document(userKey)
         docRef.getDocument(completion: {(QuerySnapshot, Error) in
             if Error != nil {
@@ -185,14 +198,18 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                             if data != nil {
                                 print("image set!")
                                 self.userImage.image = UIImage(data: data!)
-                                self.editButton.isHidden = false
+                                if self.keyForDifferentProfile == "" {
+                                    self.editButton.isHidden = false
+                                }
                                 loadingIcon.stopAnimating()
                             }
                         }
                     }
                 } else {
                     self.userImage.image = UIImage(named: "ImageOfTheDay/placeholderProfileImage")
-                    self.editButton.isHidden = false
+                    if self.keyForDifferentProfile == "" {
+                        self.editButton.isHidden = false
+                    }
                 }
                 self.userName.text = (docData["userName"] as! String)
                 self.userLocation.text = (docData["userLocation"] as! String)
@@ -277,6 +294,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                 self.userData = docData
             }
         })
+        if keyForDifferentProfile != "" {return}
         db.collection("userData").document(userKey).addSnapshotListener (includeMetadataChanges: true, listener: {(snapshot, Error) in
             if Error != nil {
                 print(Error!)
@@ -415,7 +433,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
         }
     }
     @IBAction func imageTapped(_ sender: Any) {
-        if (userImage.image != nil) {
+        if (userData["profileImageKey"] as! String != "") {
             let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "FullImageViewController") as! FullImageViewController
             self.addChild(popOverVC)
             let f = self.view.frame
@@ -473,6 +491,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination as? ProfileEditViewController
         if vc != nil {
+            vc?.userKey = userKey
             vc?.userData = userData
             if userImage.image == UIImage(named: "ImageOfTheDay/placeholderProfileImage") {
                 vc?.image = nil

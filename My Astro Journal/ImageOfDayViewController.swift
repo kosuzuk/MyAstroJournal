@@ -121,7 +121,7 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
     var sentEvenNumComments = true
     var locationWidthDefault = CGFloat(0)
     var commentTextViewHeightDefault = 36
-    var commentInputHeightMax = CGFloat(117)
+    var commentInputHeightMax = CGFloat(85)
     var commentsTableViewWidth = CGFloat(0)
     var commentInputHeightDefault = CGFloat(0)
     var commentFontName = "Helvetica Neue"
@@ -460,18 +460,18 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
             statsPhotoLabel.font = UIFont(name: "Pacifica Condensed", size: 14)
         }
         else if screenH < 670 {//iphone 8 or smaller
-            contentViewHC.constant = 1370
+            contentViewHC.constant = 1450
             hoursLabelTopC.constant = 20
             objPhotoLabelBottomC.constant = 17
-        } else if screenH > 850 && screenH < 900 {//iphone 11 pro max
-            objPhotoLabelBottomC.constant = 90
+        } else if screenH > 800 && screenH < 900 {//iphone 11 pro max
+            objPhotoLabelBottomC.constant = 50
         }
         if screenH > 1000 {//ipads
             background.image = UIImage(named: "ViewEntry/background-ipad")
 //            border.image = UIImage(named: "border-ipad")
             let scale = imageView.bounds.width * 0.6
             imageViewHCipad.constant = scale
-            contentViewHCipad.constant = 1450 + scale
+            contentViewHCipad.constant = 1480 + scale
         }
         commentInputHeightDefault = commentInputHC.constant
         imageView.isHidden = false
@@ -653,6 +653,14 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
         if listCount == 0 {
             numComments.isHidden = true
         }
+    }
+    @IBAction func featuredUserImageTapped(_ sender: Any) {
+        keyForDifferentProfile = String(entryKey.prefix(entryKey.count - 8))
+        performSegue(withIdentifier: "imageOfDayToProfile", sender: self)
+    }
+    @IBAction func featuredUserNameTapped(_ sender: Any) {
+        keyForDifferentProfile = String(entryKey.prefix(entryKey.count - 8))
+        performSegue(withIdentifier: "imageOfDayToProfile", sender: self)
     }
     @IBAction func websiteButtonTapped(_ sender: Any) {
         let webURL = NSURL(string: "https://www." + (userData!["websiteName"] as! String))!
