@@ -4309,7 +4309,7 @@
                                 </variation>
                             </textField>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Catalog/search" translatesAutoresizingMaskIntoConstraints="NO" id="2gW-ug-VKa">
-                                <rect key="frame" x="212" y="83" width="32" height="33.000000000000014"/>
+                                <rect key="frame" x="212" y="83" width="32" height="33"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="32" id="4tt-jb-jgT"/>
                                     <constraint firstAttribute="height" constant="33" id="CPM-rC-CsK"/>
@@ -6598,6 +6598,7 @@
                         <outlet property="background" destination="dha-2o-QLi" id="THG-qS-hmf"/>
                         <outlet property="bioField" destination="QUN-CJ-piX" id="hzW-YH-STT"/>
                         <outlet property="bioTrailingCipad" destination="dZi-xS-fcI" id="GiM-2L-MiE"/>
+                        <outlet property="border" destination="dha-2o-QLi" id="48O-mq-2g3"/>
                         <outlet property="cameraField" destination="6aK-rK-jcT" id="u1J-uD-klc"/>
                         <outlet property="circle1TrailingC" destination="ygr-1F-Idp" id="gMb-Hz-C5F"/>
                         <outlet property="circle2LeadingC" destination="2E1-eV-Dsi" id="YQb-iR-sOo"/>
@@ -9188,6 +9189,9 @@
                                     <action selector="fbTapped:" destination="O06-fc-MiL" eventType="touchUpInside" id="hgh-x7-Nv8"/>
                                 </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="border" translatesAutoresizingMaskIntoConstraints="NO" id="UmX-nD-gi5">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="619"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -9344,12 +9348,14 @@
                             <constraint firstItem="QOb-kU-YVL" firstAttribute="height" secondItem="7VO-rh-ctV" secondAttribute="height" id="XgK-Se-seR"/>
                             <constraint firstItem="jFa-7Y-7h7" firstAttribute="top" secondItem="76r-54-cyh" secondAttribute="bottom" constant="9" id="Xrd-qe-bc2"/>
                             <constraint firstItem="1Ob-mA-Q87" firstAttribute="centerY" secondItem="lqS-VU-Xvq" secondAttribute="centerY" id="YJF-E6-Kqc"/>
+                            <constraint firstItem="scP-fL-UfV" firstAttribute="trailing" secondItem="UmX-nD-gi5" secondAttribute="trailing" id="Ymq-aM-X57"/>
                             <constraint firstItem="NlX-KA-0lU" firstAttribute="centerX" secondItem="scP-fL-UfV" secondAttribute="centerX" id="YvR-Sc-Hrs"/>
                             <constraint firstItem="hpN-b2-ajw" firstAttribute="height" secondItem="lqS-VU-Xvq" secondAttribute="height" id="YwG-UR-AJO"/>
                             <constraint firstItem="dDQ-0P-UZ7" firstAttribute="top" secondItem="LOf-Or-ShC" secondAttribute="bottom" constant="2" id="ZPv-rw-oqY"/>
                             <constraint firstItem="G5A-Va-D5V" firstAttribute="centerX" secondItem="lmA-hC-m0t" secondAttribute="centerX" id="ZUf-hl-Hgp"/>
                             <constraint firstItem="htV-7B-GGh" firstAttribute="top" secondItem="scP-fL-UfV" secondAttribute="top" constant="25" id="Zmb-cS-MjT"/>
                             <constraint firstItem="GU7-w1-rXu" firstAttribute="centerY" secondItem="OS0-2e-zUf" secondAttribute="centerY" id="Zth-jz-Ohm"/>
+                            <constraint firstItem="UmX-nD-gi5" firstAttribute="leading" secondItem="scP-fL-UfV" secondAttribute="leading" id="aCj-SZ-wKU"/>
                             <constraint firstItem="scP-fL-UfV" firstAttribute="bottom" secondItem="Skw-aP-5Ms" secondAttribute="bottom" constant="19" id="aFh-7r-fGH">
                                 <variation key="heightClass=regular-widthClass=regular" constant="25"/>
                             </constraint>
@@ -9419,6 +9425,7 @@
                             <constraint firstItem="hvA-Nq-apj" firstAttribute="top" secondItem="OyK-8d-rjK" secondAttribute="bottom" constant="70" id="qdD-S8-o25">
                                 <variation key="heightClass=regular-widthClass=regular" constant="25"/>
                             </constraint>
+                            <constraint firstItem="UmX-nD-gi5" firstAttribute="top" secondItem="scP-fL-UfV" secondAttribute="top" id="r2B-0d-NZi"/>
                             <constraint firstItem="dDQ-0P-UZ7" firstAttribute="centerY" secondItem="QOb-kU-YVL" secondAttribute="centerY" id="r4V-mn-R6n"/>
                             <constraint firstItem="fZZ-uc-bDT" firstAttribute="leading" secondItem="7VO-rh-ctV" secondAttribute="trailing" constant="15" id="r5F-TR-njL"/>
                             <constraint firstItem="wMS-1E-0WD" firstAttribute="centerX" secondItem="Skw-aP-5Ms" secondAttribute="centerX" id="rHX-tJ-Tqi"/>
@@ -9430,6 +9437,7 @@
                             <constraint firstItem="wMS-1E-0WD" firstAttribute="centerY" secondItem="Skw-aP-5Ms" secondAttribute="centerY" id="s1G-22-eGP"/>
                             <constraint firstItem="76r-54-cyh" firstAttribute="top" secondItem="htV-7B-GGh" secondAttribute="top" id="s1s-aN-I9I"/>
                             <constraint firstItem="scP-fL-UfV" firstAttribute="trailing" secondItem="sp1-dF-Grj" secondAttribute="trailing" id="s3h-vx-Lf1"/>
+                            <constraint firstItem="UmX-nD-gi5" firstAttribute="bottom" secondItem="scP-fL-UfV" secondAttribute="bottom" id="sKq-iC-tXH"/>
                             <constraint firstItem="vZq-bb-JsL" firstAttribute="centerX" secondItem="scP-fL-UfV" secondAttribute="centerX" id="sb4-xF-wsb"/>
                             <constraint firstItem="yBk-CF-mQa" firstAttribute="centerY" secondItem="1Ob-mA-Q87" secondAttribute="centerY" id="thZ-3f-9Ze"/>
                             <constraint firstItem="G5A-Va-D5V" firstAttribute="centerY" secondItem="hvA-Nq-apj" secondAttribute="centerY" id="tiO-f4-r93"/>
@@ -9484,61 +9492,61 @@
                                 <exclude reference="KTV-gg-qQW"/>
                                 <exclude reference="SZa-3M-22L"/>
                                 <exclude reference="VB7-0E-KX9"/>
-                                <exclude reference="QlB-O1-Sr0"/>
-                                <exclude reference="TNX-hL-ekZ"/>
-                                <exclude reference="Uji-AN-8rG"/>
-                                <exclude reference="eet-ih-YVc"/>
-                                <exclude reference="y6L-Be-HxF"/>
-                                <exclude reference="IXG-SW-3cu"/>
-                                <exclude reference="ZPv-rw-oqY"/>
-                                <exclude reference="fKO-lW-beW"/>
-                                <exclude reference="n1w-S1-iBB"/>
-                                <exclude reference="qbs-JA-q2T"/>
-                                <exclude reference="y0P-7i-2oS"/>
                                 <exclude reference="RGk-z3-ux9"/>
                                 <exclude reference="rKk-Ld-JyB"/>
                                 <exclude reference="aOK-5u-ZNE"/>
                                 <exclude reference="myS-NX-Nof"/>
                                 <exclude reference="nSt-Yb-eAM"/>
                                 <exclude reference="pot-JP-zBD"/>
-                                <exclude reference="i53-vo-gr0"/>
-                                <exclude reference="yZx-8z-DKM"/>
+                                <exclude reference="QlB-O1-Sr0"/>
+                                <exclude reference="TNX-hL-ekZ"/>
+                                <exclude reference="Uji-AN-8rG"/>
+                                <exclude reference="eet-ih-YVc"/>
+                                <exclude reference="y6L-Be-HxF"/>
                                 <exclude reference="QjR-mR-GM2"/>
                                 <exclude reference="Vos-hX-7Ux"/>
                                 <exclude reference="dCU-Dh-dM3"/>
-                                <exclude reference="PEI-qg-PvQ"/>
-                                <exclude reference="efh-xa-tkm"/>
                                 <exclude reference="BXh-g9-6xY"/>
                                 <exclude reference="Bg6-q6-o2K"/>
                                 <exclude reference="jjD-B9-r7i"/>
                                 <exclude reference="usc-ck-ZKW"/>
                                 <exclude reference="yey-ci-kTS"/>
+                                <exclude reference="IXG-SW-3cu"/>
+                                <exclude reference="ZPv-rw-oqY"/>
+                                <exclude reference="fKO-lW-beW"/>
+                                <exclude reference="n1w-S1-iBB"/>
+                                <exclude reference="qbs-JA-q2T"/>
+                                <exclude reference="y0P-7i-2oS"/>
+                                <exclude reference="i53-vo-gr0"/>
+                                <exclude reference="yZx-8z-DKM"/>
                                 <exclude reference="LrA-uU-6VS"/>
                                 <exclude reference="r5F-TR-njL"/>
+                                <exclude reference="PEI-qg-PvQ"/>
+                                <exclude reference="efh-xa-tkm"/>
                                 <exclude reference="yYn-9P-BmF"/>
-                                <exclude reference="kDb-qE-usi"/>
                                 <exclude reference="6Sj-YW-CxI"/>
                                 <exclude reference="vyZ-Vc-inp"/>
+                                <exclude reference="5hG-h0-W2t"/>
+                                <exclude reference="Itq-bq-ht8"/>
+                                <exclude reference="kDb-qE-usi"/>
+                                <exclude reference="BrH-0m-4B5"/>
+                                <exclude reference="EYt-tQ-7ir"/>
+                                <exclude reference="HPr-5l-c4C"/>
+                                <exclude reference="SOb-C5-epM"/>
                                 <exclude reference="B9q-Be-Lec"/>
                                 <exclude reference="EE0-5T-c7T"/>
                                 <exclude reference="Ssp-NP-T1B"/>
                                 <exclude reference="z12-sY-qfe"/>
                                 <exclude reference="A2z-wJ-4Az"/>
                                 <exclude reference="R0Z-Mt-3md"/>
-                                <exclude reference="BrH-0m-4B5"/>
-                                <exclude reference="EYt-tQ-7ir"/>
-                                <exclude reference="5hG-h0-W2t"/>
-                                <exclude reference="Itq-bq-ht8"/>
-                                <exclude reference="HPr-5l-c4C"/>
-                                <exclude reference="SOb-C5-epM"/>
-                                <exclude reference="x5M-RW-paG"/>
+                                <exclude reference="gYZ-IU-HjQ"/>
                                 <exclude reference="7ha-QJ-WPS"/>
                                 <exclude reference="TIP-hS-sLf"/>
                                 <exclude reference="uz6-O9-lJX"/>
+                                <exclude reference="x5M-RW-paG"/>
                                 <exclude reference="O4c-am-ApZ"/>
                                 <exclude reference="nUY-xx-qlO"/>
                                 <exclude reference="qdD-S8-o25"/>
-                                <exclude reference="gYZ-IU-HjQ"/>
                                 <exclude reference="BeL-WF-CTi"/>
                                 <exclude reference="I2k-Nf-li1"/>
                                 <exclude reference="NM8-3R-8HP"/>
@@ -9547,14 +9555,14 @@
                                 <exclude reference="eOy-yj-ibe"/>
                                 <exclude reference="NMg-OE-840"/>
                                 <exclude reference="R3P-7x-1V2"/>
-                                <exclude reference="LV8-Jr-jCa"/>
+                                <exclude reference="2Us-eQ-Dwn"/>
                                 <exclude reference="3Wn-2U-RwL"/>
                                 <exclude reference="ME3-sN-2hq"/>
-                                <exclude reference="2Us-eQ-Dwn"/>
-                                <exclude reference="WoJ-Sp-Fp7"/>
-                                <exclude reference="s1G-22-eGP"/>
+                                <exclude reference="LV8-Jr-jCa"/>
                                 <exclude reference="TY7-dT-Aac"/>
                                 <exclude reference="bVW-L8-aw7"/>
+                                <exclude reference="WoJ-Sp-Fp7"/>
+                                <exclude reference="s1G-22-eGP"/>
                                 <exclude reference="2Vh-Ct-ah8"/>
                                 <exclude reference="cfA-FK-2rY"/>
                                 <exclude reference="rLs-Jm-l35"/>
@@ -9567,21 +9575,21 @@
                             <mask key="constraints">
                                 <include reference="30j-xL-dcA"/>
                                 <include reference="VB7-0E-KX9"/>
-                                <exclude reference="mpC-7I-W1t"/>
-                                <include reference="y6L-Be-HxF"/>
-                                <include reference="IXG-SW-3cu"/>
-                                <include reference="n1w-S1-iBB"/>
-                                <include reference="qbs-JA-q2T"/>
                                 <exclude reference="80u-kv-qYo"/>
                                 <exclude reference="jeL-AS-HJO"/>
                                 <include reference="myS-NX-Nof"/>
                                 <include reference="nSt-Yb-eAM"/>
-                                <include reference="yZx-8z-DKM"/>
+                                <exclude reference="mpC-7I-W1t"/>
+                                <include reference="y6L-Be-HxF"/>
                                 <exclude reference="c0c-Jw-zUm"/>
                                 <include reference="BXh-g9-6xY"/>
                                 <exclude reference="qVI-16-HsK"/>
                                 <exclude reference="ukq-0Z-AsJ"/>
                                 <include reference="usc-ck-ZKW"/>
+                                <include reference="IXG-SW-3cu"/>
+                                <include reference="n1w-S1-iBB"/>
+                                <include reference="qbs-JA-q2T"/>
+                                <include reference="yZx-8z-DKM"/>
                                 <include reference="LrA-uU-6VS"/>
                                 <include reference="5hG-h0-W2t"/>
                                 <exclude reference="s1s-aN-I9I"/>
@@ -9614,15 +9622,6 @@
                                 <include reference="KTV-gg-qQW"/>
                                 <include reference="SZa-3M-22L"/>
                                 <exclude reference="k5k-KI-d5g"/>
-                                <exclude reference="Kg4-Pi-CWK"/>
-                                <include reference="QlB-O1-Sr0"/>
-                                <exclude reference="TNX-hL-ekZ"/>
-                                <exclude reference="Uji-AN-8rG"/>
-                                <include reference="eet-ih-YVc"/>
-                                <exclude reference="mpC-7I-W1t"/>
-                                <include reference="ZPv-rw-oqY"/>
-                                <include reference="fKO-lW-beW"/>
-                                <include reference="y0P-7i-2oS"/>
                                 <exclude reference="80u-kv-qYo"/>
                                 <exclude reference="Ao1-pv-4zj"/>
                                 <exclude reference="RGk-z3-ux9"/>
@@ -9631,32 +9630,54 @@
                                 <exclude reference="hb6-cn-KII"/>
                                 <exclude reference="jeL-AS-HJO"/>
                                 <include reference="pot-JP-zBD"/>
-                                <include reference="i53-vo-gr0"/>
+                                <exclude reference="Kg4-Pi-CWK"/>
+                                <include reference="QlB-O1-Sr0"/>
+                                <exclude reference="TNX-hL-ekZ"/>
+                                <exclude reference="Uji-AN-8rG"/>
+                                <include reference="eet-ih-YVc"/>
+                                <exclude reference="mpC-7I-W1t"/>
                                 <exclude reference="Phl-EP-1GP"/>
                                 <exclude reference="QjR-mR-GM2"/>
                                 <include reference="Vos-hX-7Ux"/>
                                 <exclude reference="c0c-Jw-zUm"/>
                                 <include reference="dCU-Dh-dM3"/>
-                                <include reference="PEI-qg-PvQ"/>
-                                <include reference="efh-xa-tkm"/>
-                                <exclude reference="hG5-hF-s2q"/>
-                                <exclude reference="k6g-ht-7Pf"/>
                                 <include reference="Bg6-q6-o2K"/>
                                 <exclude reference="P1b-CL-Mew"/>
                                 <include reference="jjD-B9-r7i"/>
                                 <exclude reference="yey-ci-kTS"/>
+                                <include reference="ZPv-rw-oqY"/>
+                                <include reference="fKO-lW-beW"/>
+                                <include reference="y0P-7i-2oS"/>
+                                <include reference="i53-vo-gr0"/>
                                 <include reference="r5F-TR-njL"/>
+                                <include reference="PEI-qg-PvQ"/>
+                                <include reference="efh-xa-tkm"/>
+                                <exclude reference="hG5-hF-s2q"/>
+                                <exclude reference="k6g-ht-7Pf"/>
                                 <exclude reference="8eP-MJ-bbr"/>
                                 <exclude reference="lCx-AY-KQ1"/>
                                 <exclude reference="oqT-dh-7H4"/>
                                 <include reference="yYn-9P-BmF"/>
-                                <exclude reference="k59-J0-aY4"/>
-                                <include reference="kDb-qE-usi"/>
-                                <exclude reference="rVN-Ow-22G"/>
                                 <include reference="6Sj-YW-CxI"/>
                                 <exclude reference="YvR-Sc-Hrs"/>
                                 <exclude reference="ecy-KN-VK8"/>
                                 <include reference="vyZ-Vc-inp"/>
+                                <include reference="Itq-bq-ht8"/>
+                                <exclude reference="Xrd-qe-bc2"/>
+                                <exclude reference="k59-J0-aY4"/>
+                                <include reference="kDb-qE-usi"/>
+                                <exclude reference="rVN-Ow-22G"/>
+                                <exclude reference="6w9-nP-qqE"/>
+                                <exclude reference="7NN-rt-I67"/>
+                                <exclude reference="7k4-c8-GpE"/>
+                                <include reference="BrH-0m-4B5"/>
+                                <include reference="EYt-tQ-7ir"/>
+                                <exclude reference="QgG-ez-PvK"/>
+                                <exclude reference="unq-yJ-FLF"/>
+                                <exclude reference="zBt-Um-VFz"/>
+                                <exclude reference="HPr-5l-c4C"/>
+                                <include reference="SOb-C5-epM"/>
+                                <exclude reference="wQO-cg-TSk"/>
                                 <exclude reference="3T6-2c-4kz"/>
                                 <include reference="B9q-Be-Lec"/>
                                 <include reference="EE0-5T-c7T"/>
@@ -9670,35 +9691,22 @@
                                 <exclude reference="A2z-wJ-4Az"/>
                                 <exclude reference="DpQ-YY-7MM"/>
                                 <include reference="R0Z-Mt-3md"/>
-                                <exclude reference="6w9-nP-qqE"/>
-                                <exclude reference="7NN-rt-I67"/>
-                                <exclude reference="7k4-c8-GpE"/>
-                                <include reference="BrH-0m-4B5"/>
-                                <include reference="EYt-tQ-7ir"/>
-                                <exclude reference="QgG-ez-PvK"/>
-                                <exclude reference="unq-yJ-FLF"/>
-                                <exclude reference="zBt-Um-VFz"/>
-                                <include reference="Itq-bq-ht8"/>
-                                <exclude reference="Xrd-qe-bc2"/>
-                                <exclude reference="HPr-5l-c4C"/>
-                                <include reference="SOb-C5-epM"/>
-                                <exclude reference="wQO-cg-TSk"/>
-                                <exclude reference="bAH-Y3-gfN"/>
-                                <include reference="x5M-RW-paG"/>
+                                <exclude reference="6Nj-tk-cXg"/>
+                                <exclude reference="OmF-Cd-mWO"/>
+                                <include reference="gYZ-IU-HjQ"/>
                                 <include reference="7ha-QJ-WPS"/>
                                 <exclude reference="IeM-Xv-lZf"/>
                                 <include reference="TIP-hS-sLf"/>
                                 <exclude reference="itp-Cc-7ae"/>
                                 <include reference="uz6-O9-lJX"/>
+                                <exclude reference="bAH-Y3-gfN"/>
+                                <include reference="x5M-RW-paG"/>
                                 <exclude reference="9od-by-Mt9"/>
                                 <exclude reference="C1d-Td-a8B"/>
                                 <include reference="O4c-am-ApZ"/>
                                 <exclude reference="QEh-lM-9Eg"/>
                                 <include reference="nUY-xx-qlO"/>
                                 <include reference="qdD-S8-o25"/>
-                                <exclude reference="6Nj-tk-cXg"/>
-                                <exclude reference="OmF-Cd-mWO"/>
-                                <include reference="gYZ-IU-HjQ"/>
                                 <include reference="BeL-WF-CTi"/>
                                 <exclude reference="GtW-vq-fPi"/>
                                 <include reference="I2k-Nf-li1"/>
@@ -9721,27 +9729,27 @@
                                 <include reference="R3P-7x-1V2"/>
                                 <exclude reference="bXc-I5-x5Z"/>
                                 <exclude reference="ps8-h7-HHg"/>
-                                <exclude reference="JW6-Xp-3b4"/>
-                                <include reference="LV8-Jr-jCa"/>
+                                <include reference="2Us-eQ-Dwn"/>
+                                <exclude reference="jGq-jt-xPN"/>
+                                <exclude reference="vgI-QK-LP0"/>
                                 <include reference="3Wn-2U-RwL"/>
                                 <exclude reference="BcP-56-1H2"/>
                                 <exclude reference="Kl3-Ri-ITt"/>
                                 <include reference="ME3-sN-2hq"/>
                                 <exclude reference="MiO-PU-LVm"/>
-                                <include reference="2Us-eQ-Dwn"/>
-                                <exclude reference="jGq-jt-xPN"/>
-                                <exclude reference="vgI-QK-LP0"/>
-                                <exclude reference="3bN-nr-eBV"/>
-                                <exclude reference="Jbp-xN-9BY"/>
-                                <include reference="WoJ-Sp-Fp7"/>
-                                <exclude reference="rHX-tJ-Tqi"/>
-                                <include reference="s1G-22-eGP"/>
+                                <exclude reference="JW6-Xp-3b4"/>
+                                <include reference="LV8-Jr-jCa"/>
                                 <exclude reference="0BE-do-vsi"/>
                                 <exclude reference="0Un-I8-faa"/>
                                 <exclude reference="5Ig-CE-cfJ"/>
                                 <include reference="TY7-dT-Aac"/>
                                 <include reference="bVW-L8-aw7"/>
                                 <exclude reference="evy-lj-7kA"/>
+                                <exclude reference="3bN-nr-eBV"/>
+                                <exclude reference="Jbp-xN-9BY"/>
+                                <include reference="WoJ-Sp-Fp7"/>
+                                <exclude reference="rHX-tJ-Tqi"/>
+                                <include reference="s1G-22-eGP"/>
                                 <exclude reference="1a9-iR-sra"/>
                                 <include reference="2Vh-Ct-ah8"/>
                                 <include reference="cfA-FK-2rY"/>
@@ -9764,6 +9772,7 @@
                     <connections>
                         <outlet property="background" destination="sp1-dF-Grj" id="7gO-Pe-lIP"/>
                         <outlet property="bioHC" destination="yPi-Va-u7U" id="rhN-VZ-4IU"/>
+                        <outlet property="border" destination="UmX-nD-gi5" id="gbr-zK-yxQ"/>
                         <outlet property="cameraIcon" destination="27p-et-2oB" id="gsQ-q3-lhh"/>
                         <outlet property="circleBottomC" destination="7RH-eN-SmJ" id="dab-9A-ao9"/>
                         <outlet property="circleBottomCipad" destination="aFh-7r-fGH" id="G7t-r4-oEg"/>
@@ -9838,7 +9847,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2683.59375" y="1462.5"/>
+            <point key="canvasLocation" x="2682.4000000000001" y="1462.3152709359606"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="3cH-R9-jFa">
@@ -10704,20 +10713,26 @@ We will be adding more and more cards over time.</string>
                                     </mask>
                                 </variation>
                             </scrollView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="border" translatesAutoresizingMaskIntoConstraints="NO" id="BPW-w0-Tq3">
+                                <rect key="frame" x="0.0" y="0.0" width="712" height="2207"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="x1S-SU-qhr" firstAttribute="centerX" secondItem="QVj-iC-fsx" secondAttribute="centerX" id="1Ne-ur-DOK"/>
+                            <constraint firstItem="BPW-w0-Tq3" firstAttribute="bottom" secondItem="QVj-iC-fsx" secondAttribute="bottom" id="4X6-bj-zcj"/>
                             <constraint firstItem="QVj-iC-fsx" firstAttribute="trailing" secondItem="xVY-JD-3Of" secondAttribute="trailing" constant="172" id="DDb-GI-ZAA">
                                 <variation key="heightClass=regular-widthClass=regular" constant="0.0"/>
                             </constraint>
                             <constraint firstItem="IrY-JJ-oLl" firstAttribute="leading" secondItem="QVj-iC-fsx" secondAttribute="leading" id="HG8-u9-AKV"/>
                             <constraint firstItem="xVY-JD-3Of" firstAttribute="trailing" secondItem="QVj-iC-fsx" secondAttribute="trailing" id="J8s-sg-bMG"/>
                             <constraint firstItem="iY1-Av-Etw" firstAttribute="centerX" secondItem="QVj-iC-fsx" secondAttribute="centerX" id="JhR-eN-Q0N"/>
+                            <constraint firstItem="BPW-w0-Tq3" firstAttribute="top" secondItem="QVj-iC-fsx" secondAttribute="top" id="MQm-90-rqo"/>
                             <constraint firstItem="IrY-JJ-oLl" firstAttribute="bottom" secondItem="QVj-iC-fsx" secondAttribute="bottom" id="NGN-2g-NuC"/>
                             <constraint firstItem="xVY-JD-3Of" firstAttribute="leading" secondItem="QVj-iC-fsx" secondAttribute="leading" id="OVs-Ni-XfN"/>
                             <constraint firstItem="IrY-JJ-oLl" firstAttribute="top" secondItem="QVj-iC-fsx" secondAttribute="top" id="QH6-lh-Vqh"/>
                             <constraint firstItem="IrY-JJ-oLl" firstAttribute="trailing" secondItem="QVj-iC-fsx" secondAttribute="trailing" id="Sh5-WO-mvM"/>
+                            <constraint firstItem="BPW-w0-Tq3" firstAttribute="trailing" secondItem="QVj-iC-fsx" secondAttribute="trailing" id="YDE-uv-YfY"/>
                             <constraint firstItem="IrY-JJ-oLl" firstAttribute="leading" secondItem="QVj-iC-fsx" secondAttribute="leading" id="dJh-Jx-s7y"/>
                             <constraint firstItem="NJL-px-qDY" firstAttribute="centerX" secondItem="QVj-iC-fsx" secondAttribute="centerX" id="gGK-Ss-L7H"/>
                             <constraint firstItem="jfA-nM-trG" firstAttribute="centerX" secondItem="QVj-iC-fsx" secondAttribute="centerX" id="gJi-1q-h8M"/>
@@ -10726,6 +10741,7 @@ We will be adding more and more cards over time.</string>
                             <constraint firstItem="NaI-eu-DzD" firstAttribute="centerX" secondItem="QVj-iC-fsx" secondAttribute="centerX" id="gdx-NF-bwy"/>
                             <constraint firstItem="b7W-Ot-M0N" firstAttribute="centerX" secondItem="QVj-iC-fsx" secondAttribute="centerX" id="ioB-jm-Dvk"/>
                             <constraint firstItem="z3v-vA-1rP" firstAttribute="centerX" secondItem="QVj-iC-fsx" secondAttribute="centerX" id="mSr-bP-e4d"/>
+                            <constraint firstItem="BPW-w0-Tq3" firstAttribute="leading" secondItem="QVj-iC-fsx" secondAttribute="leading" id="nSW-PP-7zp"/>
                             <constraint firstItem="QVj-iC-fsx" firstAttribute="bottom" secondItem="IrY-JJ-oLl" secondAttribute="bottom" constant="67" id="pHa-9f-dI0">
                                 <variation key="heightClass=regular-widthClass=regular" constant="0.0"/>
                             </constraint>
@@ -10782,6 +10798,7 @@ We will be adding more and more cards over time.</string>
                     <connections>
                         <outlet property="background" destination="xVY-JD-3Of" id="non-CK-YdM"/>
                         <outlet property="bigTextHCipad" destination="O8g-EN-hUV" id="Emr-Dl-X4g"/>
+                        <outlet property="border" destination="BPW-w0-Tq3" id="hQ6-z9-zAG"/>
                         <outlet property="contentView" destination="QnV-0c-BAY" id="v6v-7K-9pS"/>
                         <outlet property="contentViewHC" destination="zxq-OG-cYA" id="uGz-vr-Gql"/>
                         <outlet property="contentViewHCipad" destination="7bB-7x-c7i" id="ce0-a2-Q3x"/>
@@ -10809,7 +10826,7 @@ We will be adding more and more cards over time.</string>
                     </items>
                 </toolbar>
             </objects>
-            <point key="canvasLocation" x="1317.3913043478262" y="2615.625"/>
+            <point key="canvasLocation" x="1316.8" y="2613.5467980295566"/>
         </scene>
         <!--Profile Edit View Controller-->
         <scene sceneID="IeL-EJ-2rV">
@@ -12157,6 +12174,9 @@ We will be adding more and more cards over time.</string>
                                     </mask>
                                 </variation>
                             </scrollView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="border" translatesAutoresizingMaskIntoConstraints="NO" id="Oal-Wi-kVR">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="807"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -12165,6 +12185,7 @@ We will be adding more and more cards over time.</string>
                             <constraint firstItem="qZ4-fc-oow" firstAttribute="width" secondItem="CE0-Zu-Efq" secondAttribute="width" id="EJi-WA-dec"/>
                             <constraint firstItem="OCO-2J-dMX" firstAttribute="leading" secondItem="47l-wM-Q4R" secondAttribute="leading" id="Gqs-ZT-yAM"/>
                             <constraint firstItem="qZ4-fc-oow" firstAttribute="width" secondItem="47l-wM-Q4R" secondAttribute="width" id="IGp-yP-a0p"/>
+                            <constraint firstItem="Oal-Wi-kVR" firstAttribute="top" secondItem="47l-wM-Q4R" secondAttribute="top" id="MrT-Js-cYa"/>
                             <constraint firstItem="47l-wM-Q4R" firstAttribute="top" secondItem="OCO-2J-dMX" secondAttribute="top" id="PVh-Gi-2Dg"/>
                             <constraint firstItem="OCO-2J-dMX" firstAttribute="bottom" secondItem="nBm-1Y-Pr5" secondAttribute="bottom" id="V3F-hY-vEY"/>
                             <constraint firstItem="47l-wM-Q4R" firstAttribute="trailing" secondItem="OCO-2J-dMX" secondAttribute="trailing" id="Xpb-8t-NIr"/>
@@ -12173,9 +12194,12 @@ We will be adding more and more cards over time.</string>
                             <constraint firstItem="nBm-1Y-Pr5" firstAttribute="leading" secondItem="47l-wM-Q4R" secondAttribute="leading" id="cCx-Gb-8Ww"/>
                             <constraint firstItem="nBm-1Y-Pr5" firstAttribute="bottom" secondItem="47l-wM-Q4R" secondAttribute="bottom" id="cRQ-oL-GGC"/>
                             <constraint firstItem="nBm-1Y-Pr5" firstAttribute="trailing" secondItem="47l-wM-Q4R" secondAttribute="trailing" id="cZr-70-G0I"/>
+                            <constraint firstItem="Oal-Wi-kVR" firstAttribute="leading" secondItem="47l-wM-Q4R" secondAttribute="leading" id="cw2-ic-VA9"/>
+                            <constraint firstItem="Oal-Wi-kVR" firstAttribute="bottom" secondItem="47l-wM-Q4R" secondAttribute="bottom" id="eO6-qv-sHG"/>
                             <constraint firstItem="nBm-1Y-Pr5" firstAttribute="top" secondItem="47l-wM-Q4R" secondAttribute="top" id="hPT-z1-tWL"/>
                             <constraint firstItem="OCO-2J-dMX" firstAttribute="trailing" secondItem="47l-wM-Q4R" secondAttribute="trailing" id="hng-Ce-Qrs"/>
                             <constraint firstItem="OCO-2J-dMX" firstAttribute="leading" secondItem="47l-wM-Q4R" secondAttribute="leading" id="mP4-on-7TF"/>
+                            <constraint firstItem="Oal-Wi-kVR" firstAttribute="trailing" secondItem="47l-wM-Q4R" secondAttribute="trailing" id="uqa-3y-anh"/>
                             <constraint firstItem="OCO-2J-dMX" firstAttribute="top" secondItem="47l-wM-Q4R" secondAttribute="top" id="vVb-ig-P9x"/>
                             <constraint firstItem="47l-wM-Q4R" firstAttribute="bottom" secondItem="nBm-1Y-Pr5" secondAttribute="bottom" id="z17-nv-pUb"/>
                         </constraints>
@@ -12220,6 +12244,7 @@ We will be adding more and more cards over time.</string>
                     <connections>
                         <outlet property="background" destination="OCO-2J-dMX" id="c3h-4n-Y6N"/>
                         <outlet property="bioField" destination="2bi-PW-MNh" id="g4R-8s-TEm"/>
+                        <outlet property="border" destination="Oal-Wi-kVR" id="QiY-1S-j7C"/>
                         <outlet property="cameraField" destination="YcC-G1-FWq" id="htF-6c-afF"/>
                         <outlet property="cameraField2" destination="m0e-e3-xpv" id="vWZ-d2-2FR"/>
                         <outlet property="cameraField3" destination="M4g-oh-PcE" id="2FZ-tp-fm1"/>
@@ -12274,7 +12299,7 @@ We will be adding more and more cards over time.</string>
                 </tapGestureRecognizer>
                 <exit id="5Hk-OW-bQm" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="3524.21875" y="2350.1953125"/>
+            <point key="canvasLocation" x="3523.1999999999998" y="2349.7536945812808"/>
         </scene>
         <!--Welcome View Controller-->
         <scene sceneID="djc-7k-wVs">
@@ -12294,7 +12319,7 @@ We will be adding more and more cards over time.</string>
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="1200"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome to" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Et8-pL-vUh">
-                                                <rect key="frame" x="62.000000000000007" y="160" width="107.66666666666669" height="32"/>
+                                                <rect key="frame" x="62" y="160" width="129.33333333333334" height="32"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="125" id="Luc-WT-xzh">
                                                         <variation key="heightClass=regular-widthClass=regular" constant="150"/>
@@ -12320,7 +12345,7 @@ We will be adding more and more cards over time.</string>
                                                 </variation>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QVi-Lz-drR">
-                                                <rect key="frame" x="177.66666666666663" y="160" width="175.33333333333337" height="32"/>
+                                                <rect key="frame" x="199.33333333333337" y="160" width="190.66666666666663" height="32"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="32" id="NPr-oX-zkn"/>
                                                     <constraint firstAttribute="width" constant="175" id="ZHJ-9g-l2m">
@@ -12404,7 +12429,7 @@ We will be adding more and more cards over time.</string>
                                                 </variation>
                                             </textView>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="Welcome/divider" translatesAutoresizingMaskIntoConstraints="NO" id="wUe-cx-LeW">
-                                                <rect key="frame" x="74" y="493.66666666666663" width="267" height="17"/>
+                                                <rect key="frame" x="74" y="493.66666666666663" width="267" height="34"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="565" id="d86-bd-Mh7">
                                                         <variation key="heightClass=regular-widthClass=regular" constant="300"/>
@@ -12425,7 +12450,7 @@ We will be adding more and more cards over time.</string>
                                                 </variation>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SIGN UP" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u5D-2k-v7L">
-                                                <rect key="frame" x="170.66666666666666" y="540.66666666666663" width="73" height="24"/>
+                                                <rect key="frame" x="170.66666666666666" y="557.66666666666663" width="73" height="24"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="24" id="FNZ-O2-chh"/>
                                                     <constraint firstAttribute="width" constant="73" id="qMY-F0-Iws"/>
@@ -12451,7 +12476,7 @@ We will be adding more and more cards over time.</string>
                                                 </variation>
                                             </label>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Email" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HSx-Ma-6wy">
-                                                <rect key="frame" x="103.66666666666669" y="594.66666666666663" width="207" height="30"/>
+                                                <rect key="frame" x="103.66666666666669" y="611.66666666666663" width="207" height="28"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="207" id="CJb-Xj-WAf"/>
@@ -12481,7 +12506,7 @@ We will be adding more and more cards over time.</string>
                                                 </variation>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Password" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sMR-wB-g3W">
-                                                <rect key="frame" x="103.66666666666669" y="634.66666666666663" width="207" height="30"/>
+                                                <rect key="frame" x="103.66666666666669" y="649.66666666666663" width="207" height="28"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="400" id="9LO-1r-kOD"/>
@@ -12509,7 +12534,7 @@ We will be adding more and more cards over time.</string>
                                                 </variation>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Confirm Password" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ctb-Sh-c4o">
-                                                <rect key="frame" x="103.66666666666669" y="674.66666666666663" width="207" height="30"/>
+                                                <rect key="frame" x="103.66666666666669" y="687.66666666666663" width="207" height="28"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="400" id="BCf-SV-dcW"/>
@@ -12537,7 +12562,7 @@ We will be adding more and more cards over time.</string>
                                                 </variation>
                                             </textField>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Wp-aa-6Q3">
-                                                <rect key="frame" x="351" y="671.33333333333337" width="35" height="37"/>
+                                                <rect key="frame" x="351" y="683.33333333333337" width="35" height="37"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="37" id="FDx-J2-iJg"/>
                                                     <constraint firstAttribute="width" constant="35" id="Glk-Ji-EFK"/>
@@ -12564,7 +12589,7 @@ We will be adding more and more cards over time.</string>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="...OR LOG IN TO AN EXISTING ACCOUNT" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="spa-3R-ZZ5">
-                                                <rect key="frame" x="36" y="768.33333333333337" width="342" height="22.333333333333371"/>
+                                                <rect key="frame" x="36" y="780.33333333333337" width="342" height="22.333333333333371"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="21" id="77s-fb-upd"/>
                                                     <constraint firstAttribute="width" constant="370" id="Mtd-SX-DRM"/>
@@ -12586,7 +12611,7 @@ We will be adding more and more cards over time.</string>
                                                 </variation>
                                             </label>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Email" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6hZ-Wx-YTx">
-                                                <rect key="frame" x="78.666666666666686" y="826.66666666666663" width="120" height="30"/>
+                                                <rect key="frame" x="78.666666666666686" y="838.66666666666663" width="120" height="28"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="30" id="KVy-w8-FoW"/>
@@ -12620,7 +12645,7 @@ We will be adding more and more cards over time.</string>
                                                 </variation>
                                             </textField>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="u01-rh-N77">
-                                                <rect key="frame" x="351" y="823.66666666666663" width="35" height="36"/>
+                                                <rect key="frame" x="351" y="834.66666666666663" width="35" height="36"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="36" id="1QD-bg-FdR"/>
                                                     <constraint firstAttribute="height" constant="36" id="9gs-ts-fXT"/>
@@ -12647,7 +12672,7 @@ We will be adding more and more cards over time.</string>
                                                 </connections>
                                             </button>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="W" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O4A-YO-yR6">
-                                                <rect key="frame" x="198.66666666666666" y="831" width="17" height="21"/>
+                                                <rect key="frame" x="198.66666666666666" y="842" width="17" height="21"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="17" id="Xmo-kE-h5l"/>
                                                     <constraint firstAttribute="height" constant="21" id="tZu-j1-yLx"/>
@@ -12673,7 +12698,7 @@ We will be adding more and more cards over time.</string>
                                                 </variation>
                                             </imageView>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="line" placeholder="Password" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sts-CQ-Pu0">
-                                                <rect key="frame" x="215.66666666666663" y="826.66666666666663" width="110" height="30"/>
+                                                <rect key="frame" x="215.66666666666663" y="838.66666666666663" width="110" height="28"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="30" id="DnF-66-qsd"/>
@@ -12731,7 +12756,7 @@ We will be adding more and more cards over time.</string>
                                                 </variation>
                                             </imageView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iEc-IN-ZtD">
-                                                <rect key="frame" x="213" y="886.66666666666663" width="115" height="34"/>
+                                                <rect key="frame" x="213" y="896.66666666666663" width="115" height="34"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="34" id="ewy-45-SVU"/>
                                                     <constraint firstAttribute="width" constant="115" id="lMF-VW-a6F"/>
@@ -12751,7 +12776,7 @@ We will be adding more and more cards over time.</string>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NXj-kH-c78">
-                                                <rect key="frame" x="81" y="886.66666666666663" width="115" height="34"/>
+                                                <rect key="frame" x="81" y="896.66666666666663" width="115" height="34"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="34" id="F2K-0j-8K3"/>
                                                     <constraint firstAttribute="width" constant="115" id="egf-bP-aCT"/>
@@ -13018,21 +13043,28 @@ We will be adding more and more cards over time.</string>
                                     </mask>
                                 </variation>
                             </scrollView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="border" translatesAutoresizingMaskIntoConstraints="NO" id="oTh-I3-snv">
+                                <rect key="frame" x="0.0" y="44" width="414" height="1122"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="J5l-ll-DJc" firstAttribute="trailing" secondItem="LYN-PR-C0Y" secondAttribute="trailing" id="2g2-Jd-8lf"/>
                             <constraint firstItem="LYN-PR-C0Y" firstAttribute="bottom" secondItem="F5Q-yU-Biy" secondAttribute="bottom" id="37d-Ud-UrZ"/>
+                            <constraint firstItem="LYN-PR-C0Y" firstAttribute="trailing" secondItem="oTh-I3-snv" secondAttribute="trailing" id="3Oo-oS-gg3"/>
                             <constraint firstItem="LYN-PR-C0Y" firstAttribute="trailing" secondItem="F5Q-yU-Biy" secondAttribute="trailing" id="4ux-Wy-0ae"/>
+                            <constraint firstItem="oTh-I3-snv" firstAttribute="top" secondItem="LYN-PR-C0Y" secondAttribute="top" id="Fb1-H1-Zlt"/>
                             <constraint firstItem="ctb-Sh-c4o" firstAttribute="centerX" secondItem="LYN-PR-C0Y" secondAttribute="centerX" id="Fsa-Hl-ces"/>
                             <constraint firstItem="F5Q-yU-Biy" firstAttribute="top" secondItem="LYN-PR-C0Y" secondAttribute="top" id="HQ2-za-U3m"/>
                             <constraint firstItem="3AL-9Y-FfU" firstAttribute="bottom" secondItem="J5l-ll-DJc" secondAttribute="bottom" id="I8x-TK-ob8">
                                 <variation key="heightClass=regular-widthClass=compact" constant="-55"/>
                             </constraint>
                             <constraint firstItem="F5Q-yU-Biy" firstAttribute="leading" secondItem="LYN-PR-C0Y" secondAttribute="leading" id="Li8-cw-A7G"/>
+                            <constraint firstItem="LYN-PR-C0Y" firstAttribute="bottom" secondItem="oTh-I3-snv" secondAttribute="bottom" id="ONU-rG-Est"/>
                             <constraint firstItem="u5D-2k-v7L" firstAttribute="centerX" secondItem="LYN-PR-C0Y" secondAttribute="centerX" id="Qxa-YB-c2a"/>
                             <constraint firstItem="F5Q-yU-Biy" firstAttribute="leading" secondItem="LYN-PR-C0Y" secondAttribute="leading" id="Sj5-0P-2lh"/>
                             <constraint firstItem="LYN-PR-C0Y" firstAttribute="trailing" secondItem="J5l-ll-DJc" secondAttribute="trailing" id="Us7-uQ-im4"/>
+                            <constraint firstItem="oTh-I3-snv" firstAttribute="leading" secondItem="LYN-PR-C0Y" secondAttribute="leading" id="Vq0-dK-KVc"/>
                             <constraint firstItem="F5Q-yU-Biy" firstAttribute="trailing" secondItem="LYN-PR-C0Y" secondAttribute="trailing" id="YGj-G2-XkS"/>
                             <constraint firstItem="HSx-Ma-6wy" firstAttribute="centerX" secondItem="LYN-PR-C0Y" secondAttribute="centerX" id="ZiA-nE-m7b"/>
                             <constraint firstItem="J5l-ll-DJc" firstAttribute="top" secondItem="LYN-PR-C0Y" secondAttribute="top" id="csr-V8-CHV"/>
@@ -13090,6 +13122,7 @@ We will be adding more and more cards over time.</string>
                     <size key="freeformSize" width="414" height="1200"/>
                     <connections>
                         <outlet property="background" destination="J5l-ll-DJc" id="z3d-PO-AhN"/>
+                        <outlet property="border" destination="oTh-I3-snv" id="fUq-3J-JTQ"/>
                         <outlet property="contentView" destination="PLX-Br-c2n" id="OGK-vL-tYE"/>
                         <outlet property="forgotEmailTopC" destination="HoB-SA-zB8" id="hbo-eU-odk"/>
                         <outlet property="logInEmailField" destination="6hZ-Wx-YTx" id="W6b-lc-xGl"/>

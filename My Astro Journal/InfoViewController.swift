@@ -12,7 +12,7 @@ import SwiftKeychainWrapper
 class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDelegate {
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var background: UIImageView!
-//    @IBOutlet weak var border: UIImageView!
+    @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var expandLabel: UILabel!
     @IBOutlet weak var expandButton: UIButton!
@@ -38,7 +38,7 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
             contentViewHC.constant = 2200
         } else if screenH > 1000 {//ipads
             background.image = UIImage(named: "Info/background-ipad")
-//            border.image = UIImage(named: "border-ipad")
+            border.image = UIImage(named: "border-ipad")
             if screenH > 1300 {//ipad 12.9
                 howItWorksTopCipad.constant = 60
                 bigTextHCipad.constant = 400

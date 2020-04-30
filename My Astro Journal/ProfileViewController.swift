@@ -12,6 +12,7 @@ import SwiftKeychainWrapper
 
 class ProfileViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     @IBOutlet weak var background: UIImageView!
+    @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var mathBackground: UIImageView!
     @IBOutlet weak var userImage: UIImageView!
     @IBOutlet weak var userName: UILabel!
@@ -128,6 +129,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
         } else if screenH > 1000 {//ipads
             background.image = UIImage(named: "Profile/background-ipad")
             mathBackground.image = UIImage(named: "Profile/math-ipad")
+            border.image = UIImage(named: "border-ipad")
             userName.font = UIFont(name: userName.font!.fontName, size: 28)
             userLocation.font = UIFont(name: userLocation.font!.fontName, size: 18)
             if screenH > 1150 {//11 and 12.9
