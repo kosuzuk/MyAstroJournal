@@ -10,6 +10,8 @@
 		60024D12239059740019B901 /* FullImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60024D11239059740019B901 /* FullImageViewController.swift */; };
 		6006EC2422B0B61F0096F6E4 /* JournalEntryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6006EC2322B0B61F0096F6E4 /* JournalEntryViewController.swift */; };
 		6006EC2622B9F3B90096F6E4 /* JournalEntryImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6006EC2522B9F3B90096F6E4 /* JournalEntryImageCell.swift */; };
+		601EBB9C245BB599005BF4D7 /* EquipmentPopOverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EBB9B245BB599005BF4D7 /* EquipmentPopOverViewController.swift */; };
+		601EBBA4245C65C9005BF4D7 /* EquipmentPopOverTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EBBA3245C65C9005BF4D7 /* EquipmentPopOverTableViewCell.swift */; };
 		602345FA224FF0F300C4ED3F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602345F9224FF0F300C4ED3F /* AppDelegate.swift */; };
 		602345FC224FF0F300C4ED3F /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602345FB224FF0F300C4ED3F /* CalendarViewController.swift */; };
 		60234601224FF0F300C4ED3F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 602345FF224FF0F300C4ED3F /* Main.storyboard */; };
@@ -66,6 +68,8 @@
 		60024D11239059740019B901 /* FullImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullImageViewController.swift; sourceTree = "<group>"; };
 		6006EC2322B0B61F0096F6E4 /* JournalEntryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalEntryViewController.swift; sourceTree = "<group>"; };
 		6006EC2522B9F3B90096F6E4 /* JournalEntryImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalEntryImageCell.swift; sourceTree = "<group>"; };
+		601EBB9B245BB599005BF4D7 /* EquipmentPopOverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquipmentPopOverViewController.swift; sourceTree = "<group>"; };
+		601EBBA3245C65C9005BF4D7 /* EquipmentPopOverTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquipmentPopOverTableViewCell.swift; sourceTree = "<group>"; };
 		602345F6224FF0F300C4ED3F /* My Astro Journal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "My Astro Journal.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		602345F9224FF0F300C4ED3F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.xcfilelist; };
 		602345FB224FF0F300C4ED3F /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
@@ -189,6 +193,8 @@
 				607D939924511B5000F8AC74 /* TouchDownGestureRecognizer.swift */,
 				603A2C632256D6E200314706 /* ProfileViewController.swift */,
 				60D151BC2276161100A578E0 /* ProfileEditViewController.swift */,
+				601EBB9B245BB599005BF4D7 /* EquipmentPopOverViewController.swift */,
+				601EBBA3245C65C9005BF4D7 /* EquipmentPopOverTableViewCell.swift */,
 				60DA3C8B22DD8DB700D10184 /* InfoViewController.swift */,
 				60024D11239059740019B901 /* FullImageViewController.swift */,
 				602345FF224FF0F300C4ED3F /* Main.storyboard */,
@@ -425,6 +431,7 @@
 				604E857022CB1BDF002B4D79 /* CardUnlockedViewController.swift in Sources */,
 				60D151B7226AECBE00A578E0 /* JournalEntryEditViewController.swift in Sources */,
 				602345FA224FF0F300C4ED3F /* AppDelegate.swift in Sources */,
+				601EBBA4245C65C9005BF4D7 /* EquipmentPopOverTableViewCell.swift in Sources */,
 				603A016C2429DC2B00EABC39 /* CommentsTableViewCell.swift in Sources */,
 				6045D9E0244934EF00C38C7D /* ImageOfDayViewerViewController.swift in Sources */,
 				604106BF23500C930058CEDD /* WelcomeViewController.swift in Sources */,
@@ -440,6 +447,7 @@
 				6045D9E2244935DF00C38C7D /* ImageOfDayViewerCollectionViewCell.swift in Sources */,
 				60024D12239059740019B901 /* FullImageViewController.swift in Sources */,
 				6032BC87233A7B4B0024776A /* CardViewController.swift in Sources */,
+				601EBB9C245BB599005BF4D7 /* EquipmentPopOverViewController.swift in Sources */,
 				603A2CCF225F895100314706 /* ProfileCreationViewController.swift in Sources */,
 				603DC27D2433B40300C5A071 /* ImageOfDayPickerViewController.swift in Sources */,
 				60C335F723243776009B4830 /* VPAutoCompleteViewCell.swift in Sources */,
