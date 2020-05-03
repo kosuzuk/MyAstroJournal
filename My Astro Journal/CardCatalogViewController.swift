@@ -37,8 +37,12 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
             } else if swipeDir == "left" {
                 curCardInd += 1
             }
+            var cell = (cardCollectionView.cellForItem(at: IndexPath(row: curCardInd, section: 0)) as? CardCell)
+            if cell == nil {
+                cell = (collectionView(cardCollectionView, cellForItemAt: IndexPath(row: curCardInd, section: 0)) as! CardCell)
+            }
             let c = cardVC!
-            c.imageView.image = (cardCollectionView.cellForItem(at: IndexPath(row: curCardInd, section: 0)) as! CardCell).cardImageView.image
+            c.imageView.image = cell!.cardImageView.image
             let target = cardsToDisplay[curCardInd]
             c.target = target
             let photoDateList = photoCardTargetDatesDict[target]

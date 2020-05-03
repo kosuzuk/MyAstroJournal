@@ -9,49 +9,92 @@
 import UIKit
 
 class EquipmentPopOverViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    @IBOutlet weak var eqTableView: UITableView!
+    var displayingBrands = true
     var eqType = ""
-    var popUpType = ""
-    var brand = ""
     var brandList: [String] = []
+    var selectedBrand = ""
     var nameList: [String] = []
+    var pevc: ProfileEditViewController? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if eqType == "telescope" {
-            if popUpType == "brand" {
-                brandList = telescopeBrands
-            } else if popUpType == "name" {
-                nameList = telescopeNames[brand]!
-            }
+            brandList = telescopeBrands
         } else if eqType == "mount" {
-            if popUpType == "brand" {
-                brandList = mountBrands
-            } else if popUpType == "name" {
-                nameList = mountNames[brand]!
-            }
+            brandList = mountBrands
         } else if eqType == "camera" {
-            if popUpType == "brand" {
-                brandList = cameraBrands
-            } else if popUpType == "name" {
-                nameList = cameraNames[brand]!
-            }
+            brandList = cameraBrands
         }
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if popUpType == "brand" {
+        if displayingBrands {
             return brandList.count
-        } else if popUpType == "name" {
+        } else  {
             return nameList.count
-        } else {
-            return 0
         }
     }
-    
+    @objc func cellButtonTapped(_ sender: UIButton) {
+        let ind = sender.tag
+        if displayingBrands {
+            if eqType == "telescope" {
+                selectedBrand = brandList[ind]
+                nameList = telescopeNames[selectedBrand]!
+            } else if eqType == "mount" {
+                selectedBrand = brandList[ind]
+                nameList = mountNames[selectedBrand]!
+            } else if eqType == "camera" {
+                selectedBrand = brandList[ind]
+                nameList = cameraNames[selectedBrand]!
+            }
+            nameList.insert("    back", at: 0)
+            displayingBrands = false
+            for view in self.view.subviews {view.frame.origin.x += self.pevc!.popOverW}
+            self.eqTableView.reloadData()
+            UIView.animate(withDuration: 0.4, animations: {for view in self.view.subviews {view.frame.origin.x -= self.pevc!.popOverW}}, completion: nil)
+        } else {
+            //first ind is back button
+            if ind == 0 {
+                nameList = []
+                displayingBrands = true
+                for view in self.view.subviews {view.frame.origin.x -= self.pevc!.popOverW}
+                self.eqTableView.reloadData()
+                UIView.animate(withDuration: 0.4, animations: {for view in self.view.subviews {view.frame.origin.x += self.pevc!.popOverW}}, completion: nil)
+            } else {
+                pevc!.selectedEqName = selectedBrand + " " + nameList[ind]
+            }
+        }
+    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "eqCell", for: indexPath) as! EquipmentPopOverTableViewCell
-        if popUpType == "brand" {
-            cell.eqButton.setTitle(brandList[indexPath.row], for: .normal)
-        } else if popUpType == "name" {
-            cell.eqButton.setTitle(nameList[indexPath.row], for: .normal)
+        if !displayingBrands && indexPath.row == 0 {
+            cell.prevArrowImageView.isHidden = false
+        } else {
+            cell.prevArrowImageView.isHidden = true
+        }
+        var btn = UIButton()
+        var hasButton = false
+        for view in cell.subviews {
+            if view is UIButton {
+                btn = view as! UIButton
+                hasButton = true
+            }
+        }
+        btn.tag = indexPath.row
+        if displayingBrands {
+            btn.setTitle(brandList[indexPath.row], for: .normal)
+            cell.nextArrowImageView.isHidden = false
+        } else {
+            btn.setTitle(nameList[indexPath.row], for: .normal)
+            cell.nextArrowImageView.isHidden = true
+        }
+        if !hasButton {
+            btn.titleLabel!.font =  UIFont(name: "Pacifica Condensed", size: 17)
+            btn.setTitleColor(UIColor.white, for: .normal)
+            btn.contentHorizontalAlignment = .left
+            btn.frame = CGRect(x: 7, y: 0, width: cell.bounds.width, height: cell.bounds.height)
+            btn.addTarget(self, action: #selector(cellButtonTapped), for: .touchUpInside)
+            cell.addSubview(btn)
         }
         return cell
     }

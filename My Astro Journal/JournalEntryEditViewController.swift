@@ -184,7 +184,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         bigImageView.layer.borderWidth = 2
         bigImageView.layer.borderColor = UIColor.orange.cgColor
         timeStartDropDown = DropDown()
-        timeStartDropDown!.backgroundColor = .gray
+        timeStartDropDown!.backgroundColor = .darkGray
         timeStartDropDown!.textColor = .white
         timeStartDropDown!.textFont = UIFont(name: "Pacifica Condensed", size: 15)!
         timeStartDropDown!.separatorColor = .white
@@ -197,7 +197,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
             self.timeStartField.text = item
         }
         timeEndDropDown = DropDown()
-        timeEndDropDown!.backgroundColor = .gray
+        timeEndDropDown!.backgroundColor = .darkGray
         timeEndDropDown!.textColor = .white
         timeEndDropDown!.textFont = UIFont(name: "Pacifica Condensed", size: 15)!
         timeEndDropDown!.separatorColor = .white

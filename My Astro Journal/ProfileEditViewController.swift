@@ -55,7 +55,19 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
     var locationsVisited: [String] = []
     var activeField: UIView? = nil
     var eqFields: [UITextField] = []
+    let popOverW = CGFloat(245)
+    let popOverH = CGFloat(170)
     var popOverController: EquipmentPopOverViewController? = nil
+    var selectedEqName = "" {
+        didSet {
+            let eqField = (activeField as! UITextField)
+            eqField.text = selectedEqName
+            selectedEqName = ""
+            popOverController!.dismiss(animated: true, completion: {})
+            popOverController = nil
+            eqField.resignFirstResponder()
+        }
+    }
     var imageData: Data? = nil
     var compressedImageData: Data? = nil
     var userDataCopyToChangeKeys: [String] = []
@@ -165,14 +177,14 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
             
             popOverController = self.storyboard!.instantiateViewController(withIdentifier: "EquipmentPopOverViewController") as? EquipmentPopOverViewController
             popOverController!.eqType = textField.accessibilityIdentifier!
-            popOverController!.popUpType = "brand"
+            popOverController!.pevc = self
             popOverController!.modalPresentationStyle = .popover
-            popOverController!.preferredContentSize = CGSize(width: 240, height: 170)
+            popOverController!.preferredContentSize = CGSize(width: popOverW, height: popOverH)
             let popOverPresentationController = popOverController!.popoverPresentationController!
             popOverPresentationController.permittedArrowDirections = .down
             popOverPresentationController.sourceView = self.view
-            print(textField.frame)
-            popOverPresentationController.sourceRect = textField.frame
+            let popOverPos = CGRect(x: textField.frame.origin.x, y: textField.frame.origin.y - yOffset - 3, width: textField.bounds.width, height: textField.bounds.height)
+            popOverPresentationController.sourceRect = popOverPos
             popOverPresentationController.delegate = self as UIPopoverPresentationControllerDelegate
             present(popOverController!, animated: true, completion: nil)
         }

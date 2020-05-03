@@ -33,7 +33,7 @@ class CardViewController: UIViewController {
                     journalEntryDateFormattedList.append(formattedDate)
                 }
                 entryDatesDropDown.anchorView = entryDatesButton
-                entryDatesDropDown.backgroundColor = .gray
+                entryDatesDropDown.backgroundColor = .darkGray
                 entryDatesDropDown.textColor = .white
                 entryDatesDropDown.textFont = UIFont(name: "Pacifica Condensed", size: 16)!
                 entryDatesDropDown.separatorColor = .white
@@ -141,14 +141,14 @@ class CardViewController: UIViewController {
         entryDatesDropDown.show()
     }
     func moveR(_: Bool) {
-        for view in views{view.frame.origin.x -= screenW * 2}
+        for view in views {view.frame.origin.x -= screenW * 2}
         catalogVC!.swipeDir = "right"
-        UIView.animate(withDuration: 0.2, animations: {for view in self.views{view.frame.origin.x += screenW}}, completion: nil)
+        UIView.animate(withDuration: 0.2, animations: {for view in self.views {view.frame.origin.x += screenW}}, completion: nil)
     }
     func moveL(_: Bool) {
-        for view in views{view.frame.origin.x += screenW * 2}
+        for view in views {view.frame.origin.x += screenW * 2}
         catalogVC!.swipeDir = "left"
-        UIView.animate(withDuration: 0.2, animations: {for view in self.views{view.frame.origin.x -= screenW}}, completion: nil)
+        UIView.animate(withDuration: 0.2, animations: {for view in self.views {view.frame.origin.x -= screenW}}, completion: nil)
     }
     @IBAction func cardSwiped(_ gesture: UIGestureRecognizer) {
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {

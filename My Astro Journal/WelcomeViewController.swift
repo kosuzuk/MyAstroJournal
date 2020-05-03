@@ -412,7 +412,7 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
                 self.present(mailComposerVC, animated: true, completion: nil)
             }
         }
-        let alertController = UIAlertController(title: "Forgot Email", message: "Please send an email to: nevadaastrophotography@gmail.com to recover your email. Please give us information such as username, description of profile image, etc. or contact Antoine the STUD", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Forgot Email", message: "Please send an email to: nevadaastrophotography@gmail.com to recover your email. Please give us information such as username, description of profile image, etc.", preferredStyle: .alert)
         let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: {(alertAction) in composeEmail()})
         alertController.addAction(defaultAction)
         self.present(alertController, animated: true, completion: nil)

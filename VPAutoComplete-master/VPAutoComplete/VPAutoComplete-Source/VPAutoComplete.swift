@@ -337,7 +337,7 @@ extension VPAutoComplete : UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "VPAutoCompleteViewCell") as! VPAutoCompleteViewCell
-        cell.backgroundColor = .gray
+        cell.backgroundColor = .darkGray
         cell.lblTitle.textColor = .white
         if is_filter {
             cell.lblTitle.text = filterDataSource[indexPath.row]

@@ -12,6 +12,9 @@
 		6006EC2622B9F3B90096F6E4 /* JournalEntryImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6006EC2522B9F3B90096F6E4 /* JournalEntryImageCell.swift */; };
 		601EBB9C245BB599005BF4D7 /* EquipmentPopOverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EBB9B245BB599005BF4D7 /* EquipmentPopOverViewController.swift */; };
 		601EBBA4245C65C9005BF4D7 /* EquipmentPopOverTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EBBA3245C65C9005BF4D7 /* EquipmentPopOverTableViewCell.swift */; };
+		601EBBA6245E25C2005BF4D7 /* AddOnsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EBBA5245E25C2005BF4D7 /* AddOnsViewController.swift */; };
+		601EBBA8245E4CE7005BF4D7 /* PacksCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EBBA7245E4CE7005BF4D7 /* PacksCollectionViewCell.swift */; };
+		601EBBAA245E4CF5005BF4D7 /* CardBacksCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 601EBBA9245E4CF5005BF4D7 /* CardBacksCollectionViewCell.swift */; };
 		602345FA224FF0F300C4ED3F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602345F9224FF0F300C4ED3F /* AppDelegate.swift */; };
 		602345FC224FF0F300C4ED3F /* CalendarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602345FB224FF0F300C4ED3F /* CalendarViewController.swift */; };
 		60234601224FF0F300C4ED3F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 602345FF224FF0F300C4ED3F /* Main.storyboard */; };
@@ -70,6 +73,9 @@
 		6006EC2522B9F3B90096F6E4 /* JournalEntryImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalEntryImageCell.swift; sourceTree = "<group>"; };
 		601EBB9B245BB599005BF4D7 /* EquipmentPopOverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquipmentPopOverViewController.swift; sourceTree = "<group>"; };
 		601EBBA3245C65C9005BF4D7 /* EquipmentPopOverTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquipmentPopOverTableViewCell.swift; sourceTree = "<group>"; };
+		601EBBA5245E25C2005BF4D7 /* AddOnsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOnsViewController.swift; sourceTree = "<group>"; };
+		601EBBA7245E4CE7005BF4D7 /* PacksCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacksCollectionViewCell.swift; sourceTree = "<group>"; };
+		601EBBA9245E4CF5005BF4D7 /* CardBacksCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBacksCollectionViewCell.swift; sourceTree = "<group>"; };
 		602345F6224FF0F300C4ED3F /* My Astro Journal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "My Astro Journal.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		602345F9224FF0F300C4ED3F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.xcfilelist; };
 		602345FB224FF0F300C4ED3F /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
@@ -196,6 +202,9 @@
 				601EBB9B245BB599005BF4D7 /* EquipmentPopOverViewController.swift */,
 				601EBBA3245C65C9005BF4D7 /* EquipmentPopOverTableViewCell.swift */,
 				60DA3C8B22DD8DB700D10184 /* InfoViewController.swift */,
+				601EBBA5245E25C2005BF4D7 /* AddOnsViewController.swift */,
+				601EBBA7245E4CE7005BF4D7 /* PacksCollectionViewCell.swift */,
+				601EBBA9245E4CF5005BF4D7 /* CardBacksCollectionViewCell.swift */,
 				60024D11239059740019B901 /* FullImageViewController.swift */,
 				602345FF224FF0F300C4ED3F /* Main.storyboard */,
 				60234604224FF0F600C4ED3F /* LaunchScreen.storyboard */,
@@ -426,6 +435,7 @@
 			files = (
 				60799F78228873F00018950B /* CalendarCell.swift in Sources */,
 				60799F7522878AA40018950B /* CardCatalogViewController.swift in Sources */,
+				601EBBA6245E25C2005BF4D7 /* AddOnsViewController.swift in Sources */,
 				602AA2722291F5CC00CE8E9B /* JournalEntryEditImageCell.swift in Sources */,
 				60D151BF22874F7E00A578E0 /* CardGroupsViewController.swift in Sources */,
 				604E857022CB1BDF002B4D79 /* CardUnlockedViewController.swift in Sources */,
@@ -438,7 +448,9 @@
 				6006EC2422B0B61F0096F6E4 /* JournalEntryViewController.swift in Sources */,
 				60DA3C8C22DD8DB700D10184 /* InfoViewController.swift in Sources */,
 				603A2C642256D6E200314706 /* ProfileViewController.swift in Sources */,
+				601EBBAA245E4CF5005BF4D7 /* CardBacksCollectionViewCell.swift in Sources */,
 				602AA276229C9C8000CE8E9B /* CalendarTableViewCell.swift in Sources */,
+				601EBBA8245E4CE7005BF4D7 /* PacksCollectionViewCell.swift in Sources */,
 				60D151BD2276161100A578E0 /* ProfileEditViewController.swift in Sources */,
 				607D939A24511B5000F8AC74 /* TouchDownGestureRecognizer.swift in Sources */,
 				603A2CD52266EC1300314706 /* CardCell.swift in Sources */,

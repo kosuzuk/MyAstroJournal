@@ -129,6 +129,9 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
     var commentFontAttributes: [NSAttributedString.Key : Any]? = nil
     var keyBoardH = CGFloat(0.0)
     let application = UIApplication.shared
+    var telescopeLink = ""
+    var mountLink = ""
+    var cameraLink = ""
     var cvc: CalendarViewController? = nil
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -222,9 +225,81 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
                 if self.locationField.text! == "" {
                     self.locationIcon.isHidden = true
                 }
-                self.telescopeField.text = (data["telescope"] as! String)
-                self.cameraField.text = (data["camera"] as! String)
-                self.mountField.text = (data["mount"] as! String)
+                let telescopeString = (data["telescope"] as! String)
+                let mountString = (data["mount"] as! String)
+                let cameraString = (data["camera"] as! String)
+                
+                func checkEq(_ eqType: String) {
+                    var eqString = ""
+                    var eqNames: [String: [String]] = [:]
+                    var field = self.telescopeField
+                    var eqLinks: [String: String] = [:]
+                    if eqType == "telescope" {
+                        eqString = telescopeString
+                        eqNames = telescopeNames
+                        field = self.telescopeField
+                        eqLinks = telescopeLinks
+                    } else if eqType == "mount" {
+                        eqString = mountString
+                        eqNames = mountNames
+                        field = self.mountField
+                        eqLinks = mountLinks
+                    } else if eqType == "camera" {
+                        eqString = cameraString
+                        eqNames = cameraNames
+                        field = self.cameraField
+                        eqLinks = cameraLinks
+                    }
+                    if eqString == "" {return}
+                    field!.text = eqString
+                    var brand = ""
+                    var name = ""
+                    var i = 0
+                    if eqString.prefix(20) == "Moravian Instruments" {
+                        i = 20
+                    } else if eqString.prefix(29) == "Orion Telescopes & Binoculars" {
+                        i = 29
+                    } else if eqString.prefix(18) == "Explore Scientific" {
+                        i = 18
+                    } else if eqString.prefix(24) == "Officina Stellare Veloce" {
+                        i = 24
+                    } else if eqString.prefix(8) == "Tele Vue" {
+                        i = 8
+                    } else if eqString.prefix(14) == "William Optics" {
+                        i = 14
+                    } else if eqString.prefix(9) == "10 Micron" {
+                        i = 9
+                    } else if eqString.prefix(15) == "Software Bisque" {
+                        i = 15
+                    } else {
+                        //may be a different brand name with no space
+                        for c in eqString {
+                            if c == " " {
+                                break
+                            }
+                            i += 1
+                        }
+                    }
+                    //invalid brand
+                    if i == 0 || i == eqString.count {return}
+                    brand = String(eqString.prefix(i))
+                    name = String(eqString.suffix(eqString.count - i - 1))
+                    if eqNames[brand]?.contains(name) ?? false {
+                        let tap = UITapGestureRecognizer(target: self, action: #selector(self.eqTapped))
+                        field!.addGestureRecognizer(tap)
+                        field!.textColor = UIColor(red: 0.3, green: 0.6, blue: 0.8, alpha: 1)
+                        if eqType == "telescope" {
+                            self.telescopeLink = eqLinks[String(eqString.prefix(i))]!
+                        } else if eqType == "mount" {
+                            self.mountLink = eqLinks[String(eqString.prefix(i))]!
+                        } else if eqType == "camera" {
+                            self.cameraLink = eqLinks[String(eqString.prefix(i))]!
+                        }
+                    }
+                }
+                checkEq("telescope")
+                checkEq("mount")
+                checkEq("camera")
             }
         })
         
@@ -695,6 +770,17 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
         } else {
             application.open(webURL as URL)
         }
+    }
+    @objc func eqTapped(sender: UIGestureRecognizer) {
+        var url = ""
+        if sender.view == telescopeField {
+            url = telescopeLink
+        } else if sender.view == mountField {
+            url = mountLink
+        } else if sender.view == cameraField {
+            url = cameraLink
+        }
+        application.open(NSURL(string: url)! as URL)
     }
     override func willMove(toParent parent: UIViewController?) {
         if likesListenerInitiated {

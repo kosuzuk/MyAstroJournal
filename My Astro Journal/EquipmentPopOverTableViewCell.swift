@@ -9,5 +9,6 @@
 import UIKit
 
 class EquipmentPopOverTableViewCell: UITableViewCell {
-    @IBOutlet weak var eqButton: UIButton!
+    @IBOutlet weak var nextArrowImageView: UIImageView!
+    @IBOutlet weak var prevArrowImageView: UIImageView!
 }

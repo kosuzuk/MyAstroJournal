@@ -15,7 +15,6 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var expandLabel: UILabel!
-    @IBOutlet weak var expandButton: UIButton!
     @IBOutlet weak var messageField: UITextView!
     @IBOutlet weak var sendMessageButton: UIButton!
     @IBOutlet weak var thankYouMessage: UILabel!
