@@ -31,6 +31,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var imageOfDayMainLabel: UILabel!
     @IBOutlet weak var imageOfDayLabel: UILabel!
     @IBOutlet weak var antoinePowersButton: UIButton!
+    @IBOutlet weak var bannerHC: NSLayoutConstraint!
     @IBOutlet weak var newEntryButtonTopC: NSLayoutConstraint!
     @IBOutlet weak var yearButtonTopC: NSLayoutConstraint!
     @IBOutlet weak var yearButtonLeadingC: NSLayoutConstraint!
@@ -168,7 +169,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         imageOfDayImageView.layer.borderColor = UIColor.orange.cgColor
         imageOfDayImageView.layer.borderWidth = 1.0
         monthDropDown = DropDown()
-        monthDropDown!.backgroundColor = .gray
+        monthDropDown!.backgroundColor = .darkGray
         monthDropDown!.textColor = .white
         monthDropDown!.textFont = UIFont(name: "Pacifica Condensed", size: 14)!
         monthDropDown!.separatorColor = .white
@@ -177,7 +178,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         monthDropDown!.anchorView = monthButton
         monthDropDown!.bottomOffset = CGPoint(x: 0, y: 25)
         yearDropDown = DropDown()
-        yearDropDown!.backgroundColor = .gray
+        yearDropDown!.backgroundColor = .darkGray
         yearDropDown!.textColor = .white
         yearDropDown!.textFont = UIFont(name: "Pacifica Condensed", size: 14)!
         yearDropDown!.separatorColor = .white
@@ -527,10 +528,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         if (screenH < 600) {//iphone SE, 5s
+            bannerHC.constant = 35
             yearButtonLeadingC.constant = 20
+            earlierMonthButtonTopC.constant = -38
             imageOfDayMainLabel.text = ""
-            imageOfDayTopC.constant = -20
-            imageOfDayWC.constant = 300
+            imageOfDayTopC.constant = 7
+            imageOfDayWC.constant = 287
         }
         let calendarSize = screenW * 0.9
         calendarWC.constant = calendarSize

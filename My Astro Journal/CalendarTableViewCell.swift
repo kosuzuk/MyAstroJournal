@@ -165,7 +165,7 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
                     if entryList.count > 1 {
                         let dd = DropDown()
                         self.cvc!.entryDropDown = dd
-                        dd.backgroundColor = .gray
+                        dd.backgroundColor = .darkGray
                         dd.textColor = .white
                         dd.textFont = UIFont(name: "Pacifica Condensed", size: 14)!
                         dd.separatorColor = .white

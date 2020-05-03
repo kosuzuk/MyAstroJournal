@@ -10,7 +10,7 @@ import UIKit
 import FirebaseAuth
 import SwiftKeychainWrapper
 
-class ProfileEditViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UITextViewDelegate, UIScrollViewDelegate {
+class ProfileEditViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UITextViewDelegate, UIScrollViewDelegate, UIPopoverPresentationControllerDelegate {
     var profileViewController: ProfileViewController?
     @IBOutlet weak var background: UIImageView!
     @IBOutlet weak var border: UIImageView!
@@ -55,6 +55,19 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
     var locationsVisited: [String] = []
     var activeField: UIView? = nil
     var eqFields: [UITextField] = []
+    let popOverW = CGFloat(245)
+    let popOverH = CGFloat(170)
+    var popOverController: EquipmentPopOverViewController? = nil
+    var selectedEqName = "" {
+        didSet {
+            let eqField = (activeField as! UITextField)
+            eqField.text = selectedEqName
+            selectedEqName = ""
+            popOverController!.dismiss(animated: true, completion: {})
+            popOverController = nil
+            eqField.resignFirstResponder()
+        }
+    }
     var imageData: Data? = nil
     var compressedImageData: Data? = nil
     var userDataCopyToChangeKeys: [String] = []
@@ -153,27 +166,43 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         activeField?.resignFirstResponder()
     }
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        if eqFields.contains(textField) {
-            let yOffset = contentView.bounds.height - scrollView.bounds.height
-            scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: true)
-        }
-        activeField = textField
-    }
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         textView.inputAccessoryView = toolbar
         return true
     }
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        activeField = textView
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if eqFields.contains(textField) {
+            let yOffset = contentView.bounds.height - scrollView.bounds.height
+            scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: true)
+            
+            popOverController = self.storyboard!.instantiateViewController(withIdentifier: "EquipmentPopOverViewController") as? EquipmentPopOverViewController
+            popOverController!.eqType = textField.accessibilityIdentifier!
+            popOverController!.pevc = self
+            popOverController!.modalPresentationStyle = .popover
+            popOverController!.preferredContentSize = CGSize(width: popOverW, height: popOverH)
+            let popOverPresentationController = popOverController!.popoverPresentationController!
+            popOverPresentationController.permittedArrowDirections = .down
+            popOverPresentationController.sourceView = self.view
+            let popOverPos = CGRect(x: textField.frame.origin.x, y: textField.frame.origin.y - yOffset - 3, width: textField.bounds.width, height: textField.bounds.height)
+            popOverPresentationController.sourceRect = popOverPos
+            popOverPresentationController.delegate = self as UIPopoverPresentationControllerDelegate
+            present(popOverController!, animated: true, completion: nil)
+        }
+        activeField = textField
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
+    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
+        popOverController?.dismiss(animated: true, completion: {})
+    }
     func textViewShouldReturn(_ textView: UITextField) -> Bool {
         textView.resignFirstResponder()
         return true
+    }
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        activeField = textView
     }
     @IBAction func toolbarButtonTapped(_ sender: Any) {
         view.endEditing(true)
@@ -218,6 +247,14 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
         removeImageButton.isHidden = true
         imageViewLabel.isHidden = false
         imageAdded = false
+    }
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
+    func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
+        return true
+    }
+    func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
     }
     @IBAction func cancel(_ sender: Any) {
         pvc!.pevc = nil

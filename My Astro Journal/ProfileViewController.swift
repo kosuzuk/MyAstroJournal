@@ -94,7 +94,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-
     override func viewDidLoad() {
         super.viewDidLoad()
         self.eqFields = [self.userTelescope, self.userTelescope2, self.userTelescope3, self.userMount, self.userMount2, self.userMount3, self.userCamera, self.userCamera2, self.userCamera3]
