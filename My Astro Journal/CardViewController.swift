@@ -4,6 +4,7 @@ import DropDown
 class CardViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var entryDatesButton: UIButton!
+    @IBOutlet weak var featuredIcon: UIButton!
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var unlockedDateLabel: UILabel!
     @IBOutlet weak var imageViewHCipad: NSLayoutConstraint!
@@ -12,6 +13,9 @@ class CardViewController: UIViewController {
     @IBOutlet weak var unlockedDateLabelTrailingCipad: NSLayoutConstraint!
     @IBOutlet weak var unlockedDateLabelBottomCipad: NSLayoutConstraint!
     var target = ""
+    var featuredDate = ""
+    var iodKeysData: [String: Any]? = nil
+    var iodImageData: UIImage? = nil
     var unlockedDate: String = "" {
         didSet {
             if unlockedDate != "" {
@@ -98,8 +102,9 @@ class CardViewController: UIViewController {
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
         self.imageView.layer.shadowOpacity = 0.8
         self.showAnimate()
-        unlockedDateLabel.isHidden = true
         entryDatesButton.isHidden = true
+        featuredIcon.isHidden = true
+        unlockedDateLabel.isHidden = true
         if screenW > 700 {//ipads
             entryDatesButton.titleLabel?.font =  entryDatesButton.titleLabel?.font.withSize(22)
             unlockedDateLabel.font = unlockedDateLabel.font.withSize(18)
@@ -111,9 +116,9 @@ class CardViewController: UIViewController {
         
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(swipeWhileDDShowing))
         swipeRight.direction = UISwipeGestureRecognizer.Direction.right
-        entryDatesDropDown.plainView.addGestureRecognizer(swipeRight)
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(swipeWhileDDShowing))
         swipeLeft.direction = UISwipeGestureRecognizer.Direction.left
+        entryDatesDropDown.plainView.addGestureRecognizer(swipeRight)
         entryDatesDropDown.plainView.addGestureRecognizer(swipeLeft)
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -135,10 +140,36 @@ class CardViewController: UIViewController {
             unlockedDateLabelTrailingCipad.constant = -(imageView.frame.size.width * 0.1)
         }
         unlockedDateLabelBottomCipad.constant = -(imageViewH * 0.11)
+        if featuredDate != "" {
+            featuredIcon.isHidden = false
+        }
     }
     
     @IBAction func showEntryDates(_ sender: Any) {
         entryDatesDropDown.show()
+    }
+    @IBAction func featuredIconTapped(_ sender: Any) {
+        startNoInput()
+        view.addSubview(formatLoadingIcon(icon: loadingIcon))
+        loadingIcon.startAnimating()
+        db.collection("imageOfDayKeys").document(featuredDate).getDocument(completion: {(snapshot, Error) in
+            if Error != nil {
+                print(Error!)
+            } else {
+                self.iodKeysData = snapshot!.data()!
+                let imageRef = storage.child(self.iodKeysData!["imageKey"] as! String)
+                imageRef.getData(maxSize: imgMaxByte) {data, Error in
+                    if let Error = Error {
+                        print(Error)
+                        return
+                    } else {
+                        self.iodImageData = UIImage(data: data!)
+                        self.performSegue(withIdentifier: "cardToImageOfDay", sender: self)
+                        loadingIcon.stopAnimating()
+                    }
+                }
+            }
+        })
     }
     func moveR(_: Bool) {
         for view in views {view.frame.origin.x -= screenW * 2}
@@ -196,6 +227,22 @@ class CardViewController: UIViewController {
                 }
             }
             vc?.selectedEntryInd = selectedEntryInd
+            return
+        }
+        let vc2 = segue.destination as? ImageOfDayViewController
+        if vc2 != nil {
+            vc2!.entryKey = iodKeysData!["journalEntryListKey"] as! String
+            vc2!.entryInd = iodKeysData!["journalEntryInd"] as! Int
+            vc2!.iodUserKey = iodKeysData!["userKey"] as! String
+            vc2!.imageData = iodImageData
+            vc2!.featuredDate = featuredDate
+            let cvc = tabBarController!.viewControllers![0].children[0] as! CalendarViewController
+            vc2!.cvc = cvc
+            //not currently featured
+            if featuredDate != featuredImageDate {
+                vc2!.notEditable = true
+            }
+            cvc.iodvc = vc2
             return
         }
     }

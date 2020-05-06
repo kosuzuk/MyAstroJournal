@@ -47,6 +47,6 @@ class FullImageViewController: UIViewController {
         })
     }
     @IBAction func closePopup(sender: AnyObject) {
-        self.removeAnimate()
+        removeAnimate()
     }
 }

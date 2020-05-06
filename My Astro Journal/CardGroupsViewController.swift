@@ -22,12 +22,24 @@ class CardGroupsViewController: UIViewController {
     var doneLoading = false
     var photoCardTargetDatesDict: [String: [String]]? = nil
     var cardTargetDatesDict: [String: [String]]? = nil
+    var numFeaturedDates = 0
+    var numFeaturedDatesLoaded = 0 {
+        didSet {
+            if numFeaturedDatesLoaded == numFeaturedDates {
+                loadingIcon.stopAnimating()
+                endNoInput()
+                self.doneLoading = true
+            }
+        }
+    }
+    var featuredTargets: [String: String] = [:]
     var catalogVC: CardCatalogViewController? = nil
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        startNoInput()
         view.addSubview(formatLoadingIcon(icon: loadingIcon))
         loadingIcon.startAnimating()
         if screenH < 600 {//iphone SE, 5s
@@ -69,8 +81,20 @@ class CardGroupsViewController: UIViewController {
                 if self.cardTargetDatesDict == nil {
                     self.photoCardTargetDatesDict = (data["photoCardTargetDates"]! as! [String: [String]])
                     self.cardTargetDatesDict = (data["cardTargetDates"]! as! [String: [String]])
-                    self.doneLoading = true
-                    loadingIcon.stopAnimating()
+                    let featureDates = (data["userDataCopyKeys"]! as! [String: String]).keys
+                    for date in featureDates {
+                        if isEarlierDate(date1: date, date2: dateToday) {
+                            self.numFeaturedDates += 1
+                            db.collection("imageOfDayKeys").document(date).getDocument(completion: {(snapshot, Error) in
+                                if Error != nil {
+                                    print(Error!)
+                                } else {
+                                    self.featuredTargets[snapshot!.data()!["formattedTarget"] as! String] = date
+                                    self.numFeaturedDatesLoaded += 1
+                                }
+                            })
+                        }
+                    }
                 } else {
                     //check if user entered or deleted entries
                     let newPhotoCardTargetDates = data["photoCardTargetDates"]! as! [String: [String]]
@@ -85,6 +109,12 @@ class CardGroupsViewController: UIViewController {
                 }
             }
         })
+        if firstTime {
+            let alertController = UIAlertController(title: "Tutorial", message: "This is where you will find your collection of cards. Cards unlock after adding new entries with images you are proud of. In the future,  each unlocked card will have their own page full of information!", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination as? CardCatalogViewController
@@ -92,6 +122,7 @@ class CardGroupsViewController: UIViewController {
             vc?.group = groupChosen
             vc?.photoCardTargetDatesDict = photoCardTargetDatesDict!
             vc?.cardTargetDatesDict = cardTargetDatesDict!
+            vc?.featuredTargets = featuredTargets
             vc?.cgvc = self
             catalogVC = vc
         }

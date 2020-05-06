@@ -518,8 +518,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
             imageSelected = bigImageView.image
             let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "FullImageViewController") as! FullImageViewController
             self.addChild(popOverVC)
-            let f = self.view.frame
-            popOverVC.view.frame = CGRect(x: 0, y: 0, width: f.width, height: f.height)
+            popOverVC.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
             self.view.addSubview(popOverVC.view)
             popOverVC.imageView.image = imageSelected
             popOverVC.didMove(toParent: self)
@@ -534,12 +533,13 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         imageSelected = (imageCollectionView.cellForItem(at: indexPath!) as! JournalEntryEditImageCell).imageView.image
         let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "FullImageViewController") as! FullImageViewController
         self.addChild(popOverVC)
-        let f = self.view.frame
-        popOverVC.view.frame = CGRect(x: 0, y: 0, width: f.width, height: f.height)
+        popOverVC.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         self.view.addSubview(popOverVC.view)
         popOverVC.imageView.image = imageSelected
         popOverVC.didMove(toParent: self)
     }
+    
+    
     @IBAction func removeBigImage(_ sender: Any) {
         if doneButton.isHidden {return}
         bigImageView.image = nil

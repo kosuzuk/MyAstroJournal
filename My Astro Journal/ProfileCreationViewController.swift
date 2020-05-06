@@ -16,7 +16,7 @@ import UIKit
 import FirebaseAuth
 import SwiftKeychainWrapper
 
-class ProfileCreationViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UITextViewDelegate {
+class ProfileCreationViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UITextViewDelegate, UIPopoverPresentationControllerDelegate {
     @IBOutlet weak var background: UIImageView!
     @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
@@ -54,6 +54,17 @@ class ProfileCreationViewController: UIViewController, UINavigationControllerDel
     var eqFields: [UITextField] = []
     var imageData: Data?
     var compressedImageData: Data?
+    var popOverController: EquipmentPopOverViewController? = nil
+    var selectedEqName = "" {
+        didSet {
+            let eqField = (activeField as! UITextField)
+            eqField.text = selectedEqName
+            selectedEqName = ""
+            popOverController!.dismiss(animated: true, completion: {})
+            popOverController = nil
+            eqField.resignFirstResponder()
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         if screenH > 1000 {//ipads
@@ -156,9 +167,22 @@ class ProfileCreationViewController: UIViewController, UINavigationControllerDel
         activeField?.resignFirstResponder()
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        if screenH < 1000 && eqFields.contains(textField) {
+        if eqFields.contains(textField) {
             let yOffset = contentView.bounds.height - scrollView.bounds.height
             scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: true)
+            
+            popOverController = self.storyboard!.instantiateViewController(withIdentifier: "EquipmentPopOverViewController") as? EquipmentPopOverViewController
+            popOverController!.eqType = textField.accessibilityIdentifier!
+            popOverController!.pcvc = self
+            popOverController!.modalPresentationStyle = .popover
+            popOverController!.preferredContentSize = CGSize(width: popOverController!.viewW, height: popOverController!.viewH)
+            let popOverPresentationController = popOverController!.popoverPresentationController!
+            popOverPresentationController.permittedArrowDirections = .down
+            popOverPresentationController.sourceView = self.view
+            let popOverPos = CGRect(x: textField.frame.origin.x, y: textField.frame.origin.y - yOffset + 20, width: textField.bounds.width, height: textField.bounds.height)
+            popOverPresentationController.sourceRect = popOverPos
+            popOverPresentationController.delegate = self as UIPopoverPresentationControllerDelegate
+            present(popOverController!, animated: true, completion: nil)
         }
         activeField = textField
     }
@@ -166,13 +190,18 @@ class ProfileCreationViewController: UIViewController, UINavigationControllerDel
         textField.resignFirstResponder()
         return true
     }
+    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
+        popOverController?.dismiss(animated: true, completion: {})
+    }
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         textView.inputAccessoryView = toolbar
         return true
     }
     func textViewDidBeginEditing(_ textView: UITextView)
     {
-        textView.text = ""
+        if textView.text == "Bio" {
+            textView.text = ""
+        }
         activeField = textView
     }
     func textViewDidEndEditing(_ textView: UITextView) {
@@ -186,6 +215,12 @@ class ProfileCreationViewController: UIViewController, UINavigationControllerDel
     }
     @IBAction func toolbarButtonTapped(_ sender: Any) {
         view.endEditing(true)
+    }
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
+    func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
+        return true
     }
     @IBAction func profileDone(_ sender: Any) {
         //if name was left blank, show alert

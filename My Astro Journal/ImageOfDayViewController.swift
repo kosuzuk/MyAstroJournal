@@ -9,6 +9,7 @@
 import UIKit
 import FirebaseFirestore
 import SwiftKeychainWrapper
+import DropDown
 
 infix operator £
 //returns true if time1 is earlier than time2
@@ -41,7 +42,7 @@ func £(comment1: Dictionary<String, String>, comment2: Dictionary<String, Strin
     return true
 }
 
-class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate, UIScrollViewDelegate {
+class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableViewDelegate, UITableViewDataSource, UITextViewDelegate {
     @IBOutlet var toolbar: UIToolbar!
     @IBOutlet weak var background: UIImageView!
     @IBOutlet weak var border: UIImageView!
@@ -51,6 +52,9 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
     @IBOutlet weak var locationIcon: UIImageView!
     @IBOutlet weak var locationField: UILabel!
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var telescopeField: UILabel!
+    @IBOutlet weak var mountField: UILabel!
+    @IBOutlet weak var cameraField: UILabel!
     @IBOutlet weak var likeButton: UIButton!
     @IBOutlet weak var numLikes: UIButton!
     @IBOutlet weak var numComments: UILabel!
@@ -61,9 +65,6 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
     @IBOutlet weak var userImage: UIImageView!
     @IBOutlet weak var nameField: UILabel!
     @IBOutlet weak var bioField: UITextView!
-    @IBOutlet weak var telescopeField: UILabel!
-    @IBOutlet weak var mountField: UILabel!
-    @IBOutlet weak var cameraField: UILabel!
     @IBOutlet weak var statsHoursLabel: UITextView!
     @IBOutlet weak var statsFeaturedLabel: UITextView!
     @IBOutlet weak var statsSeenLabel: UITextView!
@@ -76,6 +77,7 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
     @IBOutlet weak var contentViewHCipad: NSLayoutConstraint!
     @IBOutlet weak var locationFieldWC: NSLayoutConstraint!
     @IBOutlet weak var locationFieldWCipad: NSLayoutConstraint!
+    @IBOutlet weak var mountFieldWC: NSLayoutConstraint!
     @IBOutlet weak var commentInputHC: NSLayoutConstraint!
     @IBOutlet weak var imageViewWC: NSLayoutConstraint!
     @IBOutlet weak var imageViewHCipad: NSLayoutConstraint!
@@ -92,7 +94,6 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
     @IBOutlet weak var youtubeWCipad: NSLayoutConstraint!
     @IBOutlet weak var fbWCipad: NSLayoutConstraint!
     @IBOutlet weak var statsLabelLeadingCipad: NSLayoutConstraint!
-    @IBOutlet weak var mountFieldWC: NSLayoutConstraint!
     @IBOutlet weak var circle1TrailingC: NSLayoutConstraint!
     @IBOutlet weak var circle2LeadingC: NSLayoutConstraint!
     @IBOutlet weak var hoursLabelTopC: NSLayoutConstraint!
@@ -104,34 +105,33 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
     var iodUserKey = ""
     var userData: Dictionary<String, Any>? = nil
     var featuredDate = ""
+    let format = DateFormatter()
+    var notEditable = false
     var likesList: [String] = []
     var commentsList: [Dictionary<String, String>] = []
     var basicUserDataDict: Dictionary<String, Dictionary<String, Any>> = Dictionary()
     var currentUserKey: String = ""
     var imageLiked = false
-    var keyForDifferentProfile = ""
     var iodEntryListener: ListenerRegistration? = nil
     var iodUserListener: ListenerRegistration? = nil
     var likesListener: ListenerRegistration? = nil
     var likesListenerInitiated = false
     var commentsListener: ListenerRegistration? = nil
     var commentsListenerInitiated = false
-    let format = DateFormatter()
-    var notEditable = false
+    var telescopeDD: DropDown? = nil
+    var mountDD: DropDown? = nil
+    var cameraDD: DropDown? = nil
     var sentEvenNumComments = true
     var locationWidthDefault = CGFloat(0)
     var commentTextViewHeightDefault = 36
     var commentInputHeightMax = CGFloat(85)
     var commentsTableViewWidth = CGFloat(0)
-    var commentInputHeightDefault = CGFloat(0)
     var commentFontName = "Helvetica Neue"
     var commentFontSize = 14
     var commentFontAttributes: [NSAttributedString.Key : Any]? = nil
     var keyBoardH = CGFloat(0.0)
+    var keyForDifferentProfile = ""
     let application = UIApplication.shared
-    var telescopeLink = ""
-    var mountLink = ""
-    var cameraLink = ""
     var cvc: CalendarViewController? = nil
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -156,15 +156,15 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
         commentSendButton.isUserInteractionEnabled = false
         imageView.layer.borderColor = UIColor.orange.cgColor
         imageView.layer.borderWidth = 1.5
-        bioField.layer.borderColor = UIColor.gray.cgColor
-        bioField.layer.borderWidth = 1
         commentsTableView.layer.borderColor = UIColor.gray.cgColor
         commentsTableView.layer.borderWidth = 2
         commentInputTextView.layer.borderColor = UIColor.gray.cgColor
         commentInputTextView.layer.borderWidth = 1
-        commentInputTextView.delegate = (self as UITextViewDelegate)
         commentInputTextView.autocorrectionType = .yes
+        bioField.layer.borderColor = UIColor.gray.cgColor
+        bioField.layer.borderWidth = 1
         scrollView.delegate = (self as UIScrollViewDelegate)
+        commentInputTextView.delegate = (self as UITextViewDelegate)
         format.timeZone = TimeZone(abbreviation: "PDT")!
         format.dateFormat = "dd-HH:mm:ss"
         if notEditable {
@@ -229,10 +229,26 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
                 let mountString = (data["mount"] as! String)
                 let cameraString = (data["camera"] as! String)
                 
+                func setUpDD(dd: inout DropDown?, anchorView: UILabel, ddString: String, eqLink: String) {
+                    dd = DropDown()
+                    dd!.backgroundColor = .darkGray
+                    dd!.textColor = .white
+                    dd!.textFont = UIFont(name: "Pacifica Condensed", size: 13)!
+                    dd!.separatorColor = .clear
+                    dd!.cellHeight = 34
+                    dd!.cornerRadius = 10
+                    dd!.anchorView = anchorView
+                    dd!.bottomOffset = CGPoint(x: 0, y: 35)
+                    dd!.dataSource = [ddString]
+                    dd!.selectionAction = {(index: Int, item: String) in
+                        self.application.open(NSURL(string: eqLink)! as URL)
+                    }
+                }
+                
                 func checkEq(_ eqType: String) {
+                    var field = self.telescopeField
                     var eqString = ""
                     var eqNames: [String: [String]] = [:]
-                    var field = self.telescopeField
                     var eqLinks: [String: String] = [:]
                     if eqType == "telescope" {
                         eqString = telescopeString
@@ -257,8 +273,6 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
                     var i = 0
                     if eqString.prefix(20) == "Moravian Instruments" {
                         i = 20
-                    } else if eqString.prefix(29) == "Orion Telescopes & Binoculars" {
-                        i = 29
                     } else if eqString.prefix(18) == "Explore Scientific" {
                         i = 18
                     } else if eqString.prefix(24) == "Officina Stellare Veloce" {
@@ -289,11 +303,11 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
                         field!.addGestureRecognizer(tap)
                         field!.textColor = UIColor(red: 0.3, green: 0.6, blue: 0.8, alpha: 1)
                         if eqType == "telescope" {
-                            self.telescopeLink = eqLinks[String(eqString.prefix(i))]!
+                            setUpDD(dd: &self.telescopeDD, anchorView: self.telescopeField, ddString: "shop " + brand + " telescopes", eqLink: eqLinks[String(eqString.prefix(i))]!)
                         } else if eqType == "mount" {
-                            self.mountLink = eqLinks[String(eqString.prefix(i))]!
+                            setUpDD(dd: &self.mountDD, anchorView: self.mountField, ddString: "shop " + brand + " mounts", eqLink: eqLinks[String(eqString.prefix(i))]!)
                         } else if eqType == "camera" {
-                            self.cameraLink = eqLinks[String(eqString.prefix(i))]!
+                            setUpDD(dd: &self.cameraDD, anchorView: self.cameraField, ddString: "shop " + brand + " cameras", eqLink: eqLinks[String(eqString.prefix(i))]!)
                         }
                     }
                 }
@@ -548,7 +562,6 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
             imageViewHCipad.constant = scale
             contentViewHCipad.constant = 1480 + scale
         }
-        commentInputHeightDefault = commentInputHC.constant
         imageView.isHidden = false
         keyForDifferentProfile = ""
     }
@@ -619,8 +632,7 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
     @IBAction func imageTapped(_ sender: Any) {
         let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "FullImageViewController") as! FullImageViewController
         self.addChild(popOverVC)
-        let f = self.view.frame
-        popOverVC.view.frame = CGRect(x: 0, y: 0, width: f.width, height: f.height)
+        popOverVC.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         self.view.addSubview(popOverVC.view)
         popOverVC.imageView.image = imageView.image
         popOverVC.didMove(toParent: self)
@@ -669,15 +681,9 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
         scrollView.setContentOffset(CGPoint(x: 0, y: commentInputTextView.frame.origin.y - scrollView.bounds.height + keyBoardH + commentInputHeightMax - 30), animated: true)
     }
     func textViewDidChange(_ textView: UITextView) {
-        if textView.text! == "" {
-            commentInputHC.constant = commentInputHeightDefault
-        } else {
-            let numLines = getNumLines(str: textView.text!, fontAttr: commentFontAttributes!, containerW: commentInputTextView.bounds.width)
-            var newH = commentInputHeightDefault / 2 * CGFloat((numLines + 1))
-            if newH > commentInputHeightMax {
-               newH = commentInputHeightMax
-            }
-            commentInputHC.constant = newH
+        commentInputHC.constant = textView.contentSize.height
+        if commentInputHC.constant > commentInputHeightMax {
+           commentInputHC.constant = commentInputHeightMax
         }
     }
     @IBAction func toolBarItemTapped(_ sender: Any) {
@@ -685,6 +691,15 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         commentInputTextView.resignFirstResponder()
+    }
+    @objc func eqTapped(sender: UIGestureRecognizer) {
+        if sender.view == telescopeField {
+            telescopeDD!.show()
+        } else if sender.view == mountField {
+            mountDD!.show()
+        } else if sender.view == cameraField {
+            cameraDD!.show()
+        }
     }
     @IBAction func commentSendButtonTapped(_ sender: Any) {
         let inp = commentInputTextView.text!.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -706,7 +721,6 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
         }
         sentEvenNumComments = !sentEvenNumComments
         commentInputTextView.text = ""
-        commentInputHC.constant = commentInputHeightDefault
         let timeStamp = format.string(from: Date())
         commentsList.append(["userKey": currentUserKey, "comment": inp, "timeStamp": timeStamp])
         let listCount = commentsList.count
@@ -770,17 +784,6 @@ class ImageOfDayViewController: UIViewController, UITableViewDelegate, UITableVi
         } else {
             application.open(webURL as URL)
         }
-    }
-    @objc func eqTapped(sender: UIGestureRecognizer) {
-        var url = ""
-        if sender.view == telescopeField {
-            url = telescopeLink
-        } else if sender.view == mountField {
-            url = mountLink
-        } else if sender.view == cameraField {
-            url = cameraLink
-        }
-        application.open(NSURL(string: url)! as URL)
     }
     override func willMove(toParent parent: UIViewController?) {
         if likesListenerInitiated {

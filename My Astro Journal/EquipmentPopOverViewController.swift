@@ -10,11 +10,14 @@ import UIKit
 
 class EquipmentPopOverViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var eqTableView: UITableView!
+    let viewW = CGFloat(245)
+    let viewH = CGFloat(170)
     var displayingBrands = true
     var eqType = ""
     var brandList: [String] = []
     var selectedBrand = ""
     var nameList: [String] = []
+    var pcvc: ProfileCreationViewController? = nil
     var pevc: ProfileEditViewController? = nil
     
     override func viewDidLoad() {
@@ -49,19 +52,20 @@ class EquipmentPopOverViewController: UIViewController, UITableViewDelegate, UIT
             }
             nameList.insert("    back", at: 0)
             displayingBrands = false
-            for view in self.view.subviews {view.frame.origin.x += self.pevc!.popOverW}
+            for view in self.view.subviews {view.frame.origin.x += self.viewW}
             self.eqTableView.reloadData()
-            UIView.animate(withDuration: 0.4, animations: {for view in self.view.subviews {view.frame.origin.x -= self.pevc!.popOverW}}, completion: nil)
+            UIView.animate(withDuration: 0.4, animations: {for view in self.view.subviews {view.frame.origin.x -= self.viewW}}, completion: nil)
         } else {
             //first ind is back button
             if ind == 0 {
                 nameList = []
                 displayingBrands = true
-                for view in self.view.subviews {view.frame.origin.x -= self.pevc!.popOverW}
+                for view in self.view.subviews {view.frame.origin.x -= self.viewW}
                 self.eqTableView.reloadData()
-                UIView.animate(withDuration: 0.4, animations: {for view in self.view.subviews {view.frame.origin.x += self.pevc!.popOverW}}, completion: nil)
+                UIView.animate(withDuration: 0.4, animations: {for view in self.view.subviews {view.frame.origin.x += self.viewW}}, completion: nil)
             } else {
-                pevc!.selectedEqName = selectedBrand + " " + nameList[ind]
+                pevc?.selectedEqName = selectedBrand + " " + nameList[ind]
+                pcvc?.selectedEqName = selectedBrand + " " + nameList[ind]
             }
         }
     }

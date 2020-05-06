@@ -299,7 +299,7 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
                         db.collection("userData").document(userDataCopyKey).setData(["userDataCopyKeys": userDataCopyKeys], merge: true)
                         newUserData["userDataCopyKeys"] = userDataCopyKeys
                         db.collection("userData").document(userKey).setData(newUserData, merge: true)
-                        let newIodData = ["imageKey": self.entryDataToSetAsIod["mainImageKey"]!, "journalEntryInd": self.entryDataToSetAsIod["entryListInd"]!, "journalEntryListKey": entryKey, "userKey": userDataCopyKey]
+                        let newIodData = ["imageKey": self.entryDataToSetAsIod["mainImageKey"]!, "journalEntryInd": self.entryDataToSetAsIod["entryListInd"]!, "journalEntryListKey": entryKey, "userKey": userDataCopyKey, "formattedTarget": self.entryDataToSetAsIod["formattedTarget"] as! String]
                         db.collection("imageOfDayKeys").document(self.dateToSetAsIod).setData(newIodData, merge: false) {err in
                                 if let err = err {
                                     print("Error updating iod keys data: \(err)")
@@ -339,7 +339,7 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
     }
     
     func checkData() {
-        if !isValidDate(date: dateToSetAsIod) || !isEarlierDate(date1: dateToday, date2: dateToSetAsIod) {
+        if !isValidDate(date: dateToSetAsIod) {//|| !isEarlierDate(date1: dateToday, date2: dateToSetAsIod) {
             let alertController = UIAlertController(title: "Error", message: "Invalid date", preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
             alertController.addAction(defaultAction)

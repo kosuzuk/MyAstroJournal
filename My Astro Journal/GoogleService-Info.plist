@@ -2,20 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>instagram</string>
-		<string>facebook</string>
-		<string>youtube</string>
-	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<true/>
-	<key>UIStatusBarStyle</key>
-	<string>UIStatusBarStyleLightContent</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCwtkxPamdxDOqKbwJw6HU-J-Qhi7xi8_k</string>
+	<string>AIzaSyBEpUJleIIR_F7Nzg7ZJEiNU_3oGZLJTyk</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.Star-Journal</string>
+	<string>com.GalacticHunter.My-Astro-Journal</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -25,13 +15,13 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>CLIENT_ID</key>
-	<string>929675085624-go7o9jpqcmih9ttvg123p9otl775logq.apps.googleusercontent.com</string>
+	<string>15009773027-2abul2cghtrifuqp0lb2s7g1fie891eh.apps.googleusercontent.com</string>
 	<key>DATABASE_URL</key>
-	<string>https://star-journal.firebaseio.com</string>
+	<string>https://my-astro-journal-fe0ee.firebaseio.com</string>
 	<key>GCM_SENDER_ID</key>
-	<string>929675085624</string>
+	<string>15009773027</string>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:929675085624:ios:3e4a2518795eb985</string>
+	<string>1:15009773027:ios:fe5b925bc56fd14eba5cd6</string>
 	<key>IS_ADS_ENABLED</key>
 	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -42,19 +32,29 @@
 	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
 	<true/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>instagram</string>
+		<string>facebook</string>
+		<string>youtube</string>
+	</array>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>PROJECT_ID</key>
-	<string>star-journal</string>
+	<string>my-astro-journal-fe0ee</string>
 	<key>REVERSED_CLIENT_ID</key>
 	<string>com.googleusercontent.apps.929675085624-go7o9jpqcmih9ttvg123p9otl775logq</string>
 	<key>STORAGE_BUCKET</key>
-	<string>star-journal.appspot.com</string>
+	<string>my-astro-journal-fe0ee.appspot.com</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array/>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<true/>
 </dict>
 </plist>

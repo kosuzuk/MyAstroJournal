@@ -437,8 +437,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
         if (userData["profileImageKey"] as! String != "") {
             let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "FullImageViewController") as! FullImageViewController
             self.addChild(popOverVC)
-            let f = self.view.frame
-            popOverVC.view.frame = CGRect(x: 0, y: 0, width: f.width, height: f.height)
+            popOverVC.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
             self.view.addSubview(popOverVC.view)
             popOverVC.imageView.image = userImage.image
             popOverVC.didMove(toParent: self)

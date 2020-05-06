@@ -11,10 +11,15 @@ import UIKit
 class PacksCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var descriptionTextView: UITextView!
+    @IBOutlet weak var moreInfoButton: UIButton!
+    @IBOutlet weak var priceButton: UIButton!
+    var ind = 0
+    var aovc: AddOnsViewController? = nil
+    
     @IBAction func moreInfoButtonTapped(_ sender: Any) {
-        print(1)
+        aovc!.packShowMoreInfo(ind)
     }
     @IBAction func priceButtonTapped(_ sender: Any) {
-        print(2)
+        
     }
 }
