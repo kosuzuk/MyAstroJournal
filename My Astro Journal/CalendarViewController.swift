@@ -270,7 +270,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                     db.collection("userData").document(userKey).updateData(["featuredAlertDates": alertDates])
                 }
                 self.userAlertDates = alertDates
-                if (userData["email"] as! String) != "nevadaastrophotography@gmail.com" {
+                if (userData["email"] as! String) == "nevadaastrophotography@gmail.com" {
                     self.antoinePowersButton.isHidden = false
                     db.collection("iodDeletedNotifications").addSnapshotListener(includeMetadataChanges: true, listener: {(snapshot, Error) in
                         if Error != nil {
