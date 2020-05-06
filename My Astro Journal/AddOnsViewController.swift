@@ -61,7 +61,7 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
         popOverVC.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         self.view.addSubview(popOverVC.view)
         popOverVC.imageView.image = UIImage(named: "AddOns/" + "CardBacks/" + "Previews/" +  cardBackImageNumbers[ind])!
-        popOverVC.textView.text = "This add-on will add the " +  cardBackImageNames[ind] + "card back to your collection."
+        popOverVC.textView.text = "This add-on will add the \"" +  cardBackImageNames[ind] + "\" Card Back to your collection."
         popOverVC.didMove(toParent: self)
     }
 }

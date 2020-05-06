@@ -82,6 +82,11 @@ class CardGroupsViewController: UIViewController {
                     self.photoCardTargetDatesDict = (data["photoCardTargetDates"]! as! [String: [String]])
                     self.cardTargetDatesDict = (data["cardTargetDates"]! as! [String: [String]])
                     let featureDates = (data["userDataCopyKeys"]! as! [String: String]).keys
+                    if featureDates.count == 0 {
+                        loadingIcon.stopAnimating()
+                        endNoInput()
+                        self.doneLoading = true
+                    }
                     for date in featureDates {
                         if isEarlierDate(date1: date, date2: dateToday) {
                             self.numFeaturedDates += 1
@@ -110,7 +115,7 @@ class CardGroupsViewController: UIViewController {
             }
         })
         if firstTime {
-            let alertController = UIAlertController(title: "Tutorial", message: "This is where you will find your collection of cards. Cards unlock after adding new entries with images you are proud of. In the future,  each unlocked card will have their own page full of information!", preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Tutorial", message: "This is where you will find your collection of cards. Cards unlock after adding new entries with images you are proud of. In the future, each unlocked card will have their own page full of information!", preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
             alertController.addAction(defaultAction)
             self.present(alertController, animated: true, completion: nil)
