@@ -27,6 +27,7 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
     var cardsToDisplay: [String] = []
     var numUnlockedCards = 0
     var loaded = false
+    var featuredTargets: [String: String] = [:]
     var showingCard = false
     var curCardInd = 0
     var cardLastInd = 0
@@ -137,12 +138,6 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
         resetButton.isHidden = true
         searchIcon.isHidden = true
         cardCollectionView.isHidden = true
-        if firstTime {
-            let alertController = UIAlertController(title: "Tutorial", message: "This is where you will find your collection of cards. Cards unlock after entering new entries with images you are proud of. In the future,  each unlocked card will have their own page full of information!", preferredStyle: .alert)
-            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-            alertController.addAction(defaultAction)
-            self.present(alertController, animated: true, completion: nil)
-        }
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
@@ -169,6 +164,7 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
                 layout.minimumLineSpacing = 50
                 cardCollectionView.collectionViewLayout = layout
             }
+            cardCollectionView.contentOffset.y = 0.0
             cardCollectionView.isHidden = false
             loaded = true
         }
@@ -203,6 +199,11 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
             imageName = "UnlockedCards/" + imageName
         }
         cell.cardImageView.image = UIImage(named: imageName)
+        if featuredTargets[cardName] == nil {
+            cell.featuredIcon.isHidden = true
+        } else {
+            cell.featuredIcon.isHidden = false
+        }
         return cell
     }
     func search() {
@@ -250,8 +251,7 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
         cardVC = (UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CardViewController") as! CardViewController)
         let c = cardVC!
         self.addChild(c)
-        let f = self.view.frame
-        c.view.frame = CGRect(x: 0, y: 0, width: f.width, height: f.height)
+        c.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         self.view.addSubview(c.view)
         c.imageView.image = (cardCollectionView.cellForItem(at: indexPath!) as! CardCell).cardImageView.image
         let target = cardsToDisplay[indexPath!.row]
@@ -259,6 +259,9 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
         let photoDateList = photoCardTargetDatesDict[target]
         if photoDateList != nil {
             c.unlockedDate = photoDateList![photoDateList!.count - 1]
+        }
+        if featuredTargets[target] != nil {
+            c.featuredDate = featuredTargets[target]!
         }
         let dateList = cardTargetDatesDict[target]
         if dateList != nil {

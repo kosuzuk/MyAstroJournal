@@ -9,6 +9,7 @@
 import UIKit
 import FirebaseAuth
 import SwiftKeychainWrapper
+import DropDown
 
 class ProfileEditViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UITextViewDelegate, UIScrollViewDelegate, UIPopoverPresentationControllerDelegate {
     var profileViewController: ProfileViewController?
@@ -38,6 +39,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
     @IBOutlet weak var cameraField3: UITextField!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var doneButton: UIButton!
+    @IBOutlet weak var moreButton: UIButton!
     @IBOutlet var toolbar: UIToolbar!
     @IBOutlet weak var userImageTopCipad: NSLayoutConstraint!
     @IBOutlet weak var userImageLeadingCipad: NSLayoutConstraint!
@@ -46,7 +48,6 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
     @IBOutlet weak var favObjTrailingCipad: NSLayoutConstraint!
     @IBOutlet weak var dividerTopCipad: NSLayoutConstraint!
     @IBOutlet weak var mountFieldWC: NSLayoutConstraint!
-    @IBOutlet weak var updateEmailTrailingC: NSLayoutConstraint!
     var userKey = ""
     var userData: Dictionary<String, Any>! = nil
     var image: UIImage! = nil
@@ -55,8 +56,6 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
     var locationsVisited: [String] = []
     var activeField: UIView? = nil
     var eqFields: [UITextField] = []
-    let popOverW = CGFloat(245)
-    let popOverH = CGFloat(170)
     var popOverController: EquipmentPopOverViewController? = nil
     var selectedEqName = "" {
         didSet {
@@ -71,6 +70,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
     var imageData: Data? = nil
     var compressedImageData: Data? = nil
     var userDataCopyToChangeKeys: [String] = []
+    var moreOptionsDD: DropDown? = nil
     var pvc: ProfileViewController? = nil
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -87,7 +87,6 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
         else if screenH > 1000 {//ipads
             background.image = UIImage(named: "Profile/background-ipad")
             border.image = UIImage(named: "border-ipad")
-            updateEmailTrailingC.constant = 60
             if screenH < 1100 {//9.7
                 dividerTopCipad.constant = 5
             }
@@ -119,14 +118,62 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
             }
         }
         let linkFields = [websiteField, instaField, youtubeField, fbField]
-        let linkStarters = ["www.", "instagram.com/", "youtube.com/", "facebook.com/"]
+        let linkDomains = ["www.", "instagram.com/", "youtube.com/", "facebook.com/"]
         for i in 0..<4 {
             let font = UIFont(name: websiteField.font!.fontName, size: websiteField.font!.pointSize)
             let fontAttributes = [NSAttributedString.Key.font: font]
-            let size = (linkStarters[i] as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
+            let size = (linkDomains[i] as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
             let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: size.width, height: websiteField.bounds.height))
             linkFields[i]!.leftView = paddingView
             linkFields[i]!.leftViewMode = UITextField.ViewMode.always
+        }
+        moreOptionsDD = DropDown()
+        moreOptionsDD!.backgroundColor = .darkGray
+        moreOptionsDD!.textColor = .white
+        moreOptionsDD!.selectionBackgroundColor = .darkGray
+        moreOptionsDD!.selectedTextColor = .white
+        moreOptionsDD!.textFont = UIFont(name: "Pacifica Condensed", size: 15)!
+        moreOptionsDD!.separatorColor = .white
+        moreOptionsDD!.cellHeight = 34
+        moreOptionsDD!.cornerRadius = 10
+        moreOptionsDD!.anchorView = moreButton
+        moreOptionsDD!.bottomOffset = CGPoint(x: 0, y: -61)
+        moreOptionsDD!.dataSource = ["change email", "update password"]
+        moreOptionsDD!.selectionAction = {(index: Int, item: String) in
+            if index == 0 {
+                let alertController = UIAlertController(title: "Update Email", message: "Enter a new email address:", preferredStyle: .alert)
+                let confirmAction = UIAlertAction(title: "confirm", style: .destructive, handler: {(alertAction) in
+                    let currentUser = Auth.auth().currentUser
+                    currentUser!.updateEmail(to: alertController.textFields![0].text!) {error in
+                        if error != nil {
+                            let alertController = UIAlertController(title: "Error", message: error!.localizedDescription, preferredStyle: .alert)
+                            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                            alertController.addAction(defaultAction)
+                            self.present(alertController, animated: true, completion: nil)
+                        } else {
+                            db.collection("userData").document(self.userKey).setData(["email": alertController.textFields![0].text!], merge: true)
+                            print("email changed")
+                            let alertController = UIAlertController(title: "Success", message: "Your email has been successfully updated.", preferredStyle: .alert)
+                            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                            alertController.addAction(defaultAction)
+                            self.present(alertController, animated: true, completion: nil)
+                        }
+                    }
+                })
+                let cancelAction = UIAlertAction(title: "cancel", style: .cancel, handler: nil)
+                alertController.addAction(confirmAction)
+                alertController.addAction(cancelAction)
+                alertController.addTextField {(textField) in}
+                self.present(alertController, animated: true, completion: nil)
+            } else {
+                let userEmail = self.userData["email"] as! String
+                Auth.auth().sendPasswordReset(withEmail: userEmail) {_ in
+                    let alertController = UIAlertController(title: "Email Sent", message: "A password reset email has been sent to: " + userEmail, preferredStyle: .alert)
+                    let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                    alertController.addAction(defaultAction)
+                    self.present(alertController, animated: true, completion: nil)
+                }
+            }
         }
         
         nameField.text = (userData["userName"] as! String)
@@ -179,7 +226,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
             popOverController!.eqType = textField.accessibilityIdentifier!
             popOverController!.pevc = self
             popOverController!.modalPresentationStyle = .popover
-            popOverController!.preferredContentSize = CGSize(width: popOverW, height: popOverH)
+            popOverController!.preferredContentSize = CGSize(width: popOverController!.viewW, height: popOverController!.viewH)
             let popOverPresentationController = popOverController!.popoverPresentationController!
             popOverPresentationController.permittedArrowDirections = .down
             popOverPresentationController.sourceView = self.view
@@ -254,7 +301,8 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
     func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
         return true
     }
-    func popoverPresentationControllerDidDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) {
+    @IBAction func moreButtonTapped(_ sender: Any) {
+        moreOptionsDD!.show()
     }
     @IBAction func cancel(_ sender: Any) {
         pvc!.pevc = nil
@@ -274,6 +322,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
         loadingIcon.startAnimating()
         doneButton.isHidden = true
         cancelButton.isHidden = true
+        doneButton.isUserInteractionEnabled = false
         pvc!.profileChanged = true
         
         //check if there are any profile copies to update if user is currently or will be featured
@@ -437,32 +486,6 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
             }
             compressedDataRef.delete {error in}
         }
-    }
-    @IBAction func updateEmailButtonTapped(_ sender: Any) {
-        let alertController = UIAlertController(title: "Update Email", message: "Enter a new email address:", preferredStyle: .alert)
-        let confirmAction = UIAlertAction(title: "confirm", style: .destructive, handler: {(alertAction) in
-            let currentUser = Auth.auth().currentUser
-            currentUser!.updateEmail(to: alertController.textFields![0].text!) {error in
-                if error != nil {
-                    let alertController = UIAlertController(title: "Error", message: error!.localizedDescription, preferredStyle: .alert)
-                    let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-                    alertController.addAction(defaultAction)
-                    self.present(alertController, animated: true, completion: nil)
-                } else {
-                    db.collection("userData").document(self.userKey).setData(["email": alertController.textFields![0].text!], merge: true)
-                    print("email changed")
-                    let alertController = UIAlertController(title: "Success", message: "Your email has been successfully updated.", preferredStyle: .alert)
-                    let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-                    alertController.addAction(defaultAction)
-                    self.present(alertController, animated: true, completion: nil)
-                }
-            }
-        })
-        let cancelAction = UIAlertAction(title: "cancel", style: .cancel, handler: nil)
-        alertController.addAction(confirmAction)
-        alertController.addAction(cancelAction)
-        alertController.addTextField {(textField) in}
-        self.present(alertController, animated: true, completion: nil)
     }
 }
 

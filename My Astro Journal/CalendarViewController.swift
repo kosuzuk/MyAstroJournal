@@ -261,8 +261,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                             popOverVC.featuredDate = alertDate
                             popOverVC.cvc = self
                             self.addChild(popOverVC)
-                            let f = self.view.frame
-                            popOverVC.view.frame = CGRect(x: 0, y: 0, width: f.width, height: f.height)
+                            popOverVC.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
                             self.view.addSubview(popOverVC.view)
                             popOverVC.didMove(toParent: self)
                             alertDates.remove(at: alertDates.index(of: alertDate)!)
@@ -401,7 +400,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 }
                 self.imageOfDayKeysData = iodKeysData
                 if iodKeysData.count == 0 {
-                    print("empty iod data")
+                    print("empty iod keys data")
                     noIodData()
                     return
                 }
@@ -430,7 +429,11 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                     } else {
                         let data = QuerySnapshot!.data()
                         if data == nil {
-                            print("empty iod keys data")
+                            print("no iod entry doc found")
+                            noIodData()
+                            return
+                        } else if data!.count == 0 {
+                            print("empty iod entry data")
                             noIodData()
                             return
                         }
@@ -469,8 +472,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                         popOverVC.featuredDate = iodDocToShow.documentID
                         popOverVC.cvc = self
                         self.addChild(popOverVC)
-                        let f = self.view.frame
-                        popOverVC.view.frame = CGRect(x: 0, y: 0, width: f.width, height: f.height)
+                        popOverVC.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
                         self.view.addSubview(popOverVC.view)
                         popOverVC.didMove(toParent: self)
                         db.collection("userData").document(userKey).updateData(["featuredAlertDates": self.userAlertDates])
@@ -507,11 +509,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     func showUnlockAnimation(_ cardName: String) {
         let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CardUnlockedViewController") as! CardUnlockedViewController
         self.addChild(popOverVC)
-        let f = self.view.frame
-        popOverVC.view.frame = CGRect(x: 0, y: 0, width: f.width, height: f.height)
+        popOverVC.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         self.view.addSubview(popOverVC.view)
         popOverVC.unlockedDateLabel.text = monthNames[Int(unlockedDate.prefix(2))! - 1] + " " + String(Int(unlockedDate.prefix(4).suffix(2))!) + " " + String(unlockedDate.suffix(4))
-        unlockedDate = ""
         var formattedCardName = ""
         if Array(cardName)[1].isNumber {
             formattedCardName = "Messier/" + cardName.dropFirst()
@@ -559,7 +559,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             imageChangedDate = ""
         }
         if cardUnlocked != "" {
+            let othertarget = doubleTargets[cardUnlocked]
+            if othertarget != nil {
+                showUnlockAnimation(othertarget!)
+            }
             showUnlockAnimation(cardUnlocked)
+            unlockedDate = ""
             cardUnlocked = ""
         }
         calendarsListView.reloadData()
