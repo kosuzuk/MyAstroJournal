@@ -31,10 +31,10 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         if screenH < 600 {//iphone SE, 5s
-            contentViewHC.constant = 2310
+            contentViewHC.constant = 2330
             expandLabel.text = "expand catalog"
         } else if screenW < 400 {//iphone 8, 11
-            contentViewHC.constant = 2200
+            contentViewHC.constant = 2220
         } else if screenH > 1000 {//ipads
             background.image = UIImage(named: "Info/background-ipad")
             border.image = UIImage(named: "border-ipad")
