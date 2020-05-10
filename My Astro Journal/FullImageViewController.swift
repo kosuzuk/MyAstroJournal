@@ -13,7 +13,6 @@ class FullImageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
-        imageView.layer.shadowOpacity = 0.8
         showAnimate()
         removeButton.isHidden = true
     }

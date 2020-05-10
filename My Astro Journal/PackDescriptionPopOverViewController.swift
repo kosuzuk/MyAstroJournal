@@ -10,8 +10,24 @@ import UIKit
 
 class PackDescriptionPopOverViewController: UIViewController {
     @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var closeButton: UIButton!
+    @IBOutlet weak var textViewHC: NSLayoutConstraint!
+    @IBOutlet weak var closeButtonWC: NSLayoutConstraint!
     override func viewDidLoad() {
         super.viewDidLoad()
+        if screenH < 600 {//iphpone SE, 5s
+            textViewHC.constant = 300
+        } else if screenH > 1000 {//ipads
+            closeButtonWC.constant = 50
+            closeButton.titleLabel!.font = UIFont(name: "Helvetica Neue", size: 35)
+        }
+        if #available(iOS 13.3, *) {
+        } else {
+            closeButton.imageView!.image = nil
+            closeButton.setTitle("X", for: .normal)
+            closeButton.setTitleColor(.white, for: .normal)
+        }
+
         view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
         showAnimate()
     }

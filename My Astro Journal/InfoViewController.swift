@@ -31,7 +31,7 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         if screenH < 600 {//iphone SE, 5s
-            contentViewHC.constant = 2330
+            contentViewHC.constant = 2375
             expandLabel.text = "expand catalog"
         } else if screenW < 400 {//iphone 8, 11
             contentViewHC.constant = 2220

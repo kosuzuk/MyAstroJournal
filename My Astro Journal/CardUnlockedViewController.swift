@@ -4,9 +4,8 @@ class CardUnlockedViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var unlockedDateLabel: UILabel!
     @IBOutlet weak var imageViewWC: NSLayoutConstraint!
-    @IBOutlet weak var imageViewHC: NSLayoutConstraint!
     @IBOutlet weak var imageViewWCipad: NSLayoutConstraint!
-    @IBOutlet weak var imageViewHCipad: NSLayoutConstraint!
+    @IBOutlet weak var unlockedLabelTopC: NSLayoutConstraint!
     @IBOutlet weak var unlockedDateLabelBottomC: NSLayoutConstraint!
     @IBOutlet weak var unlockedDateLabelTrailingC: NSLayoutConstraint!
     @IBOutlet weak var unlockedDateLabelBottomCipad: NSLayoutConstraint!
@@ -18,35 +17,35 @@ class CardUnlockedViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
-        imageView.layer.shadowOpacity = 0.8
         if screenH < 600 {//iphone SE, 5s
-            imageViewWC.constant = 210
-            imageViewHC.constant = 313
+            imageViewWC.constant = 250
         }
         else if screenH > 800 && screenH < 1000 {//iphone 11, pro max
             imageViewWC.constant = 350
-            imageViewHC.constant = 522
         }
-        else if screenH > 700 {//ipads
+        else if screenH > 1000 {//ipads
             unlockedDateLabel.font = unlockedDateLabel.font.withSize(17)
-            if screenW > 1000 {//ipad 12.9
+            if screenH > 1300 {//ipad 12.9
                 imageViewWCipad.constant = 616
-                imageViewHCipad.constant = 920
             }
         }
         showAnimate()
     }
+    func adjustUnlockedDateLabelPos() {
+        let imageViewH = imageView.frame.size.height
+        let font = UIFont(name: unlockedDateLabel.font.fontName, size: unlockedDateLabel.font.pointSize)
+        let fontAttributes = [NSAttributedString.Key.font: font]
+        let size = (unlockedDateLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
+        unlockedDateLabelTrailingC.constant = -(imageViewH * 0.14) + size.width / 2
+        unlockedDateLabelBottomC.constant = -(imageViewH * 0.125) + size.height / 2
+        unlockedDateLabelTrailingCipad.constant = -(imageViewH * 0.14) + size.width / 2
+        unlockedDateLabelBottomCipad.constant = -(imageViewH * 0.13) + size.height / 2
+    }
     override func viewDidLayoutSubviews() {
-        unlockedDateLabelTrailingC.constant = -(imageView.frame.size.width * CGFloat(0.064))
         if screenH < 600 {//iphone SE, 5s
-            unlockedDateLabelTrailingC.constant = 5
+            unlockedLabelTopC.constant = 10
         }
-        unlockedDateLabelBottomC.constant = -(imageView.frame.size.height * 0.11)
-        unlockedDateLabelTrailingCipad.constant = -(imageView.frame.size.width * 0.064)
-        if screenH > 1300 {
-            unlockedDateLabelTrailingCipad.constant = -(imageView.frame.size.width * 0.1)
-        }
-        unlockedDateLabelBottomCipad.constant = -(imageView.frame.size.height * 0.122)
+        adjustUnlockedDateLabelPos()
     }
     func showAnimate() {
         self.view.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)

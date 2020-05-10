@@ -9,8 +9,9 @@
 import UIKit
 import SwiftKeychainWrapper
 
-class CardGroupsViewController: UIViewController {
+class CardGroupsViewController: UIViewController, UIPopoverPresentationControllerDelegate {
     @IBOutlet weak var background: UIImageView!
+    @IBOutlet weak var cardBacksButton: UIButton!
     @IBOutlet weak var catalogsLabelTopC: NSLayoutConstraint!
     @IBOutlet weak var categoriesLabelTopC: NSLayoutConstraint!
     @IBOutlet weak var galaxiesLeadingC: NSLayoutConstraint!
@@ -18,7 +19,7 @@ class CardGroupsViewController: UIViewController {
     @IBOutlet weak var galaxiesWC: NSLayoutConstraint!
     @IBOutlet weak var messierWCipad: NSLayoutConstraint!
     @IBOutlet weak var galaxiesWCipad: NSLayoutConstraint!
-    var groupChosen = ""
+    var userKey = ""
     var doneLoading = false
     var photoCardTargetDatesDict: [String: [String]]? = nil
     var cardTargetDatesDict: [String: [String]]? = nil
@@ -33,6 +34,8 @@ class CardGroupsViewController: UIViewController {
         }
     }
     var featuredTargets: [String: String] = [:]
+    var cardBackSelected = ""
+    var groupChosen = ""
     var catalogVC: CardCatalogViewController? = nil
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -68,7 +71,7 @@ class CardGroupsViewController: UIViewController {
                 galaxiesWCipad.constant *= 1.45
             }
         }
-        let userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
+        userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
         db.collection("userData").document(userKey).addSnapshotListener (includeMetadataChanges: true, listener: {(snapshot, Error) in
             if Error != nil {
                 print(Error!)
@@ -100,6 +103,7 @@ class CardGroupsViewController: UIViewController {
                             })
                         }
                     }
+                    self.cardBackSelected = (data["cardBackSelected"]! as! String)
                 } else {
                     //check if user entered or deleted entries
                     let newPhotoCardTargetDates = data["photoCardTargetDates"]! as! [String: [String]]
@@ -121,6 +125,34 @@ class CardGroupsViewController: UIViewController {
             self.present(alertController, animated: true, completion: nil)
         }
     }
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
+    func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
+        return true
+    }
+    @IBAction func cardBacksButtonTapped(_ sender: Any) {
+        let popOverController = self.storyboard!.instantiateViewController(withIdentifier: "CardBackBackgroundsPopOverViewController") as? CardBackBackgroundsPopOverViewController
+        popOverController!.modalPresentationStyle = .popover
+        var viewW = 295
+        var viewH = 395
+        if screenH < 600 {//iphone SE, 5s
+            viewH = 300
+        } else if screenH > 1000 {//ipads
+            viewW = 420
+            viewH = 650
+        }
+        popOverController!.preferredContentSize = CGSize(width: viewW, height: viewH)
+        popOverController!.cgvc = self
+        popOverController!.userKey = userKey
+        let popOverPresentationController = popOverController!.popoverPresentationController!
+        popOverPresentationController.permittedArrowDirections = .up
+        popOverPresentationController.sourceView = self.view
+        let popOverPos = CGRect(x: cardBacksButton.frame.origin.x, y: cardBacksButton.frame.origin.y, width: cardBacksButton.bounds.width, height: cardBacksButton.bounds.height)
+        popOverPresentationController.sourceRect = popOverPos
+        popOverPresentationController.delegate = self as UIPopoverPresentationControllerDelegate
+        present(popOverController!, animated: true, completion: nil)
+    }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination as? CardCatalogViewController
         if vc != nil {
@@ -128,6 +160,7 @@ class CardGroupsViewController: UIViewController {
             vc?.photoCardTargetDatesDict = photoCardTargetDatesDict!
             vc?.cardTargetDatesDict = cardTargetDatesDict!
             vc?.featuredTargets = featuredTargets
+            vc?.cardBackSelected = cardBackSelected
             vc?.cgvc = self
             catalogVC = vc
         }

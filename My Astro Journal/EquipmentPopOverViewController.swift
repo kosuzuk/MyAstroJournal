@@ -54,7 +54,9 @@ class EquipmentPopOverViewController: UIViewController, UITableViewDelegate, UIT
             displayingBrands = false
             for view in self.view.subviews {view.frame.origin.x += self.viewW}
             self.eqTableView.reloadData()
-            UIView.animate(withDuration: 0.4, animations: {for view in self.view.subviews {view.frame.origin.x -= self.viewW}}, completion: nil)
+            UIView.animate(withDuration: 0.4, animations: {
+                for view in self.view.subviews {view.frame.origin.x -= self.viewW}
+            }, completion: nil)
         } else {
             //first ind is back button
             if ind == 0 {
@@ -62,7 +64,9 @@ class EquipmentPopOverViewController: UIViewController, UITableViewDelegate, UIT
                 displayingBrands = true
                 for view in self.view.subviews {view.frame.origin.x -= self.viewW}
                 self.eqTableView.reloadData()
-                UIView.animate(withDuration: 0.4, animations: {for view in self.view.subviews {view.frame.origin.x += self.viewW}}, completion: nil)
+                UIView.animate(withDuration: 0.4, animations: {
+                    for view in self.view.subviews {view.frame.origin.x += self.viewW}
+                }, completion: nil)
             } else {
                 pevc?.selectedEqName = selectedBrand + " " + nameList[ind]
                 pcvc?.selectedEqName = selectedBrand + " " + nameList[ind]

@@ -13,13 +13,20 @@ import DropDown
 
 class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     @IBOutlet weak var calendarMonthYear: UILabel!
-    @IBOutlet weak var weekdays: UILabel!
     @IBOutlet weak var calendarView: UICollectionView!
+    @IBOutlet weak var sunLabel: UILabel!
+    @IBOutlet weak var sunLabelLeadingC: NSLayoutConstraint!
+    @IBOutlet weak var monLabelLeadingC: NSLayoutConstraint!
+    @IBOutlet weak var tuesLabelLeadingC: NSLayoutConstraint!
+    @IBOutlet weak var wedLabelLeadingC: NSLayoutConstraint!
+    @IBOutlet weak var thursLabelLeadingC: NSLayoutConstraint!
+    @IBOutlet weak var friLabelLeadingC: NSLayoutConstraint!
+    @IBOutlet weak var satLabelLeadingC: NSLayoutConstraint!
     var calendarMonthString = ""
     var calendarYearString = ""
+    var sunLabelW = CGFloat(0)
     var firstDayOffset = 0
     var numDays = 0
-    var cvc: CalendarViewController? = nil
     var curRow = -1 {
         didSet {
             if curRow != -1 {
@@ -44,22 +51,10 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
             }
         }
     }
-    let userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
+    var cvc: CalendarViewController? = nil
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        let weekdayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-        let numSpaces = Int((screenW - (50000 / screenW)) / 45)
-        var spaces = ""
-        for _ in 0...numSpaces - 1 {
-            spaces += " "
-        }
-        var weekdaysText = ""
-        for weekday in weekdayNames {
-            weekdaysText += weekday + spaces
-        }
-        weekdays.text = weekdaysText
-        
         let tap = UITapGestureRecognizer(target: self, action: #selector(calendarTapped))
         calendarView.addGestureRecognizer(tap)
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
@@ -67,10 +62,21 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
         layout.minimumLineSpacing = 0
         layout.sectionInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         calendarView.collectionViewLayout = layout
+        let font = UIFont(name: sunLabel.font.fontName, size: sunLabel.font.pointSize)
+        let fontAttributes = [NSAttributedString.Key.font: font]
+        sunLabelW = (sunLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any]).width
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
     {
-       return CGSize(width: floor(calendarView.bounds.width / 7), height: floor(calendarView.bounds.height / 6))
+        if indexPath.row == 0 {
+            let cellW = floor(calendarView.bounds.width / 7)
+            sunLabelLeadingC.constant = cellW / 2 - sunLabelW / 2
+            for c in [monLabelLeadingC, tuesLabelLeadingC, wedLabelLeadingC, thursLabelLeadingC, friLabelLeadingC] {
+                c!.constant = cellW - sunLabelW
+            }
+            satLabelLeadingC.constant = cellW - sunLabelW + 7
+        }
+        return CGSize(width: floor(calendarView.bounds.width / 7), height: floor(calendarView.bounds.height / 6))
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if numDays + firstDayOffset < 36 {
@@ -123,6 +129,7 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
             return
         }
         let cell = calendarView.cellForItem(at: indexPath!) as! CalendarCell
+        let userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
         if cvc!.newEntryMode && cell.cellLabel.text != "" {
             var cellDate = String(indexPath!.row - firstDayOffset + 1)
             if cellDate.count == 1 {
