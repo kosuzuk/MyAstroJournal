@@ -210,6 +210,8 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
     @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var welcomeLabel: UILabel!
+    @IBOutlet weak var myAstroLabel: UILabel!
     @IBOutlet weak var signUpEmailField: UITextField!
     @IBOutlet weak var signUpPasswordField: UITextField!
     @IBOutlet weak var signUpPasswordConfirmField: UITextField!
@@ -217,7 +219,7 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
     @IBOutlet weak var logInEmailField: UITextField!
     @IBOutlet weak var logInPasswordField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
-    @IBOutlet weak var  welcomeLabelLeadingC: NSLayoutConstraint!
+    @IBOutlet weak var welcomeLabelLeadingC: NSLayoutConstraint!
     @IBOutlet weak var welcomeLabelTopCipad: NSLayoutConstraint!
     @IBOutlet weak var paragraphTopCipad: NSLayoutConstraint!
     @IBOutlet weak var signUpButtonTrailingC: NSLayoutConstraint!
@@ -239,6 +241,8 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
         } else if screenH > 1000 {//ipads
             background.image = UIImage(named: "Welcome/background-ipad")
             border.image = UIImage(named: "border-ipad")
+            welcomeLabel.font = UIFont(name: "Pacifica Condensed", size: 26)
+            myAstroLabel.font = UIFont(name: "Pacifica Condensed", size: 26)
             forgotEmailTopC.constant = 50
             if screenH > 1050 {//10.5, 11, 12,9
                 paragraphTopCipad.constant = screenH * 0.05

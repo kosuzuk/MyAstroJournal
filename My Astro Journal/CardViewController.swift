@@ -7,19 +7,18 @@ class CardViewController: UIViewController {
     @IBOutlet weak var featuredIcon: UIButton!
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var unlockedDateLabel: UILabel!
+    @IBOutlet weak var backgroundImageView: UIImageView!
+    @IBOutlet weak var imageViewTopC: NSLayoutConstraint!
     @IBOutlet weak var imageViewHCipad: NSLayoutConstraint!
     @IBOutlet weak var unlockedDateLabelTrailingC: NSLayoutConstraint!
     @IBOutlet weak var unlockedDateLabelBottomC: NSLayoutConstraint!
     @IBOutlet weak var unlockedDateLabelTrailingCipad: NSLayoutConstraint!
     @IBOutlet weak var unlockedDateLabelBottomCipad: NSLayoutConstraint!
     var target = ""
-    var featuredDate = ""
-    var iodKeysData: [String: Any]? = nil
-    var iodImageData: UIImage? = nil
+    var cardImage: UIImage? = nil
     var unlockedDate: String = "" {
         didSet {
             if unlockedDate != "" {
-                unlockedDateLabel.isHidden = false
                 unlockedDateLabel.text = monthNames[Int(unlockedDate.prefix(2))! - 1] + " " + String(Int(unlockedDate.prefix(4).suffix(2))!) + " " + String(unlockedDate.suffix(4))
             }
         }
@@ -30,7 +29,6 @@ class CardViewController: UIViewController {
     var journalEntryDateList: [String] = [] {
         didSet {
             if journalEntryDateList != [] {
-                entryDatesButton.isHidden = false
                 journalEntryDateFormattedList = []
                 for date in journalEntryDateList {
                     let formattedDate = monthNames[Int(date.prefix(2))! - 1] + " " + String(Int(date.prefix(4).suffix(2))!) + " " + String(date.suffix(4))
@@ -64,9 +62,15 @@ class CardViewController: UIViewController {
             }
         }
     }
+    var featuredDate = ""
+    var iodKeysData: [String: Any]? = nil
+    var iodImageData: UIImage? = nil
     var selectedDate = ""
     var entryListData: [Dictionary<String, Any>]? = nil
-    var views: [UIView] = []
+    var frontDisplayed = true
+    var cardInfoImage: UIImage? = nil
+    var backgroundImage: UIImage? = nil
+    var items: [UIView] = []
     var catalogVC: CardCatalogViewController? = nil
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -84,65 +88,50 @@ class CardViewController: UIViewController {
     
     @objc func swipeWhileDDShowing(gesture: UIGestureRecognizer) {
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
-            switch swipeGesture.direction {
-                case UISwipeGestureRecognizer.Direction.right:
-                    entryDatesDropDown.hide()
-                    cardSwiped(swipeGesture)
-                case UISwipeGestureRecognizer.Direction.left:
-                    entryDatesDropDown.hide()
-                    cardSwiped(swipeGesture)
-                default:
-                    break
+            if swipeGesture.direction == UISwipeGestureRecognizer.Direction.left || swipeGesture.direction == UISwipeGestureRecognizer.Direction.right {
+                entryDatesDropDown.hide()
+                cardSwiped(swipeGesture)
             }
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
-        self.imageView.layer.shadowOpacity = 0.8
-        self.showAnimate()
-        entryDatesButton.isHidden = true
-        featuredIcon.isHidden = true
-        unlockedDateLabel.isHidden = true
-        if screenW > 700 {//ipads
+        if screenH < 600 {
+            imageViewTopC.constant = 5
+        }
+        else if screenH > 1000 {//ipads
             entryDatesButton.titleLabel?.font =  entryDatesButton.titleLabel?.font.withSize(22)
             unlockedDateLabel.font = unlockedDateLabel.font.withSize(18)
             if screenW > 1000 {//ipad 12.9
                 imageViewHCipad.constant = 970
             }
         }
-        views = [imageView, entryDatesButton, closeButton, unlockedDateLabel]
-        
+        self.view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
+        items = [imageView, entryDatesButton, closeButton, unlockedDateLabel, featuredIcon, backgroundImageView]
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(swipeWhileDDShowing))
         swipeRight.direction = UISwipeGestureRecognizer.Direction.right
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(swipeWhileDDShowing))
         swipeLeft.direction = UISwipeGestureRecognizer.Direction.left
         entryDatesDropDown.plainView.addGestureRecognizer(swipeRight)
         entryDatesDropDown.plainView.addGestureRecognizer(swipeLeft)
+        self.showAnimate()
+    }
+    func adjustUnlockedDateLabelPos() {
+        let imageViewH = imageView.frame.size.height
+        let font = UIFont(name: unlockedDateLabel.font.fontName, size: unlockedDateLabel.font.pointSize)
+        let fontAttributes = [NSAttributedString.Key.font: font]
+        let size = (unlockedDateLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
+        unlockedDateLabelTrailingC.constant = -(imageViewH * 0.14) + size.width / 2
+        unlockedDateLabelBottomC.constant = -(imageViewH * 0.125) + size.height / 2
+        unlockedDateLabelTrailingCipad.constant = -(imageViewH * 0.14) + size.width / 2
+        unlockedDateLabelBottomCipad.constant = -(imageViewH * 0.13) + size.height / 2
     }
     override func viewDidAppear(_ animated: Bool) {
-        let imageViewW = imageView.frame.size.width
-        let imageViewH = imageView.frame.size.height
-        unlockedDateLabelTrailingC.constant = -(imageViewW * 0.05)
-        if screenH < 600 {//iphone SE, 5s
-            unlockedDateLabelTrailingC.constant = 5
-        }
-        else if screenH < 700 {//8
-            unlockedDateLabelTrailingC.constant = -(imageViewW * 0.03)
-        }
-        else if screenH > 800 && screenH < 1000 {//
-            unlockedDateLabelTrailingC.constant = -(imageViewW * 0.067)
-        }
-        unlockedDateLabelBottomC.constant = -(imageViewH * 0.11)
-        unlockedDateLabelTrailingCipad.constant = -(imageViewW * 0.07)
-        if screenH > 1300 {
-            unlockedDateLabelTrailingCipad.constant = -(imageView.frame.size.width * 0.1)
-        }
-        unlockedDateLabelBottomCipad.constant = -(imageViewH * 0.11)
-        if featuredDate != "" {
-            featuredIcon.isHidden = false
-        }
+        adjustUnlockedDateLabelPos()
+        entryDatesButton.isHidden = journalEntryDateList == []
+        unlockedDateLabel.isHidden = unlockedDate == ""
+        featuredIcon.isHidden = featuredDate == ""
     }
     
     @IBAction func showEntryDates(_ sender: Any) {
@@ -171,25 +160,81 @@ class CardViewController: UIViewController {
             }
         })
     }
-    func moveR(_: Bool) {
-        for view in views {view.frame.origin.x -= screenW * 2}
-        catalogVC!.swipeDir = "right"
-        UIView.animate(withDuration: 0.2, animations: {for view in self.views {view.frame.origin.x += screenW}}, completion: nil)
+    @IBAction func flipCardButtonTapped(_ sender: Any) {
+        startNoInput()
+        closeButton.isHidden = true
+        if frontDisplayed {
+            entryDatesButton.isHidden = true
+            featuredIcon.isHidden = true
+            unlockedDateLabel.isHidden = true
+            UIView.animate(withDuration: 0.25, animations: {
+                self.imageView.transform = CGAffineTransform(scaleX: 0.001, y: 1)
+                self.backgroundImageView.transform = CGAffineTransform(scaleX: 0.001, y: 1)
+            }, completion: {_ in
+                self.imageView.image = self.cardInfoImage
+                self.backgroundImageView.image = self.backgroundImage
+                UIView.animate(withDuration: 0.25, animations: {
+                    self.imageView.transform = CGAffineTransform.identity
+                    self.backgroundImageView.transform = CGAffineTransform.identity
+                }, completion: {_ in
+                    self.closeButton.isHidden = false
+                    endNoInput()
+                })
+            })
+        } else {
+            UIView.animate(withDuration: 0.25, animations: {
+                self.imageView.transform = CGAffineTransform(scaleX: 0.001, y: 1)
+                self.backgroundImageView.transform = CGAffineTransform(scaleX: 0.001, y: 1)
+            }, completion: {_ in
+                self.imageView.image = self.cardImage
+                self.backgroundImageView.image = nil
+                UIView.animate(withDuration: 0.25, animations: {
+                    self.imageView.transform = CGAffineTransform.identity
+                    self.backgroundImageView.transform = CGAffineTransform.identity
+                }, completion: {_ in
+                    self.entryDatesButton.isHidden = self.journalEntryDateList == []
+                    self.featuredIcon.isHidden = self.featuredDate == ""
+                    self.unlockedDateLabel.isHidden = self.unlockedDate == ""
+                    self.closeButton.isHidden = false
+                    endNoInput()
+                })
+            })
+        }
+        frontDisplayed = !frontDisplayed
     }
     func moveL(_: Bool) {
-        for view in views {view.frame.origin.x += screenW * 2}
+        for item in items {item.frame.origin.x -= screenW * 2}
+        catalogVC!.swipeDir = "right"
+        UIView.animate(withDuration: 0.2, animations: {
+            for item in self.items {item.frame.origin.x += screenW}
+        }, completion: {_ in
+            self.frontDisplayed = true
+            self.adjustUnlockedDateLabelPos()
+        })
+    }
+    func moveR(_: Bool) {
+        for item in items {item.frame.origin.x += screenW * 2}
         catalogVC!.swipeDir = "left"
-        UIView.animate(withDuration: 0.2, animations: {for view in self.views {view.frame.origin.x -= screenW}}, completion: nil)
+        UIView.animate(withDuration: 0.2, animations: {
+            for item in self.items {item.frame.origin.x -= screenW}
+        }, completion: {_ in
+            self.frontDisplayed = true
+            self.adjustUnlockedDateLabelPos()
+        })
     }
     @IBAction func cardSwiped(_ gesture: UIGestureRecognizer) {
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             switch swipeGesture.direction {
                 case UISwipeGestureRecognizer.Direction.right:
                     if catalogVC!.curCardInd == 0 {break}
-                    UIView.animate(withDuration: 0.2, animations: {for view in self.views{view.frame.origin.x += screenW}}, completion: moveR)
+                    UIView.animate(withDuration: 0.2, animations: {
+                        for item in self.items {item.frame.origin.x += screenW}
+                    }, completion: moveL)
                 case UISwipeGestureRecognizer.Direction.left:
                     if catalogVC!.curCardInd == catalogVC!.cardLastInd {break}
-                    UIView.animate(withDuration: 0.2, animations: {for view in self.views{view.frame.origin.x -= screenW}}, completion: moveL)
+                    UIView.animate(withDuration: 0.2, animations: {
+                        for item in self.items {item.frame.origin.x -= screenW}
+                    }, completion: moveR)
                 default:
                     break
             }
@@ -200,13 +245,10 @@ class CardViewController: UIViewController {
         UIView.animate(withDuration: 0.25, animations: {
             self.view.transform = CGAffineTransform(scaleX: 1.3, y: 1.3)
             self.view.alpha = 0.0
-        }, completion:{(finished : Bool)  in
-            if (finished)
-            {
-                self.catalogVC?.cardJustClosed = true
-                self.catalogVC?.showingCard = false
-                self.view.removeFromSuperview()
-            }
+        }, completion: {_ in
+            self.catalogVC?.cardJustClosed = true
+            self.catalogVC?.showingCard = false
+            self.view.removeFromSuperview()
         })
     }
 

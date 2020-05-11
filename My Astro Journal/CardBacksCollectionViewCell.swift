@@ -19,8 +19,7 @@ class CardBacksCollectionViewCell: UICollectionViewCell {
     @IBAction func moreInfoButtonTapped(_ sender: Any) {
         aovc!.cardBackShowMoreInfo(ind)
     }
-    @IBAction func priceButtonTapped(_ sender: Any) {
-        
+    @IBAction func priceButtonTapped(_ sender: Any) {   
     }
 }
 

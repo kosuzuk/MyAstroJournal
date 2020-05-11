@@ -14,7 +14,6 @@ class CongratsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
-        imageView.layer.shadowOpacity = 0.8
         seeButton.isHidden = true
         showAnimate()
         db.collection("imageOfDayKeys").document(featuredDate).getDocument(completion: {(snapshot, Error) in

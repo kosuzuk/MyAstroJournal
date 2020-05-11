@@ -28,6 +28,7 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
     var numUnlockedCards = 0
     var loaded = false
     var featuredTargets: [String: String] = [:]
+    var cardBackSelected = ""
     var showingCard = false
     var curCardInd = 0
     var cardLastInd = 0
@@ -43,12 +44,14 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
                 cell = (collectionView(cardCollectionView, cellForItemAt: IndexPath(row: curCardInd, section: 0)) as! CardCell)
             }
             let c = cardVC!
-            c.imageView.image = cell!.cardImageView.image
+            c.cardImage = cell!.cardImageView.image
+            c.imageView.image = c.cardImage
             let target = cardsToDisplay[curCardInd]
             c.target = target
             let photoDateList = photoCardTargetDatesDict[target]
             if photoDateList == nil {
                 c.unlockedDateLabel.isHidden = true
+                c.unlockedDate = ""
             } else {
                 c.unlockedDateLabel.isHidden = false
                 c.unlockedDate = photoDateList![photoDateList!.count - 1]
@@ -56,10 +59,21 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
             let dateList = cardTargetDatesDict[target]
             if dateList == nil {
                 c.entryDatesButton.isHidden = true
+                c.journalEntryDateList = []
             } else {
                 c.entryDatesButton.isHidden = false
                 c.journalEntryDateList = dateList!
             }
+            if featuredTargets[target] == nil {
+                c.featuredIcon.isHidden = true
+                c.featuredDate = ""
+            } else {
+                c.featuredIcon.isHidden = false
+                c.featuredDate = featuredTargets[target]!
+            }
+            let imageName = "Catalog/CardBacks/Info/" + getTargetImageName(targetName: cardsToDisplay[curCardInd])
+            c.cardInfoImage = UIImage(named: imageName)!
+            c.backgroundImageView.image = nil
         }
     }
     var cardJustClosed = false {
@@ -181,25 +195,15 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CardCell", for: indexPath) as! CardCell
-        let i = indexPath.row
-        let cardName = cardsToDisplay[i]
-        var imageName = ""
-        if Array(cardName)[1].isNumber {
-            imageName = "Messier/" + cardName.dropFirst()
-        } else if cardName.prefix(3) == "NGC" {
-            imageName = "NGC/" + cardName.suffix(cardName.count - 3)
-        } else if cardName.prefix(2) == "IC" {
-            imageName = "IC/" + cardName.suffix(cardName.count - 2)
-        } else {
-            imageName = "Planets/" + cardName
-        }
-        if photoCardTargetDatesDict[cardName] == nil {
+        let target = cardsToDisplay[indexPath.row]
+        var imageName = getTargetImageName(targetName: target)
+        if photoCardTargetDatesDict[target] == nil {
             imageName = "LockedCards/" + imageName
         } else {
             imageName = "UnlockedCards/" + imageName
         }
         cell.cardImageView.image = UIImage(named: imageName)
-        if featuredTargets[cardName] == nil {
+        if featuredTargets[target] == nil {
             cell.featuredIcon.isHidden = true
         } else {
             cell.featuredIcon.isHidden = false
@@ -241,6 +245,17 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
             search()
         }
     }
+    func getTargetImageName(targetName: String) -> String {
+        if Array(targetName)[1].isNumber {
+            return "Messier/" + targetName.dropFirst()
+        } else if targetName.prefix(3) == "NGC" {
+            return "NGC/" + targetName.suffix(targetName.count - 3)
+        } else if targetName.prefix(2) == "IC" {
+            return "IC/" + targetName.suffix(targetName.count - 2)
+        } else {
+            return "Planets/" + targetName
+        }
+    }
     @IBAction func cardTapped(_ sender: UITapGestureRecognizer) {
         searchField.resignFirstResponder()
         let touch = sender.location(in: cardCollectionView)
@@ -253,9 +268,14 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
         self.addChild(c)
         c.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         self.view.addSubview(c.view)
-        c.imageView.image = (cardCollectionView.cellForItem(at: indexPath!) as! CardCell).cardImageView.image
+        c.cardImage = (cardCollectionView.cellForItem(at: indexPath!) as! CardCell).cardImageView.image
+        c.imageView.image = c.cardImage
         let target = cardsToDisplay[indexPath!.row]
         c.target = target
+        let dateList = cardTargetDatesDict[target]
+        if dateList != nil {
+            c.journalEntryDateList = dateList!
+        }
         let photoDateList = photoCardTargetDatesDict[target]
         if photoDateList != nil {
             c.unlockedDate = photoDateList![photoDateList!.count - 1]
@@ -263,12 +283,10 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
         if featuredTargets[target] != nil {
             c.featuredDate = featuredTargets[target]!
         }
-        let dateList = cardTargetDatesDict[target]
-        if dateList != nil {
-            c.journalEntryDateList = dateList!
-        }
-        let userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
-        c.userKey = userKey
+        c.userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
+        let imageName = "Catalog/CardBacks/Info/" + getTargetImageName(targetName: cardsToDisplay[indexPath!.row])
+        c.cardInfoImage = UIImage(named: imageName)!
+        c.backgroundImage = UIImage(named: "Catalog/CardBacks/Backgrounds/" + cardBackSelected)!
         c.catalogVC = self
         c.didMove(toParent: self)
         curCardInd = indexPath!.row
