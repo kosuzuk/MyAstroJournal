@@ -74,6 +74,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
     @IBOutlet weak var arrowWC: NSLayoutConstraint!
     @IBOutlet weak var targetFieldWC: NSLayoutConstraint!
     @IBOutlet weak var mountFieldWC: NSLayoutConstraint!
+    @IBOutlet weak var deleteEntryLeadingCipad: NSLayoutConstraint!
     var entryDate = ""
     var entryList: [Dictionary<String, Any>] = []
     var selectedEntryInd = 0
@@ -161,6 +162,9 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
             let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
             layout.itemSize = CGSize(width: imageCollectionView.bounds.height, height: imageCollectionView.bounds.height)
             imageCollectionView.collectionViewLayout = layout
+            if screenH > 1150 {
+                deleteEntryLeadingCipad.constant = 40
+            }
         }
         let monthInt = Int(entryDate.prefix(2))!
         let monthStr = monthNames[monthInt - 1]

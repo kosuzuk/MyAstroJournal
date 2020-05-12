@@ -286,7 +286,11 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
         c.userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
         let imageName = "Catalog/CardBacks/Info/" + getTargetImageName(targetName: cardsToDisplay[indexPath!.row])
         c.cardInfoImage = UIImage(named: imageName)!
-        c.backgroundImage = UIImage(named: "Catalog/CardBacks/Backgrounds/" + cardBackSelected)!
+        if Int(cardBackSelected)! < 6 {
+            c.backgroundImage = UIImage(named: "Catalog/CardBacks/Backgrounds/" + cardBackSelected)!
+        } else {
+            c.backgroundImage = UIImage(named: "AddOns/CardBacks/Backgrounds/" + cardBackSelected)
+        }
         c.catalogVC = self
         c.didMove(toParent: self)
         curCardInd = indexPath!.row

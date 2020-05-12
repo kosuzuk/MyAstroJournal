@@ -11,6 +11,8 @@ import SwiftKeychainWrapper
 
 class CardGroupsViewController: UIViewController, UIPopoverPresentationControllerDelegate {
     @IBOutlet weak var background: UIImageView!
+    @IBOutlet weak var catalogsLabel: UILabel!
+    @IBOutlet weak var categoriesLabel: UILabel!
     @IBOutlet weak var cardBacksButton: UIButton!
     @IBOutlet weak var catalogsLabelTopC: NSLayoutConstraint!
     @IBOutlet weak var categoriesLabelTopC: NSLayoutConstraint!
@@ -34,6 +36,8 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
         }
     }
     var featuredTargets: [String: String] = [:]
+    var unlockedPacks: [String] = []
+    var cardBacksUnlocked: [String] = []
     var cardBackSelected = ""
     var groupChosen = ""
     var catalogVC: CardCatalogViewController? = nil
@@ -60,15 +64,20 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
         }
         if (screenW > 400 && screenW < 440) {//8 plus and 11 pro max
             galaxiesLeadingC.constant = 50
-        }
-        else if screenH > 1150 {//ipads 11 and 12.9
+        } else if screenH > 1000 {//ipads
             background.image = UIImage(named: "CardGroups/background-ipad")
-            if screenH < 1300 {//ipad 11
-                messierWCipad.constant *= 1.25
-                galaxiesWCipad.constant *= 1.25
-            } else {
-                messierWCipad.constant *= 1.45
-                galaxiesWCipad.constant *= 1.45
+            catalogsLabel.font = UIFont(name: catalogsLabel.font.fontName, size: 30)
+            categoriesLabel.font = UIFont(name: categoriesLabel.font.fontName, size: 30)
+            if screenH > 1150 {//ipads 11 and 12.9
+                catalogsLabel.font = UIFont(name: catalogsLabel.font.fontName, size: 38)
+                categoriesLabel.font = UIFont(name: categoriesLabel.font.fontName, size: 38)
+                if screenH < 1300 {//ipad 11
+                    messierWCipad.constant *= 1.25
+                    galaxiesWCipad.constant *= 1.25
+                } else {
+                    messierWCipad.constant *= 1.45
+                    galaxiesWCipad.constant *= 1.45
+                }
             }
         }
         userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
@@ -104,6 +113,13 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
                         }
                     }
                     self.cardBackSelected = (data["cardBackSelected"]! as! String)
+                    let cardBacksUnlockedData = (data["cardBacksUnlocked"]! as! [String: Bool])
+                    for (cardBack, isUnlocked) in cardBacksUnlockedData {
+                        if isUnlocked {
+                            self.cardBacksUnlocked.append(cardBack)
+                        }
+                    }
+                    self.cardBacksUnlocked.sort()
                 } else {
                     //check if user entered or deleted entries
                     let newPhotoCardTargetDates = data["photoCardTargetDates"]! as! [String: [String]]
@@ -134,17 +150,19 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
     @IBAction func cardBacksButtonTapped(_ sender: Any) {
         let popOverController = self.storyboard!.instantiateViewController(withIdentifier: "CardBackBackgroundsPopOverViewController") as? CardBackBackgroundsPopOverViewController
         popOverController!.modalPresentationStyle = .popover
-        var viewW = 295
-        var viewH = 395
-        if screenH < 600 {//iphone SE, 5s
-            viewH = 300
-        } else if screenH > 1000 {//ipads
-            viewW = 420
-            viewH = 650
+        var viewW = 290
+        var viewH = 280
+        if screenH > 1000 {//ipads
+            viewW = 370
+            viewH = 340
+            if screenH > 1300 {//ipads
+                viewW = 440
+                viewH = 420
+            }
         }
         popOverController!.preferredContentSize = CGSize(width: viewW, height: viewH)
+        popOverController!.cardBacksUnlocked = cardBacksUnlocked
         popOverController!.cgvc = self
-        popOverController!.userKey = userKey
         let popOverPresentationController = popOverController!.popoverPresentationController!
         popOverPresentationController.permittedArrowDirections = .up
         popOverPresentationController.sourceView = self.view
