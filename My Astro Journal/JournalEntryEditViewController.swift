@@ -74,6 +74,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
     @IBOutlet weak var arrowWC: NSLayoutConstraint!
     @IBOutlet weak var targetFieldWC: NSLayoutConstraint!
     @IBOutlet weak var mountFieldWC: NSLayoutConstraint!
+    @IBOutlet weak var deleteEntryLeadingCipad: NSLayoutConstraint!
     var entryDate = ""
     var entryList: [Dictionary<String, Any>] = []
     var selectedEntryInd = 0
@@ -118,8 +119,6 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         dropDown.onTextField = textField // Your TextField
         dropDown.onView = self.view // ViewController's View
         dropDown.cellHeight = 34
-        //dropDownTop.showAlwaysOnTop = true
-        //To show dropdown always on top.
         dropDown.show {(str, index) in
             var commaInd = -1
             for (i, char) in textField.text!.enumerated() {
@@ -161,6 +160,9 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
             let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
             layout.itemSize = CGSize(width: imageCollectionView.bounds.height, height: imageCollectionView.bounds.height)
             imageCollectionView.collectionViewLayout = layout
+            if screenH > 1150 {
+                deleteEntryLeadingCipad.constant = 40
+            }
         }
         let monthInt = Int(entryDate.prefix(2))!
         let monthStr = monthNames[monthInt - 1]
@@ -245,7 +247,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
                 }
                 self.locationsVisited = docData["locationsVisited"] as! [String]
                 let eqData = docData["userEquipment"] as! Dictionary<String, [String]>
-                self.setAutoComp(self.targetField, ["Messier", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"], 0)
+                self.setAutoComp(self.targetField, ["Messier", "Sharpless", "SH2-", "Milky Way", "Rho Ophiuchi", "XSS J16271-2423", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"], 0)
                 self.setAutoComp(self.locationField, self.locationsVisited, 1)
                 self.setAutoComp(self.telescopeField, eqData["telescopes"]!, 2)
                 self.setAutoComp(self.mountField, eqData["mounts"]!, 2)
@@ -350,12 +352,16 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
         if textField == targetField && targetField.text != "" {
             let inp = formatTarget(inputTarget: targetField.text!)
-            if  inp.count > 1 && inp.prefix(1) == "M" && MessierConst[Int(String(inp.suffix(inp.count - 1))) ?? -1] != nil {
+            if  inp.prefix(1) == "M" && MessierConst[Int(String(inp.suffix(inp.count - 1))) ?? -1] != nil {
                 constellationField.text = MessierConst[Int(String(inp.suffix(inp.count - 1)))!]
-            } else if inp.count > 3 && inp.prefix(3) == "NGC" && NGCConst[Int(String(inp.suffix(inp.count - 3))) ?? -1] != nil {
+            } else if inp.prefix(3) == "NGC" && NGCConst[Int(String(inp.suffix(inp.count - 3))) ?? -1] != nil {
                 constellationField.text = NGCConst[Int(String(inp.suffix(inp.count - 3)))!]
-            } else if inp.count > 2 && inp.prefix(2) == "IC" && ICConst[Int(String(inp.suffix(inp.count - 2))) ?? -1] != nil {
+            } else if inp.prefix(2) == "IC" && ICConst[Int(String(inp.suffix(inp.count - 2))) ?? -1] != nil {
                 constellationField.text = ICConst[Int(String(inp.suffix(inp.count - 2)))!]
+            } else if inp.prefix(4) == "SH2-" && SharplessConst[Int(String(inp.suffix(inp.count - 4))) ?? -1] != nil {
+                constellationField.text = SharplessConst[Int(String(inp.suffix(inp.count - 4)))!]
+            } else if OthersConst[inp] != nil {
+                constellationField.text = OthersConst[inp]
             } else {
                 constellationField.text = ""
             }
@@ -605,7 +611,13 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
             if dict[t] == nil {
                 if dateDictType != "" {
                     dict[t] = [self.entryDate]
-                    if self.cvc?.cardUnlocked == "" && dateDictType == "photo" {
+                    //check if card unlocked animation should show
+                    var cardPurchased = true
+                    let packsUnlocked = userData["packsUnlocked"]! as! [String: Bool]
+                    if ((Pack1Targets.contains(t) && packsUnlocked["1"] == nil) || (Pack2Targets.contains(t) && packsUnlocked["2"] == nil) || (Pack3Targets.contains(t) && packsUnlocked["3"] == nil) || (Pack4Targets.contains(t) && packsUnlocked["4"] == nil)) {
+                        cardPurchased = false
+                    }
+                    if cardPurchased && self.cvc?.cardUnlocked == "" && dateDictType == "photo" {
                         self.cvc?.cardUnlocked = t
                         self.cvc?.unlockedDate = entryDate
                     }
@@ -730,7 +742,10 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         var totalHours = userData["totalHours"] as! Int
 
         func cardListContainsTarget(_ target: String) -> Bool {
-            return (target.count > 1 && target.prefix(1) == "M" &&  MessierTargets.contains(target)) || (target.count > 3 && target.prefix(3) == "NGC" &&  NGCTargets.contains(target)) || (target.count > 2 && target.prefix(2) == "IC" &&  ICTargets.contains(target)) || (PlanetTargets.contains(target))
+            for lst in [MessierTargets, NGCTargets, ICTargets, SharplessTargets, OthersTargets, PlanetTargets] {
+                if lst.contains(target) {return true}
+            }
+            return false
         }
         if entryData.count == 0 {
             if cardListContainsTarget(formattedTarget) {

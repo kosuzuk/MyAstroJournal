@@ -21,6 +21,7 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
     @IBOutlet weak var cvTrailingCipad: NSLayoutConstraint!
     @IBOutlet weak var cvLeadingCipad: NSLayoutConstraint!
     var group = ""
+    var packsUnlocked: [String] = []
     var cardTargetDatesDict: [String: [String]] = [:]
     var photoCardTargetDatesDict: [String: [String]] = [:]
     var availableCards: [String] = []
@@ -71,7 +72,7 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
                 c.featuredIcon.isHidden = false
                 c.featuredDate = featuredTargets[target]!
             }
-            let imageName = "Catalog/CardBacks/Info/" + getTargetImageName(targetName: cardsToDisplay[curCardInd])
+            let imageName = "Catalog/CardBacks/Info/" + formattedTargetToImageName(target: cardsToDisplay[curCardInd])
             c.cardInfoImage = UIImage(named: imageName)!
             c.backgroundImageView.image = nil
         }
@@ -114,29 +115,60 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
         searchField.delegate = (self as UITextFieldDelegate)
         searchField.autocorrectionType = .no
         switch group {
-        case "Messier":
-            bannerImage.image = UIImage(named: "Catalog/MessierBanner")
-            availableCards = MessierTargets
-        case "IC":
-            bannerImage.image = UIImage(named: "Catalog/ICBanner")
-            availableCards = ICTargets
-        case "NGC":
-            bannerImage.image = UIImage(named: "Catalog/NGCBanner")
-            availableCards = NGCTargets
-        case "Galaxies":
-            bannerImage.image = UIImage(named: "Catalog/GalaxiesBanner")
-            availableCards = GalaxyTargets
-        case "Nebulae":
-            bannerImage.image = UIImage(named: "Catalog/NebulaeBanner")
-            availableCards = NebulaTargets
-        case "Clusters":
-            bannerImage.image = UIImage(named: "Catalog/ClustersBanner")
-            availableCards = ClusterTargets
-        case "Planets":
-            bannerImage.image = UIImage(named: "Catalog/PlanetsBanner")
-            availableCards = PlanetTargets
-        default:
-            availableCards = []
+            case "Messier":
+                bannerImage.image = UIImage(named: "Catalog/MessierBanner")
+                availableCards = MessierTargets
+            case "IC":
+                bannerImage.image = UIImage(named: "Catalog/ICBanner")
+                availableCards = ICTargets
+            case "NGC":
+                bannerImage.image = UIImage(named: "Catalog/NGCBanner")
+                availableCards = NGCTargets
+            case "Sharpless":
+                bannerImage.image = UIImage(named: "Catalog/SharplessBanner")
+                availableCards = SharplessTargets
+            case "Others":
+                bannerImage.image = UIImage(named: "Catalog/OthersBanner")
+                availableCards = OthersTargets
+            case "Galaxies":
+                bannerImage.image = UIImage(named: "Catalog/GalaxiesBanner")
+                availableCards = GalaxyTargets
+            case "Nebulae":
+                bannerImage.image = UIImage(named: "Catalog/NebulaeBanner")
+                availableCards = NebulaTargets
+            case "Clusters":
+                bannerImage.image = UIImage(named: "Catalog/ClustersBanner")
+                availableCards = ClusterTargets
+            case "Planets":
+                bannerImage.image = UIImage(named: "Catalog/PlanetsBanner")
+                availableCards = PlanetTargets
+            default:
+                availableCards = []
+        }
+        if group != "Messier" {
+            //remove locked cards
+            var lockedCards = Set<String>()
+            if !packsUnlocked.contains("1") {
+                lockedCards = lockedCards.union(Pack1Targets)
+            }
+            if !packsUnlocked.contains("2") {
+                lockedCards = lockedCards.union(Pack2Targets)
+            }
+            if !packsUnlocked.contains("3") {
+                lockedCards = lockedCards.union(Pack3Targets)
+            }
+            if !packsUnlocked.contains("4") {
+                lockedCards = lockedCards.union(Pack4Targets)
+            }
+            let tempCards = availableCards
+            var ind = 0
+            for card in tempCards {
+                if lockedCards.contains(card) {
+                    availableCards.remove(at: ind)
+                } else {
+                    ind += 1
+                }
+            }
         }
         cardsToDisplay = availableCards
         cardLastInd = availableCards.count - 1
@@ -152,6 +184,15 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
         resetButton.isHidden = true
         searchIcon.isHidden = true
         cardCollectionView.isHidden = true
+        let dropDown = VPAutoComplete()
+        dropDown.dataSource = ["Messier", "Sharpless", "Milky Way", "Rho Ophiuchi"]
+        dropDown.onTextField = searchField
+        dropDown.onView = self.view
+        dropDown.cellHeight = 34
+        dropDown.frame.origin.y = searchField.frame.origin.y + 39
+        dropDown.show {(str, index) in
+            self.searchField.text = str
+        }
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
@@ -196,7 +237,7 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CardCell", for: indexPath) as! CardCell
         let target = cardsToDisplay[indexPath.row]
-        var imageName = getTargetImageName(targetName: target)
+        var imageName = formattedTargetToImageName(target: target)
         if photoCardTargetDatesDict[target] == nil {
             imageName = "LockedCards/" + imageName
         } else {
@@ -245,17 +286,6 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
             search()
         }
     }
-    func getTargetImageName(targetName: String) -> String {
-        if Array(targetName)[1].isNumber {
-            return "Messier/" + targetName.dropFirst()
-        } else if targetName.prefix(3) == "NGC" {
-            return "NGC/" + targetName.suffix(targetName.count - 3)
-        } else if targetName.prefix(2) == "IC" {
-            return "IC/" + targetName.suffix(targetName.count - 2)
-        } else {
-            return "Planets/" + targetName
-        }
-    }
     @IBAction func cardTapped(_ sender: UITapGestureRecognizer) {
         searchField.resignFirstResponder()
         let touch = sender.location(in: cardCollectionView)
@@ -284,9 +314,13 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
             c.featuredDate = featuredTargets[target]!
         }
         c.userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
-        let imageName = "Catalog/CardBacks/Info/" + getTargetImageName(targetName: cardsToDisplay[indexPath!.row])
+        let imageName = "Catalog/CardBacks/Info/" + formattedTargetToImageName(target: cardsToDisplay[indexPath!.row])
         c.cardInfoImage = UIImage(named: imageName)!
-        c.backgroundImage = UIImage(named: "Catalog/CardBacks/Backgrounds/" + cardBackSelected)!
+        if Int(cardBackSelected)! < 6 {
+            c.backgroundImage = UIImage(named: "Catalog/CardBacks/Backgrounds/" + cardBackSelected)!
+        } else {
+            c.backgroundImage = UIImage(named: "AddOns/CardBacks/Backgrounds/" + cardBackSelected)
+        }
         c.catalogVC = self
         c.didMove(toParent: self)
         curCardInd = indexPath!.row

@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "Sharpless card.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
+      "filename" : "Sharpless card new.png",
       "scale" : "2x"
     },
     {

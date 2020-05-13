@@ -22,13 +22,14 @@ class CardBackDescriptionPopOverViewController: UIViewController {
             imageViewHC.constant = 350
             imageViewYCenterC.constant = -20
         } else if screenH > 1000 {//ipads
-            imageViewHCipad.constant = 900
             closeButtonWC.constant = 50
             closeButton.titleLabel!.font = UIFont(name: "Helvetica Neue", size: 35)
+            if screenH > 1300 {
+                imageViewHCipad.constant = 900
+            }
         }
         if #available(iOS 13.3, *) {
         } else {
-            closeButton.imageView!.image = nil
             closeButton.setTitle("X", for: .normal)
             closeButton.setTitleColor(.white, for: .normal)
         }
