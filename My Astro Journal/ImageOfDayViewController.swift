@@ -200,14 +200,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                 }
                 let data = (snapshot?.data()!["data"] as! [[String: Any]])[self.entryInd]
                 self.entryData = data
-                var target = (data["formattedTarget"] as! String)
-                if target.count > 1 && target.prefix(1) == "M" && MessierConst[Int(String(target.suffix(target.count - 1))) ?? -1] != nil {
-                    target = "Messier " + String(target.suffix(target.count - 1))
-                } else if target.count > 3 && target.prefix(3) == "NGC" && NGCConst[Int(String(target.suffix(target.count - 3))) ?? -1] != nil {
-                    target = "NGC " + String(target.suffix(target.count - 3))
-                } else if target.count > 2 && target.prefix(2) == "IC" && ICConst[Int(String(target.suffix(target.count - 2))) ?? -1] != nil {
-                    target = "IC " + String(target.suffix(target.count - 2))
-                }
+                var target = formattedTargetToTargetName(target: (data["formattedTarget"] as! String))
                 self.targetField.text = target
                 let entryDate = String(self.entryKey.suffix(8))
                 self.dateField.text = monthNames[Int(entryDate.prefix(2))! - 1] + " " + String(Int(entryDate.prefix(4).suffix(2))!) + " " + String(entryDate.suffix(4))

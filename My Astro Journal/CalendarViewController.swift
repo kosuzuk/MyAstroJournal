@@ -512,17 +512,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         popOverVC.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         self.view.addSubview(popOverVC.view)
         popOverVC.unlockedDateLabel.text = monthNames[Int(unlockedDate.prefix(2))! - 1] + " " + String(Int(unlockedDate.prefix(4).suffix(2))!) + " " + String(unlockedDate.suffix(4))
-        var formattedCardName = ""
-        if Array(cardName)[1].isNumber {
-            formattedCardName = "Messier/" + cardName.dropFirst()
-        } else if cardName.prefix(3) == "NGC" {
-            formattedCardName = "NGC/" + cardName.suffix(cardName.count - 3)
-        } else if cardName.prefix(2) == "IC" {
-            formattedCardName = "IC/" + cardName.suffix(cardName.count - 2)
-        } else {
-            formattedCardName = "Planets/" + cardName
-        }
-        popOverVC.imageView.image = UIImage(named: "UnlockedCards/" + formattedCardName)
+        popOverVC.imageView.image = UIImage(named: "UnlockedCards/" + formattedTargetToImageName(target: cardName))
         popOverVC.didMove(toParent: self)
     }
     override func viewDidAppear(_ animated: Bool) {

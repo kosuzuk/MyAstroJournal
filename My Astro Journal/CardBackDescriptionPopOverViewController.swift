@@ -30,7 +30,6 @@ class CardBackDescriptionPopOverViewController: UIViewController {
         }
         if #available(iOS 13.3, *) {
         } else {
-            closeButton.imageView!.image = nil
             closeButton.setTitle("X", for: .normal)
             closeButton.setTitleColor(.white, for: .normal)
         }
