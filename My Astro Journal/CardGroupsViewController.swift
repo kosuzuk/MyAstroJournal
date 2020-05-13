@@ -37,6 +37,11 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
     var numFeaturedDatesLoaded = 0 {
         didSet {
             if numFeaturedDatesLoaded == numFeaturedDates {
+                for item in view.subviews {
+                    if item is UIButton {
+                        item.isHidden = false
+                    }
+                }
                 loadingIcon.stopAnimating()
                 endNoInput()
                 self.doneLoading = true
@@ -93,6 +98,11 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
         }
         sharplessButton.isUserInteractionEnabled = false
         othersButton.isUserInteractionEnabled = false
+        for item in view.subviews {
+            if item is UIButton {
+                item.isHidden = true
+            }
+        }
         userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
         db.collection("userData").document(userKey).addSnapshotListener (includeMetadataChanges: true, listener: {(snapshot, Error) in
             if Error != nil {

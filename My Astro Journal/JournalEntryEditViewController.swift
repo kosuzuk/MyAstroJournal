@@ -119,8 +119,6 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         dropDown.onTextField = textField // Your TextField
         dropDown.onView = self.view // ViewController's View
         dropDown.cellHeight = 34
-        //dropDownTop.showAlwaysOnTop = true
-        //To show dropdown always on top.
         dropDown.show {(str, index) in
             var commaInd = -1
             for (i, char) in textField.text!.enumerated() {
@@ -249,7 +247,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
                 }
                 self.locationsVisited = docData["locationsVisited"] as! [String]
                 let eqData = docData["userEquipment"] as! Dictionary<String, [String]>
-                self.setAutoComp(self.targetField, ["Messier", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Rho Ophiuchi", "XSS J16271-2423", "Milky Way"], 0)
+                self.setAutoComp(self.targetField, ["Messier", "Sharpless", "SH2-", "Milky Way", "Rho Ophiuchi", "XSS J16271-2423", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"], 0)
                 self.setAutoComp(self.locationField, self.locationsVisited, 1)
                 self.setAutoComp(self.telescopeField, eqData["telescopes"]!, 2)
                 self.setAutoComp(self.mountField, eqData["mounts"]!, 2)
