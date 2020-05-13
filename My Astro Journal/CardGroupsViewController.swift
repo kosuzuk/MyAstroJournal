@@ -118,6 +118,11 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
                     self.cardTargetDatesDict = (data["cardTargetDates"]! as! [String: [String]])
                     let featureDates = (data["userDataCopyKeys"]! as! [String: String]).keys
                     if featureDates.count == 0 {
+                        for item in self.view.subviews {
+                            if item is UIButton {
+                                item.isHidden = false
+                            }
+                        }
                         loadingIcon.stopAnimating()
                         endNoInput()
                         self.doneLoading = true
