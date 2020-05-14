@@ -12,6 +12,7 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
     @IBOutlet weak var entriesTableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        endNoInput()
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
