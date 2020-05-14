@@ -35,6 +35,7 @@
 		604106BF23500C930058CEDD /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604106BE23500C930058CEDD /* WelcomeViewController.swift */; };
 		60450B08246CC62100DA2E93 /* MonthlyChallengeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60450B07246CC62100DA2E93 /* MonthlyChallengeViewController.swift */; };
 		60450B0A246CC73400DA2E93 /* MonthlyChallengeEntryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60450B09246CC73400DA2E93 /* MonthlyChallengeEntryCell.swift */; };
+		60450B0C246DB17900DA2E93 /* MonthlyChallengePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60450B0B246DB17900DA2E93 /* MonthlyChallengePicker.swift */; };
 		604579F723E2736400BB27C3 /* Pacifica Condensed.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 604579F623E2736400BB27C3 /* Pacifica Condensed.ttf */; };
 		6045D9E0244934EF00C38C7D /* ImageOfDayViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6045D9DF244934EF00C38C7D /* ImageOfDayViewerViewController.swift */; };
 		6045D9E2244935DF00C38C7D /* ImageOfDayViewerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6045D9E1244935DF00C38C7D /* ImageOfDayViewerCollectionViewCell.swift */; };
@@ -106,6 +107,7 @@
 		604106BE23500C930058CEDD /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		60450B07246CC62100DA2E93 /* MonthlyChallengeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyChallengeViewController.swift; sourceTree = "<group>"; };
 		60450B09246CC73400DA2E93 /* MonthlyChallengeEntryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyChallengeEntryCell.swift; sourceTree = "<group>"; };
+		60450B0B246DB17900DA2E93 /* MonthlyChallengePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthlyChallengePicker.swift; sourceTree = "<group>"; };
 		604579F623E2736400BB27C3 /* Pacifica Condensed.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Pacifica Condensed.ttf"; sourceTree = "<group>"; };
 		6045D9DF244934EF00C38C7D /* ImageOfDayViewerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageOfDayViewerViewController.swift; sourceTree = "<group>"; };
 		6045D9E1244935DF00C38C7D /* ImageOfDayViewerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageOfDayViewerCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 				60799F77228873F00018950B /* CalendarCell.swift */,
 				60450B07246CC62100DA2E93 /* MonthlyChallengeViewController.swift */,
 				60450B09246CC73400DA2E93 /* MonthlyChallengeEntryCell.swift */,
+				60450B0B246DB17900DA2E93 /* MonthlyChallengePicker.swift */,
 				60EB899E23540728002B0C38 /* CongratsViewController.swift */,
 				60D151B4226AEC4300A578E0 /* ImageOfDayViewController.swift */,
 				603A016B2429DC2B00EABC39 /* CommentsTableViewCell.swift */,
@@ -480,6 +483,7 @@
 				60450B0A246CC73400DA2E93 /* MonthlyChallengeEntryCell.swift in Sources */,
 				6045D9E2244935DF00C38C7D /* ImageOfDayViewerCollectionViewCell.swift in Sources */,
 				60024D12239059740019B901 /* FullImageViewController.swift in Sources */,
+				60450B0C246DB17900DA2E93 /* MonthlyChallengePicker.swift in Sources */,
 				6032BC87233A7B4B0024776A /* CardViewController.swift in Sources */,
 				601EBB9C245BB599005BF4D7 /* EquipmentPopOverViewController.swift in Sources */,
 				603A2CCF225F895100314706 /* ProfileCreationViewController.swift in Sources */,

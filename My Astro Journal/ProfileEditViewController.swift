@@ -328,7 +328,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
         //check if there are any profile copies to update if user is currently or will be featured
         if (userData["userDataCopyKeys"] as! [String: String]).count != 0 {
             for (date, userDataKey) in (userData["userDataCopyKeys"] as! [String: String]) {
-                if date == featuredImageDate || isEarlierDate(date1: dateToday, date2: date) {
+                if date == featuredImageDate || isEarlierDate(dateToday, date) {
                     userDataCopyToChangeKeys.append(userDataKey)
                 }
             }

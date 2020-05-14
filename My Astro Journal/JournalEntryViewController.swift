@@ -26,11 +26,13 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
     @IBOutlet weak var photographedCheckImage: UIImageView!
     @IBOutlet weak var bigImageView: UIImageView!
     @IBOutlet weak var featuredButton: UIButton!
+    @IBOutlet weak var memoriesLabel: UILabel!
     @IBOutlet weak var memoriesField: UITextView!
     @IBOutlet weak var telescopeField: UILabel!
     @IBOutlet weak var mountField: UILabel!
     @IBOutlet weak var cameraField: UILabel!
     @IBOutlet weak var acquisitionField: UITextView!
+    @IBOutlet weak var extraPhotosLabel: UILabel!
     @IBOutlet weak var imageCollectionView: UICollectionView!
     @IBOutlet weak var contentViewHC: NSLayoutConstraint!
     @IBOutlet weak var contentViewHCipad: NSLayoutConstraint!
@@ -153,11 +155,14 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
                 }
             }
         } else {
+            extraPhotosLabel.isHidden = true
+            contentViewHC.constant -= 157
+            contentViewHCipad.constant -= 227
             imagesPulled = true
             checkFinishedPullingImages()
         }
         featuredDate = entryData["featuredDate"] as! String
-        if featuredDate != "" && isEarlierDate(date1: featuredDate, date2: dateToday) {
+        if featuredDate != "" && isEarlierDate(featuredDate, dateToday) {
             db.collection("imageOfDayKeys").document(featuredDate).getDocument(completion: {(snapshot, Error) in
                 if Error != nil {
                     print(Error!)

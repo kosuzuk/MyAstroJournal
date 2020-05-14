@@ -380,7 +380,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                 self.statsHours.text = String(data["totalHours"] as! Int)
                 var numfeatures = 0
                 for (date, _) in (data["userDataCopyKeys"] as! [String: String]) {
-                    if isEarlierDate(date1: date, date2: dateToday) {
+                    if isEarlierDate(date, dateToday) {
                         numfeatures += 1
                     }
                 }

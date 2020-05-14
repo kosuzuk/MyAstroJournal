@@ -286,7 +286,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
                 mainImage = (entryData["mainImage"] as! UIImage)
                 bigImageView.image = mainImage
                 featuredDate = entryData["featuredDate"] as! String
-                if featuredDate == "" || !isEarlierDate(date1: featuredDate, date2: dateToday) {
+                if featuredDate == "" || !isEarlierDate(featuredDate, dateToday) {
                     bigImageViewRemoveButton.isHidden = false
                 } else {
                     photographedCheckBox.isUserInteractionEnabled = false
@@ -351,7 +351,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
     }
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
         if textField == targetField && targetField.text != "" {
-            let inp = formatTarget(inputTarget: targetField.text!)
+            let inp = formatTarget(targetField.text!)
             if  inp.prefix(1) == "M" && MessierConst[Int(String(inp.suffix(inp.count - 1))) ?? -1] != nil {
                 constellationField.text = MessierConst[Int(String(inp.suffix(inp.count - 1)))!]
             } else if inp.prefix(3) == "NGC" && NGCConst[Int(String(inp.suffix(inp.count - 3))) ?? -1] != nil {
@@ -687,7 +687,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         db.collection("userData").document(userKey).setData(["featuredAlertDates": alertDates, "userDataCopyKeys": [featuredDate: FieldValue.delete()]], merge: true)
         db.collection("userData").document(copyKey).delete()
         
-        if isEarlierDate(date1: dateToday, date2: featuredDate) {
+        if isEarlierDate(dateToday, featuredDate) {
             //notify Antoine
             db.collection("iodDeletedNotifications").document(featuredDate).setData(["target": formattedTarget])
         }
@@ -837,7 +837,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         let copyKeys = userData["userDataCopyKeys"] as! [String: String]
         if copyKeys.count != 0 {
             for (date, key) in copyKeys {
-                if date == featuredImageDate || isEarlierDate(date1: dateToday, date2: date) {
+                if date == featuredImageDate || isEarlierDate(dateToday, date) {
                     db.collection("userData").document(key).setData(["photoTargetNum": userData["photoTargetNum"]!, "obsTargetNum": userData["obsTargetNum"]!, "totalHours": userData["totalHours"]!], merge: true)
                 }
             }
@@ -1047,7 +1047,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         }
         var duplicateTargets = false
         self.target = targets[0]
-        self.formattedTarget = formatTarget(inputTarget: target)
+        self.formattedTarget = formatTarget(target)
         //these targets appear together
         otherTarget = doubleTargets[formattedTarget] ?? ""
         for entry in entryList {
@@ -1114,7 +1114,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
     func processDelete(_ alertAction: UIAlertAction) {
         view.addSubview(formatLoadingIcon(icon: loadingIcon))
         loadingIcon.startAnimating()
-        formattedTarget = formatTarget(inputTarget: targetField.text!)
+        formattedTarget = formatTarget(targetField.text!)
         //these targets appear together
         otherTarget = doubleTargets[formattedTarget] ?? ""
         let entryDoc = db.collection("journalEntries").document(userKey + entryDate)
@@ -1168,7 +1168,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
                     if key == entryDate {
                         continue
                     }
-                    if isEarlierDate(date1: key, date2: earliestDate) {
+                    if isEarlierDate(key, earliestDate) {
                         earliestDate = key
                     }
                 }

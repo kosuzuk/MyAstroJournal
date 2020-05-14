@@ -14,7 +14,7 @@ infix operator ¬
 func ¬(entry1: Dictionary<String, Any>, entry2: Dictionary<String, Any>) -> Bool {
     let date1 = String((entry1["key"] as! String).suffix(8))
     let date2 = String((entry2["key"] as! String).suffix(8))
-    return isEarlierDate(date1: date2, date2: date1)
+    return isEarlierDate(date2, date1)
 }
 
 class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
@@ -195,7 +195,7 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
         var entryDate = ""
         for entry in allEntryData {
             entryDate = String((entry["key"] as! String).suffix(8))
-            if !isEarlierDate(date1: inputDate, date2: entryDate)  {
+            if !isEarlierDate(inputDate, entryDate)  {
                 break
             }
             endEntryInd += 1
@@ -339,7 +339,7 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
     }
     
     func checkData() {
-        if !isValidDate(date: dateToSetAsIod) {//|| !isEarlierDate(date1: dateToday, date2: dateToSetAsIod) {
+        if !isValidDate(date: dateToSetAsIod) {//|| !isEarlierDate(dateToday, dateToSetAsIod) {
             let alertController = UIAlertController(title: "Error", message: "Invalid date", preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
             alertController.addAction(defaultAction)

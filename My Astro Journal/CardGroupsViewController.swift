@@ -128,7 +128,7 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
                         self.doneLoading = true
                     }
                     for date in featureDates {
-                        if isEarlierDate(date1: date, date2: dateToday) {
+                        if isEarlierDate(date, dateToday) {
                             self.numFeaturedDates += 1
                             db.collection("imageOfDayKeys").document(date).getDocument(completion: {(snapshot, Error) in
                                 if Error != nil {

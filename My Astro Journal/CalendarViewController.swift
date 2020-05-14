@@ -256,7 +256,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 var alertDates = userData["featuredAlertDates"] as! [String]
                 if alertDates != [] {
                     for alertDate in alertDates {
-                        if isEarlierDate(date1: alertDate, date2: dateToday) {
+                        if isEarlierDate(alertDate, dateToday) {
                             let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CongratsViewController") as! CongratsViewController
                             popOverVC.featuredDate = alertDate
                             popOverVC.cvc = self
@@ -315,7 +315,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                                     self.entryToShowDate && iodDocs[j].data()["journalEntryInd"] as? Int == i {
                                     self.entryDropDown?.hide()
                                     let iodDate = iodDocs[j].documentID
-                                    if isEarlierDate(date1: iodDate, date2: dateToday) {
+                                    if isEarlierDate(iodDate, dateToday) {
                                         self.jevc?.navigationController?.popToRootViewController(animated: true)
                                     } else {
                                         self.jevc?.featuredDate = iodDate
@@ -330,7 +330,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                                 if iodDocs[j].documentID == entryFeaturedDate {
                                     if iodDocs[j].data()["journalEntryListKey"] as? String != userKey + self.entryToShowDate || iodDocs[j].data()["journalEntryInd"] as? Int != i {
                                         self.entryDropDown?.hide()
-                                        if isEarlierDate(date1: iodDocs[j].documentID, date2: dateToday) {
+                                        if isEarlierDate(iodDocs[j].documentID, dateToday) {
                                             self.jevc?.featuredButton.isHidden = true
                                             self.jevc?.jeevc?.photographedCheckBox.isUserInteractionEnabled = true
                                             self.jevc?.jeevc?.bigImageViewRemoveButton.isHidden = false
@@ -344,7 +344,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                                 //iod doc for this date was deleted
                                 if j == iodDocs.count - 1 {
                                     self.entryDropDown?.hide()
-                                    if isEarlierDate(date1: iodDocs[j].documentID, date2: dateToday) {
+                                    if isEarlierDate(iodDocs[j].documentID, dateToday) {
                                         self.jevc?.featuredButton.isHidden = true
                                         self.jevc?.jeevc?.photographedCheckBox.isUserInteractionEnabled = true
                                         self.jevc?.jeevc?.bigImageViewRemoveButton.isHidden = false
@@ -379,16 +379,16 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 var iodDocToShow = iodDocs[0]
                 for doc in iodDocs {
                     //the entry date is not in the future and latest entry seen so far not in the future
-                    if isEarlierDate(date1: doc.documentID, date2: dateToday) && (!isEarlierDate(date1: iodDocToShow.documentID, date2: dateToday) || isEarlierDate(date1: iodDocToShow.documentID, date2: doc.documentID)) {
+                    if isEarlierDate(doc.documentID, dateToday) && (!isEarlierDate(iodDocToShow.documentID, dateToday) || isEarlierDate(iodDocToShow.documentID, doc.documentID)) {
                         iodDocToShow = doc
                     }
                 }
-                if !isEarlierDate(date1: iodDocToShow.documentID, date2: dateToday) {
+                if !isEarlierDate(iodDocToShow.documentID, dateToday) {
                     print("there are only featured images for the future")
                     noIodData()
                     return
                 }
-                if featuredImageDate != "" && !isEarlierDate(date1: featuredImageDate, date2: iodDocToShow.documentID) {
+                if featuredImageDate != "" && !isEarlierDate(featuredImageDate, iodDocToShow.documentID) {
                     print("Antoine has deleted today's iod data")
                     noIodData()
                     return

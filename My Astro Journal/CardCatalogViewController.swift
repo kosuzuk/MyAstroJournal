@@ -254,7 +254,7 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
     func search() {
         searchField.resignFirstResponder()
         cardsToDisplay = []
-        let formattedTarget = formatTarget(inputTarget: searchField.text!)
+        let formattedTarget = formatTarget(searchField.text!)
         for card in availableCards {
             if card == formattedTarget {
                 cardsToDisplay.append(card)
