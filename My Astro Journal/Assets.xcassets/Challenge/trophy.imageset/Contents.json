@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "Trophy PNG.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "divider.png",
       "scale" : "2x"
     },
     {
