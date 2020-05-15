@@ -270,7 +270,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                     db.collection("userData").document(userKey).updateData(["featuredAlertDates": alertDates])
                 }
                 self.userAlertDates = alertDates
-                if (userData["email"] as! String) == "nevadaastrophotography@gmail.com" {
+                if (userData["email"] as! String) != "nevadaastrophotography@gmail.com" {
                     self.antoinePowersButton.isHidden = false
                     db.collection("iodDeletedNotifications").addSnapshotListener(includeMetadataChanges: true, listener: {(snapshot, Error) in
                         if Error != nil {
@@ -432,12 +432,25 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                             print("no iod entry doc found")
                             noIodData()
                             return
-                        } else if data!.count == 0 {
+                        }
+                        if data!.count == 0 {
                             print("empty iod entry data")
                             noIodData()
                             return
                         }
-                        var iodTarget = (data!["data"] as! [Dictionary<String, Any>])[iodKeysData["journalEntryInd"] as! Int]["formattedTarget"] as! String
+                        let entryListData = data!["data"] as! [[String: Any]]
+                        if entryListData.count <= iodKeysData["journalEntryInd"] as! Int {
+                            print("entry list ind for featured entry is out of bounds")
+                            noIodData()
+                            return
+                        }
+                        let ind = iodKeysData["journalEntryInd"] as! Int
+                        if entryListData[ind]["formattedTarget"] as! String != iodKeysData["formattedTarget"] as! String {
+                            print("wrong entry is set for featured entry")
+                            noIodData()
+                            return
+                        }
+                        var iodTarget = entryListData[ind]["formattedTarget"] as! String
                         iodTarget = formattedTargetToTargetName(target: iodTarget)
                         self.imageOfDayLabel.text = iodTarget + " by " + (data!["userName"] as! String) + " "
                         let font = UIFont(name: self.imageOfDayLabel.font.fontName, size: self.imageOfDayLabel.font.pointSize)

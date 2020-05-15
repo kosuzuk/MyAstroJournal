@@ -27,12 +27,14 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
     @IBOutlet weak var lastPageButton: UIButton!
     @IBOutlet weak var collectionViewLeadingCipad: NSLayoutConstraint!
     @IBOutlet weak var collectionViewTrailingCipad: NSLayoutConstraint!
-    var allEntryData: [[String: Any]] = []
+    var entriesBasicData: [[String: Any]] = []
     var endEntryInd = 0
     var curEntryRangeInPage: CountableRange = 0..<0
     var savedEntryImageData: [Int: UIImage] = [:]
     let maxSavedImages = 30
     var entryIndToShow = 0
+    var entryListDataToShow: [[String: Any]] = []
+    var entryIndInEntryList = 0
     var profileKeyToShow = ""
     var entryDataToSetAsIod: [String: Any] = [:]
     var dateToSetAsIod = ""
@@ -42,7 +44,7 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
         pageNumLabel.text = String(Int(ceil(Double(curEntryRangeInPage.endIndex) / 10.0))) + "/" + String(Int(ceil(Double(endEntryInd) / 10.0)))
         for i in curEntryRangeInPage.startIndex..<curEntryRangeInPage.endIndex {
             if savedEntryImageData[i] == nil {
-                let imageKey = (allEntryData[i]["mainImageKey"] as! String)
+                let imageKey = (entriesBasicData[i]["mainImageKey"] as! String)
                 storage.child(imageKey).getData(maxSize: imgMaxByte) {data, Error in
                     if let Error = Error {
                         print(Error)
@@ -96,14 +98,14 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
                     for i in 0..<entryList.endIndex {
                         if entryList[i]["mainImageKey"] as! String != "" && entryList[i]["featuredDate"] as! String == "" {
                             entryList[i]["key"] = doc.documentID
-                            entryList[i]["entryListInd"] = i
-                            self.allEntryData.append(entryList[i])
+                            let basicEntryData = ["key": doc.documentID, "mainImageKey": entryList[i]["mainImageKey"] as! String, "formattedTarget": entryList[i]["formattedTarget"] as! String]
+                            self.entriesBasicData.append(basicEntryData)
                         }
                     }
                 }
                 //sort from most recent to oldest entries
-                self.allEntryData.sort(by: ¬)
-                self.endEntryInd = self.allEntryData.endIndex
+                self.entriesBasicData.sort(by: ¬)
+                self.endEntryInd = self.entriesBasicData.endIndex
                 self.resetEntryRangeInPage()
                 self.updateCollectionView()
                 loadingIcon.stopAnimating()
@@ -159,7 +161,7 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
                 }
             }
         }
-        let formattedTarget = allEntryData[curEntryRangeInPage.startIndex + indexPath.row]["formattedTarget"] as? String
+        let formattedTarget = entriesBasicData[curEntryRangeInPage.startIndex + indexPath.row]["formattedTarget"] as? String
         if formattedTarget != "" {
             let target = formattedTargetToTargetName(target: formattedTarget!)
             cell.targetNameLabel.text = target
@@ -193,7 +195,7 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
         entriesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
         endEntryInd = 0
         var entryDate = ""
-        for entry in allEntryData {
+        for entry in entriesBasicData {
             entryDate = String((entry["key"] as! String).suffix(8))
             if !isEarlierDate(inputDate, entryDate)  {
                 break
@@ -208,9 +210,9 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination as? JournalEntryViewController
         if vc != nil {
-            vc?.entryDate = String((allEntryData[entryIndToShow]["key"] as! String).suffix(8))
-            vc?.entryList = [allEntryData[entryIndToShow]]
-            vc?.selectedEntryInd = 0
+            vc?.entryDate = String((entriesBasicData[entryIndToShow]["key"] as! String).suffix(8))
+            vc?.entryList = entryListDataToShow
+            vc?.selectedEntryInd = entryIndInEntryList
         }
         let vc2 = segue.destination as? ProfileViewController
         if vc2 != nil {
@@ -222,14 +224,32 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
         let indexPath = entriesCollectionView.indexPathForItem(at: sender.location(in: entriesCollectionView))
         if indexPath != nil {
             entryIndToShow = curEntryRangeInPage.startIndex + indexPath!.row
-            performSegue(withIdentifier: "pickerToEntry", sender: self)
+            db.collection("journalEntries").document(self.entriesBasicData[entryIndToShow]["key"] as! String).getDocument(completion: {(snapshot, Error) in
+                if Error != nil {
+                    print(Error!, "journal entry deleted by user")
+                } else {
+                    var entryListData = snapshot!.data()!["data"] as! [[String: Any]]
+                    for i in 0..<entryListData.endIndex {
+                        if self.entriesBasicData[self.entryIndToShow]["formattedTarget"] as! String == entryListData[i]["formattedTarget"] as! String {
+                            entryListData[i]["key"] = self.entriesBasicData[self.entryIndToShow]["key"] as! String
+                            self.entryListDataToShow = entryListData
+                            self.entryIndInEntryList = i
+                            self.performSegue(withIdentifier: "pickerToEntry", sender: self)
+                            break
+                        }
+                        if i == entryListData.endIndex - 1 {
+                            print(Error!, "journal entry deleted by user")
+                        }
+                    }
+                }
+            })
         }
     }
     
     @objc func showProfile(sender: UIGestureRecognizer) {
         let indexPath = entriesCollectionView.indexPathForItem(at: sender.location(in: entriesCollectionView))
         if indexPath != nil {
-            let key = allEntryData[curEntryRangeInPage.startIndex + indexPath!.row]["key"] as! String
+            let key = entriesBasicData[curEntryRangeInPage.startIndex + indexPath!.row]["key"] as! String
             profileKeyToShow = String(key.prefix(key.count - 8))
             performSegue(withIdentifier: "pickerToProfile", sender: self)
         }
@@ -240,7 +260,7 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
         let userKey = String(entryKey.prefix(entryKey.count - 8))
         db.collection("userData").document(userKey).getDocument(completion: {(snapshot, Error) in
             if Error != nil {
-                print(Error!, "getting user data to undo feature")
+                print(Error!, "couldn't get user data to undo the feature")
             } else {
                 let userData = snapshot!.data()!
                 let userDataCopyKey = (userData["userDataCopyKeys"] as! [String: String])[self.dateToSetAsIod]!
@@ -260,7 +280,7 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
         })
         db.collection("journalEntries").document(entryKey).getDocument(completion: {(snapshot, Error) in
             if Error != nil {
-                print(Error!, "getting journal entry to undo feature")
+                print(Error!, "couldn't get entry data to undo the feature")
             } else {
                 var entryListData = snapshot!.data()!["data"] as! [[String: Any]]
                 entryListData[curImageOfDayKeysData["journalEntryInd"] as! Int]["featuredDate"] = ""
@@ -299,7 +319,7 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
                         db.collection("userData").document(userDataCopyKey).setData(["userDataCopyKeys": userDataCopyKeys], merge: true)
                         newUserData["userDataCopyKeys"] = userDataCopyKeys
                         db.collection("userData").document(userKey).setData(newUserData, merge: true)
-                        let newIodData = ["imageKey": self.entryDataToSetAsIod["mainImageKey"]!, "journalEntryInd": self.entryDataToSetAsIod["entryListInd"]!, "journalEntryListKey": entryKey, "userKey": userDataCopyKey, "formattedTarget": self.entryDataToSetAsIod["formattedTarget"] as! String]
+                        let newIodData = ["imageKey": self.entryDataToSetAsIod["mainImageKey"]!, "journalEntryInd": self.entryIndInEntryList, "journalEntryListKey": entryKey, "userKey": userDataCopyKey, "formattedTarget": self.entryDataToSetAsIod["formattedTarget"] as! String]
                         db.collection("imageOfDayKeys").document(self.dateToSetAsIod).setData(newIodData, merge: false) {err in
                                 if let err = err {
                                     print("Error updating iod keys data: \(err)")
@@ -322,18 +342,8 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
                 print(Error!, "getting journal entry")
             } else {
                 var entryListData = snapshot!.data()!["data"] as! [[String: Any]]
-                entryListData[self.entryDataToSetAsIod["entryListInd"] as! Int]["featuredDate"] = self.dateToSetAsIod
+                entryListData[self.entryIndInEntryList]["featuredDate"] = self.dateToSetAsIod
                 db.collection("journalEntries").document(entryKey).setData(["data": entryListData], merge: true)
-                //check if image still exists in db
-                let imageRef = storage.child(self.entryDataToSetAsIod["mainImageKey"] as! String)
-                imageRef.getData(maxSize: imgMaxByte) {data, Error in
-                    if Error != nil {
-                        let alertController = UIAlertController(title: "User deleted image", message: "User has deleted the image you just picked!", preferredStyle: .alert)
-                        let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-                        alertController.addAction(defaultAction)
-                        self.present(alertController, animated: true, completion: nil)
-                    }
-                }
             }
         })
     }
@@ -350,19 +360,53 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
             if Error != nil {
                 print(Error!)
             } else {
-                let docData = QuerySnapshot!.data()
-                if docData != nil && docData!.count != 0 {
-                    let alertController = UIAlertController(title: "Warning", message: "You have already picked an entry to feature for this date. Do you want to change the chosen entry?", preferredStyle: .alert)
-                    let confirmAction = UIAlertAction(title: "yes", style: .destructive, handler: {(alertAction) in self.changeFeaturedImage(curImageOfDayKeysData: docData!)})
-                    let cancelAction = UIAlertAction(title: "cancel", style: .cancel, handler: nil)
-                    alertController.addAction(confirmAction)
-                    alertController.addAction(cancelAction)
-                    self.present(alertController, animated: true, completion: nil)
-                }
-                else {
-                    self.updateUserData()
-                    self.updateJournalEntryData()
-                }
+                let docRef = db.collection("journalEntries").document(self.entryDataToSetAsIod["key"] as! String)
+                docRef.getDocument(completion: {(snapshot, Error) in
+                    var deleted = false
+                    if Error != nil {
+                        print(Error!)
+                        deleted = true
+                        print(1)
+                    } else {
+                        var entryListData = snapshot!.data()!["data"] as! [[String: Any]]
+                        for i in 0..<entryListData.endIndex {
+                            if entryListData[i]["formattedTarget"] as! String == self.entryDataToSetAsIod["formattedTarget"] as! String {
+                                if entryListData[i]["mainImageKey"] as! String == "" {
+                                    deleted = true
+                                    print(2)
+                                    break
+                                }
+                                entryListData[i]["key"] = self.entryDataToSetAsIod["key"] as! String
+                                self.entryDataToSetAsIod = entryListData[i]
+                                self.entryIndInEntryList = i
+                                let docData = QuerySnapshot!.data()
+                                if docData != nil && docData!.count != 0 {
+                                    let alertController = UIAlertController(title: "Warning", message: "You have already picked an entry to feature for this date. Do you want to change the chosen entry?", preferredStyle: .alert)
+                                    let confirmAction = UIAlertAction(title: "yes", style: .destructive, handler: {(alertAction) in self.changeFeaturedImage(curImageOfDayKeysData: docData!)})
+                                    let cancelAction = UIAlertAction(title: "cancel", style: .cancel, handler: nil)
+                                    alertController.addAction(confirmAction)
+                                    alertController.addAction(cancelAction)
+                                    self.present(alertController, animated: true, completion: nil)
+                                }
+                                else {
+                                    self.updateUserData()
+                                    self.updateJournalEntryData()
+                                }
+                                return
+                            }
+                            if i == entryListData.endIndex - 1 {
+                                deleted = true
+                                print(3)
+                            }
+                        }
+                    }
+                    if deleted {
+                        let alertController = UIAlertController(title: "User deleted entry", message: "User has deleted the entry you just picked!", preferredStyle: .alert)
+                        let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                        alertController.addAction(defaultAction)
+                        self.present(alertController, animated: true, completion: nil)
+                    }
+                })
             }
         })
     }
@@ -372,10 +416,10 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
         if indexPath != nil {
             let alertController = UIAlertController(title: "Set as Image of Day", message: "Choose this image as Image of the Day?", preferredStyle: .alert)
             let confirmAction = UIAlertAction(title: "confirm", style: .destructive, handler: {(alertAction) in
-                self.entryDataToSetAsIod = self.allEntryData[self.curEntryRangeInPage.startIndex + indexPath!.row]
-                    self.dateToSetAsIod = alertController.textFields![0].text!
-                    self.checkData()
-                })
+                self.entryDataToSetAsIod = self.entriesBasicData[self.curEntryRangeInPage.startIndex + indexPath!.row]
+                self.dateToSetAsIod = alertController.textFields![0].text!
+                self.checkData()
+            })
             let cancelAction = UIAlertAction(title: "cancel", style: .cancel, handler: nil)
             alertController.addAction(confirmAction)
             alertController.addAction(cancelAction)
@@ -417,8 +461,8 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
     
     @IBAction func nextPageTapped(_ sender: Any) {
         entriesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
-        if allEntryData.endIndex <= curEntryRangeInPage.endIndex + 10 {
-            curEntryRangeInPage = curEntryRangeInPage.endIndex..<allEntryData.endIndex
+        if entriesBasicData.endIndex <= curEntryRangeInPage.endIndex + 10 {
+            curEntryRangeInPage = curEntryRangeInPage.endIndex..<entriesBasicData.endIndex
             nextPageButton.isHidden = true
             lastPageButton.isHidden = true
         } else {
@@ -441,7 +485,7 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
     }
     @IBAction func lastPageTapped(_ sender: Any) {
         entriesCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
-        curEntryRangeInPage = (allEntryData.endIndex - 1) / 10 * 10..<allEntryData.endIndex
+        curEntryRangeInPage = (entriesBasicData.endIndex - 1) / 10 * 10..<entriesBasicData.endIndex
         checkAndClearImageData()
         updateCollectionView()
         prevPageButton.isHidden = false

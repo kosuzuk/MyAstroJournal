@@ -1121,7 +1121,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         if entryList.count > 1 {
             //remove journal entry from list
             entryList.remove(at: selectedEntryInd)
-            entryDoc.setData(["data": entryList], merge: false)
+            entryDoc.setData(["data": entryList], merge: true)
         } else {
             //delete journal entry list document
             entryList = []

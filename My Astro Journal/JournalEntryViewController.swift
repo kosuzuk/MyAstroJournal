@@ -116,7 +116,8 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
             imageRef.getData(maxSize: imgMaxByte) {data, Error in
                 if let Error = Error {
                     print(Error)
-                    return
+                    mainImagePulled = true
+                    checkFinishedPullingImages()
                 } else {
                     self.bigImageView.image = UIImage(data: data!)
                     self.entryData["mainImage"] = UIImage(data: data!)

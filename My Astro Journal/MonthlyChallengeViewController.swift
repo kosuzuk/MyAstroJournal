@@ -61,21 +61,17 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
                         print(Error!)
                     } else {
                         for doc in snapshot!.documents {
-                            var entryListData = (doc.data()["data"] as! [[String: Any]])
+                            let entryListData = (doc.data()["data"] as! [[String: Any]])
                             for i in 0..<entryListData.endIndex {
-                                if entryListData[i]["mainImageKey"] as! String != "" {
-                                    entryListData[i]["key"] = doc.documentID
-                                    entryListData[i]["entryListInd"] = i
+                                if entryListData[i]["formattedTarget"] as! String == self.formattedChallengeTarget && entryListData[i]["mainImageKey"] as! String != "" {
+                                    let listItem = ["key": doc.documentID, "imageKey": entryListData[i]["imageKey"], "userName": doc.data()["userName"]]
+                                    self.entriesList!.append(listItem as! [String : String])
+                                    break
                                 }
                             }
                         }
                         //sort from most recent to oldest entries
-        //                self.allEntryData.sort(by: ¬)
-        //                self.endEntryInd = self.allEntryData.endIndex
-        //                self.resetEntryRangeInPage()
-        //                self.updateCollectionView()
-                        loadingIcon.stopAnimating()
-                        endNoInput()
+                        self.entriesList!.sort(by: ¬)
                     }
                 })
             }
@@ -94,7 +90,7 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
         if vc != nil {
             vc!.entryDate = String((challengeData!["lastMonthJournalEntryListKey"] as! String).suffix(8))
             vc!.entryList = winningEntryData!
-            vc!.selectedEntryInd = challengeData!["lastMonthJournalEntryInd"] as! Int
+            vc!.selectedEntryInd = 0
             vc!.editButton.isHidden = true
             vc!.featuredButton.isUserInteractionEnabled = false
             vc!.memoriesLabel.isHidden = true

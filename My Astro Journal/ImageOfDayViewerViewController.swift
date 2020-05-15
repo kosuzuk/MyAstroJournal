@@ -9,7 +9,7 @@
 import FirebaseFirestore
 
 infix operator ¡
-//returns true if date1 is later than or equal to date2
+//returns true if entry1 was entered later than or on the same day as entry2
 func ¡(entry1: Dictionary<String, Any>, entry2: Dictionary<String, Any>) -> Bool {
     let date1 = String((entry1["featuredDate"] as! String).suffix(8))
     let date2 = String((entry2["featuredDate"] as! String).suffix(8))

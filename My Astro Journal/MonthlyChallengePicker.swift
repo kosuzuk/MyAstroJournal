@@ -33,7 +33,7 @@ class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate,
                         DDList = [monthNames[Int(listItem["docID"]!.prefix(2))! - 1]]
                     } else {
                         for i in 0..<lst.count {
-                            if isEarlierMonth(lst[i]["docID"]!, doc.documentID) {
+                            if isEarlierMonth(doc.documentID, lst[i]["docID"]!) {
                                 lst.insert(listItem, at: i)
                                 DDList.insert(monthNames[Int(listItem["docID"]!.prefix(2))! - 1], at: i)
                                 break
