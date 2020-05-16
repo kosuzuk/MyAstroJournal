@@ -9,14 +9,6 @@
 import UIKit
 import FirebaseFirestore
 
-infix operator ¬
-//returns true if date1 is later than or equal to date2
-func ¬(entry1: Dictionary<String, Any>, entry2: Dictionary<String, Any>) -> Bool {
-    let date1 = String((entry1["key"] as! String).suffix(8))
-    let date2 = String((entry2["key"] as! String).suffix(8))
-    return isEarlierDate(date2, date1)
-}
-
 class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     @IBOutlet weak var fromDateField: UITextField!
     @IBOutlet weak var entriesCollectionView: UICollectionView!
@@ -120,7 +112,7 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
         buttonLabel.textColor = UIColor.white
         buttonLabel.font = UIFont(name: "Helvetica Neue", size: 13)
         buttonLabel.layer.borderWidth = 1
-        buttonLabel.layer.borderColor = UIColor.orange.cgColor
+        buttonLabel.layer.borderColor = astroOrange
         buttonLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: f))
         buttonLabel.isUserInteractionEnabled = true
         cell.imageView.addSubview(buttonLabel)
@@ -363,17 +355,15 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
                 let docRef = db.collection("journalEntries").document(self.entryDataToSetAsIod["key"] as! String)
                 docRef.getDocument(completion: {(snapshot, Error) in
                     var deleted = false
-                    if Error != nil {
+                    if Error != nil || snapshot!.data() == nil {
                         print(Error!)
                         deleted = true
-                        print(1)
                     } else {
                         var entryListData = snapshot!.data()!["data"] as! [[String: Any]]
                         for i in 0..<entryListData.endIndex {
                             if entryListData[i]["formattedTarget"] as! String == self.entryDataToSetAsIod["formattedTarget"] as! String {
                                 if entryListData[i]["mainImageKey"] as! String == "" {
                                     deleted = true
-                                    print(2)
                                     break
                                 }
                                 entryListData[i]["key"] = self.entryDataToSetAsIod["key"] as! String
@@ -396,7 +386,6 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
                             }
                             if i == entryListData.endIndex - 1 {
                                 deleted = true
-                                print(3)
                             }
                         }
                     }

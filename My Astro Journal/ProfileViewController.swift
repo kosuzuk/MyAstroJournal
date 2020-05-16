@@ -156,7 +156,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             iconGap = websiteTrailingCipad.constant
         }
         userImage.layer.borderWidth = 2
-        userImage.layer.borderColor = UIColor.orange.cgColor
+        userImage.layer.borderColor = astroOrange
         editButton.isHidden = true
         userBio.textContainerInset.top = 0
         userKey = KeychainWrapper.standard.string(forKey: "dbKey")!

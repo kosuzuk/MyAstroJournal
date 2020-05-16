@@ -103,7 +103,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
         }
         scrollView.delegate = (self as UIScrollViewDelegate)
         imageView.layer.borderWidth = 1
-        imageView.layer.borderColor = UIColor.orange.cgColor
+        imageView.layer.borderColor = astroOrange
         for field in [favObjField, bioField, websiteField, instaField, youtubeField, fbField, nameField, locationField, telescopeField, telescopeField2, telescopeField3, mountField, mountField2, mountField3, cameraField, cameraField2, cameraField3] {
             field!.layer.borderWidth = 1
             field!.layer.borderColor = UIColor.white.cgColor
@@ -133,7 +133,6 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
         moreOptionsDD!.selectionBackgroundColor = .darkGray
         moreOptionsDD!.selectedTextColor = .white
         moreOptionsDD!.textFont = UIFont(name: "Pacifica Condensed", size: 15)!
-        moreOptionsDD!.separatorColor = .white
         moreOptionsDD!.cellHeight = 34
         moreOptionsDD!.cornerRadius = 10
         moreOptionsDD!.anchorView = moreButton

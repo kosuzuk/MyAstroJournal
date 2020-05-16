@@ -19,11 +19,11 @@ class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate,
     var newImageKey = ""
     override func viewDidLoad() {
         super.viewDidLoad()
-        db.collection("monthlyChallenge").getDocuments(completion: {(snapshot, Error) in
+        db.collection("monthlyChallenges").getDocuments(completion: {(snapshot, Error) in
             if Error != nil {
                 print(Error!)
             } else {
-                var lst = self.challengesData
+                var lst: [[String: String]] = []
                 var DDList: [String] = []
                 for doc in snapshot!.documents {
                     let data = doc.data()
@@ -33,22 +33,22 @@ class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate,
                         DDList = [monthNames[Int(listItem["docID"]!.prefix(2))! - 1]]
                     } else {
                         for i in 0..<lst.count {
-                            if isEarlierMonth(doc.documentID, lst[i]["docID"]!) {
+                            if isEarlierMonth(lst[i]["docID"]!, doc.documentID) {
                                 lst.insert(listItem, at: i)
                                 DDList.insert(monthNames[Int(listItem["docID"]!.prefix(2))! - 1], at: i)
                                 break
                             } else if i == lst.endIndex - 1 {
                                 lst.insert(listItem, at: i + 1)
-                                DDList.insert(monthNames[Int(listItem["docID"]!.prefix(2))! - 1], at: i)
+                                DDList.insert(monthNames[Int(listItem["docID"]!.prefix(2))! - 1], at: i + 1)
                             }
                         }
                     }
                 }
+                self.challengesData = lst
                 self.challengesDD = DropDown()
                 self.challengesDD!.backgroundColor = .darkGray
                 self.challengesDD!.textColor = .white
                 self.challengesDD!.textFont = UIFont(name: "Pacifica Condensed", size: 14)!
-                self.challengesDD!.separatorColor = .white
                 self.challengesDD!.cellHeight = 34
                 self.challengesDD!.cornerRadius = 10
                 self.challengesDD!.anchorView = self.seeChallengesButton
@@ -92,6 +92,6 @@ class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate,
         )}
     }
     func setButtonTapped() {
-        db.collection("monthlyChallenge").document(monthYearField.text!).setData(["imageKey": newImageKey, "target": formatTarget(targetField.text!)], merge: true)
+        db.collection("monthlyChallenges").document(monthYearField.text!).setData(["imageKey": newImageKey, "target": formatTarget(targetField.text!)], merge: true)
     }
 }

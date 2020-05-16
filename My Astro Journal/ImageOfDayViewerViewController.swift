@@ -9,7 +9,7 @@
 import FirebaseFirestore
 
 infix operator ¡
-//returns true if entry1 was entered later than or on the same day as entry2
+//returns true if entry1 was entered before or on the same day as entry2
 func ¡(entry1: Dictionary<String, Any>, entry2: Dictionary<String, Any>) -> Bool {
     let date1 = String((entry1["featuredDate"] as! String).suffix(8))
     let date2 = String((entry2["featuredDate"] as! String).suffix(8))
@@ -163,7 +163,7 @@ class ImageOfDayViewerViewController: UIViewController, UICollectionViewDelegate
         buttonLabel.textColor = UIColor.white
         buttonLabel.font = UIFont(name: "Helvetica Neue", size: 13)
         buttonLabel.layer.borderWidth = 1
-        buttonLabel.layer.borderColor = UIColor.orange.cgColor
+        buttonLabel.layer.borderColor = astroOrange
         buttonLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: f))
         buttonLabel.isUserInteractionEnabled = true
         cell.entryImageView.addSubview(buttonLabel)

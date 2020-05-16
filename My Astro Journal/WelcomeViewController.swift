@@ -60,6 +60,7 @@ let screenW = UIScreen.main.bounds.width
 let screenH = UIScreen.main.bounds.height
 let monthNames = ["January", "Feburary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 var firstTime = false
+var entryEditFirstTime = false
 var dateToday = ""
 var featuredImageDate = ""
 //communicate between profile and calendar view if featured user changes username
@@ -70,6 +71,7 @@ let calCellSize = 50
 let iodUserIconSize = 30
 let maxSize = 700
 let imageTooBigMessage = "The image size is too big. Please choose another image."
+let astroOrange = UIColor(red: 1, green: 0.62, blue: 0, alpha: 1).cgColor
 
 func formatLoadingIcon(icon: UIActivityIndicatorView) -> UIActivityIndicatorView {
     icon.center = CGPoint(x: screenW / 2, y: screenH / 2 - 75)
@@ -78,13 +80,6 @@ func formatLoadingIcon(icon: UIActivityIndicatorView) -> UIActivityIndicatorView
         icon.style = UIActivityIndicatorView.Style.large
     }
     return icon
-}
-
-infix operator ^^
-extension Bool {
-    static func ^^(a:Bool, b:Bool) -> Bool {
-        return a != b
-    }
 }
 
 func processImageAndResize(inpImg: UIImage, resizeTo: CGSize, clip: Bool) -> [Any]? {
@@ -246,6 +241,22 @@ func formattedTargetToImageName(target: String) -> String {
     }
     return imageName
 }
+
+infix operator ^^
+extension Bool {
+    static func ^^ (a: Bool, b: Bool) -> Bool {
+        return a != b
+    }
+}
+
+infix operator ¬
+//returns true if entry1 was entered later than or on the same day as entry2
+func ¬ (entry1: Dictionary<String, Any>, entry2: Dictionary<String, Any>) -> Bool {
+    let date1 = String((entry1["key"] as! String).suffix(8))
+    let date2 = String((entry2["key"] as! String).suffix(8))
+    return isEarlierDate(date2, date1)
+}
+
 class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollViewDelegate, MFMailComposeViewControllerDelegate {
     @IBOutlet weak var welcomeView: UIView!
     @IBOutlet weak var background: UIImageView!

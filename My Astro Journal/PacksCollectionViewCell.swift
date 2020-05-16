@@ -20,6 +20,6 @@ class PacksCollectionViewCell: UICollectionViewCell {
         aovc!.packShowMoreInfo(ind)
     }
     @IBAction func priceButtonTapped(_ sender: Any) {
-        
+        aovc!.packPurchase(ind)
     }
 }

@@ -79,7 +79,7 @@ class ProfileCreationViewController: UIViewController, UINavigationControllerDel
         scrollView.delegate = (self as UIScrollViewDelegate)
         removeImageButton.isHidden = true
         imageView.layer.borderWidth = 2
-        imageView.layer.borderColor = UIColor.orange.cgColor
+        imageView.layer.borderColor = astroOrange
         for field in [favObjField, bioField, websiteField, instaField, youtubeField, fbField, nameField, locationField, telescopeField, telescopeField2, telescopeField3, mountField, mountField2, mountField3, cameraField, cameraField2, cameraField3] {
             field!.layer.borderWidth = 1
             field!.layer.borderColor = UIColor.white.cgColor
@@ -271,6 +271,7 @@ class ProfileCreationViewController: UIViewController, UINavigationControllerDel
                 } else {
                     print("done storing profile image")
                     firstTime = true
+                    entryEditFirstTime = true
                     self.performSegue(withIdentifier: "profileCreationToCalendar", sender: self)
                 }
             }

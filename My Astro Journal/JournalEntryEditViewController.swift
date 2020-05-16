@@ -78,6 +78,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
     var entryDate = ""
     var entryList: [Dictionary<String, Any>] = []
     var selectedEntryInd = 0
+    var formattedTargetsList: [String]? = nil
     var entryData: Dictionary<String, Any> = [:]
     let userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
     var userData: Dictionary<String, Any> = [:]
@@ -184,12 +185,11 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         let color = UIColor(red: 1, green: 1, blue: 1, alpha: 0.6)
         targetField.attributedPlaceholder = NSAttributedString(string: "target", attributes: [NSAttributedString.Key.foregroundColor : color])
         bigImageView.layer.borderWidth = 2
-        bigImageView.layer.borderColor = UIColor.orange.cgColor
+        bigImageView.layer.borderColor = astroOrange
         timeStartDropDown = DropDown()
         timeStartDropDown!.backgroundColor = .darkGray
         timeStartDropDown!.textColor = .white
         timeStartDropDown!.textFont = UIFont(name: "Pacifica Condensed", size: 15)!
-        timeStartDropDown!.separatorColor = .white
         timeStartDropDown!.cellHeight = 34
         timeStartDropDown!.cornerRadius = 10
         timeStartDropDown!.anchorView = timeStartField
@@ -202,7 +202,6 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         timeEndDropDown!.backgroundColor = .darkGray
         timeEndDropDown!.textColor = .white
         timeEndDropDown!.textFont = UIFont(name: "Pacifica Condensed", size: 15)!
-        timeEndDropDown!.separatorColor = .white
         timeEndDropDown!.cellHeight = 34
         timeEndDropDown!.cornerRadius = 10
         timeEndDropDown!.anchorView = timeEndField
@@ -309,11 +308,12 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         memoriesField.autocapitalizationType = .none
         memoriesField.autocorrectionType = .yes
         endNoInput()
-        if firstTime {
+        if entryEditFirstTime {
             let alertController = UIAlertController(title: "Tutorial", message: "First, add the object's name on the top left, the constellation should be recognized automatically! Then, input the time, location, equipment used, and write down your memories from the night. Check Observed if you have seen the object through an eyepiece, and Photographed if you have captured the target and are proud of the result! Besides your final image, you can also add 3 extra photographs from the night. ", preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
             alertController.addAction(defaultAction)
             self.present(alertController, animated: true, completion: nil)
+            entryEditFirstTime = false
         }
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -724,14 +724,15 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         let userName = KeychainWrapper.standard.string(forKey: "userName")!
         if entryData.count == 0 {
             if entryList.count == 0 {
-                dataToPut = ["data": [newEntryData], "userName": userName]
+                dataToPut = ["data": [newEntryData], "formattedTargets": [formattedTarget], "userName": userName]
             } else {
                 entryList.append(newEntryData)
-                dataToPut = ["data": entryList, "userName": userName]
+                formattedTargetsList!.append(formattedTarget)
+                dataToPut = ["data": entryList, "formattedTargets": formattedTargetsList!, "userName": userName]
             }
         } else {
             entryList[selectedEntryInd] = newEntryData
-            dataToPut = ["data": entryList, "userName": userName]
+            dataToPut = ["data": entryList, "formattedTargets": formattedTargetsList!, "userName": userName]
         }
         db.collection("journalEntries").document(userKey + entryDate).setData(dataToPut, merge: false)
         
@@ -1121,7 +1122,8 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         if entryList.count > 1 {
             //remove journal entry from list
             entryList.remove(at: selectedEntryInd)
-            entryDoc.setData(["data": entryList], merge: true)
+            formattedTargetsList!.remove(at: formattedTargetsList!.index(of: formattedTarget)!)
+            entryDoc.setData(["data": entryList, "formattedTargets": formattedTargetsList!], merge: true)
         } else {
             //delete journal entry list document
             entryList = []

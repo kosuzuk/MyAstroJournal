@@ -79,6 +79,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     var entryToShowDate = ""
     var selectedEntryList: [[String: Any]] = []
     var selectedEntryInd = 0
+    var formattedTargetsList: [String] = []
     var jevc: JournalEntryViewController? = nil
     var iodvc: ImageOfDayViewController? = nil
     var monthTodayInt = 0
@@ -166,13 +167,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 imageOfDayBottomCipad.constant = 30
             }
         }
-        imageOfDayImageView.layer.borderColor = UIColor.orange.cgColor
+        imageOfDayImageView.layer.borderColor = astroOrange
         imageOfDayImageView.layer.borderWidth = 1.0
         monthDropDown = DropDown()
         monthDropDown!.backgroundColor = .darkGray
         monthDropDown!.textColor = .white
         monthDropDown!.textFont = UIFont(name: "Pacifica Condensed", size: 14)!
-        monthDropDown!.separatorColor = .white
         monthDropDown!.cellHeight = 34
         monthDropDown!.cornerRadius = 10
         monthDropDown!.anchorView = monthButton
@@ -181,7 +181,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         yearDropDown!.backgroundColor = .darkGray
         yearDropDown!.textColor = .white
         yearDropDown!.textFont = UIFont(name: "Pacifica Condensed", size: 14)!
-        yearDropDown!.separatorColor = .white
         yearDropDown!.cellHeight = 34
         yearDropDown!.cornerRadius = 10
         yearDropDown!.bottomOffset = CGPoint(x: 0, y: 25)
@@ -645,6 +644,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             vc!.entryDate = newEntryDate
             vc!.entryList = selectedEntryList
             vc!.selectedEntryInd = selectedEntryList.count
+            vc!.formattedTargetsList = formattedTargetsList
             vc!.cvc = self
             newEntryDate = ""
             newEntryButton.isHidden = false
@@ -663,6 +663,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             vc2!.entryDate = entryToShowDate
             vc2!.entryList = selectedEntryList
             vc2!.selectedEntryInd = selectedEntryInd
+            vc2!.formattedTargetsList = formattedTargetsList
             vc2!.cvc = self
             jevc = vc2!
             return

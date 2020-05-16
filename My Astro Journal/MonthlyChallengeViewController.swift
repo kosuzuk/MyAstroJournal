@@ -20,25 +20,30 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
     @IBOutlet weak var challengeTargetImageView: UIImageView!
     @IBOutlet weak var targetLabel: UILabel!
     @IBOutlet weak var entriesTableView: UITableView!
+    @IBOutlet weak var trophyWC: NSLayoutConstraint!
     @IBOutlet weak var trophyTopC: NSLayoutConstraint!
     @IBOutlet weak var textViewWC: NSLayoutConstraint!
     @IBOutlet weak var OPTLeadingC: NSLayoutConstraint!
     var challengeData: [String: Any]? = nil
     var formattedChallengeTarget = ""
-    var winningEntryData: [[String: Any]]? = nil
-    var entriesList: [[String: String]]? = nil
+    var entryListToShowData: [[String: Any]]? = nil
+    var entryToShowInd = 0
+    var entryToShowDate = ""
+    var basicEntryDataList: [[String: String]] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         if screenH < 600 {
             banner.isHidden = true
-            trophyTopC.constant = -64
+            trophyWC.constant = 30
+            trophyTopC.constant = -50
             textViewWC.constant = 320
             OPTLeadingC.constant = -290
+            
         }
-        challengeTargetImageView.layer.borderColor = UIColor.orange.cgColor
+        challengeTargetImageView.layer.borderColor = astroOrange
         challengeTargetImageView.layer.borderWidth = 1
         targetLabel.backgroundColor = UIColor(patternImage: UIImage(named: "Calendar/light")!)
-        db.collection("monthlyChallenge").document(String(dateToday.prefix(2) + dateToday.suffix(4))).getDocument(completion: {(snapshot, Error) in
+        db.collection("monthlyChallenges").document(String(dateToday.prefix(2) + dateToday.suffix(4))).getDocument(completion: {(snapshot, Error) in
             if Error != nil {
                 print(Error!)
             } else {
@@ -64,21 +69,23 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
                             let entryListData = (doc.data()["data"] as! [[String: Any]])
                             for i in 0..<entryListData.endIndex {
                                 if entryListData[i]["formattedTarget"] as! String == self.formattedChallengeTarget && entryListData[i]["mainImageKey"] as! String != "" {
-                                    let listItem = ["key": doc.documentID, "imageKey": entryListData[i]["imageKey"], "userName": doc.data()["userName"]]
-                                    self.entriesList!.append(listItem as! [String : String])
+                                    let listItem = ["key": doc.documentID, "imageKey": entryListData[i]["mainImageKey"] as! String, "userName": doc.data()["userName"] as! String]
+                                    self.basicEntryDataList.append(listItem)
                                     break
                                 }
                             }
                         }
                         //sort from most recent to oldest entries
-                        self.entriesList!.sort(by: ¬)
+                        self.basicEntryDataList.sort(by: ¬)
+                        self.entriesTableView.reloadData()
+                        endNoInput()
                     }
                 })
             }
         })
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return entriesList!.count
+        return basicEntryDataList.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MonthlyChallengeEntryCell
@@ -88,9 +95,9 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination as? JournalEntryViewController
         if vc != nil {
-            vc!.entryDate = String((challengeData!["lastMonthJournalEntryListKey"] as! String).suffix(8))
-            vc!.entryList = winningEntryData!
-            vc!.selectedEntryInd = 0
+            vc!.entryDate = entryToShowDate
+            vc!.entryList = entryListToShowData!
+            vc!.selectedEntryInd = entryToShowInd
             vc!.editButton.isHidden = true
             vc!.featuredButton.isUserInteractionEnabled = false
             vc!.memoriesLabel.isHidden = true
@@ -100,17 +107,43 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
             return
         }
     }
-    @IBAction func seeButtonTapped(_ sender: Any) {
-        db.collection("journalEntries").document(challengeData!["lastMonthJournalEntryListKey"] as! String).getDocument(completion: {(snapshot, Error) in
+    func manageMoveToEntry(key: String, data: [String: Any]?, targetToLookFor: String) {
+        if data != nil {
+            let entryListData = data!["data"] as! [[String: Any]]
+            for i in 0..<entryListData.endIndex - 1 {
+                if entryListData[i]["formattedTarget"] as! String == self.formattedChallengeTarget && entryListData[i]["mainImageKey"] as! String != "" {
+                    self.entryListToShowData = (data!["data"] as! [[String : Any]])
+                    self.entryToShowInd = i
+                    self.entryToShowDate = String(key.suffix(8))
+                    self.performSegue(withIdentifier: "MonthlyChallengeToEntry", sender: self)
+                    return
+                }
+            }
+        }
+        let alertController = UIAlertController(title: "Entry deleted", message: "User has deleted that entry.", preferredStyle: .alert)
+        let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        alertController.addAction(defaultAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+    @IBAction func seeWinningEntryButtonTapped(_ sender: Any) {
+        let key = challengeData!["lastMonthJournalEntryListKey"] as! String
+        db.collection("journalEntries").document(key).getDocument(completion: {(snapshot, Error) in
             if Error != nil {
                 print(Error!)
             } else {
-                if snapshot!.data() == nil {
-                    return
-                } else {
-                    self.winningEntryData = (snapshot!.data()!["data"] as! [[String : Any]])
-                    self.performSegue(withIdentifier: "MonthlyChallengeToEntry", sender: self)
-                }
+                self.manageMoveToEntry(key: key, data: snapshot!.data(), targetToLookFor: self.challengeData!["lastMonthTarget"] as! String)
+            }
+        })
+    }
+    @IBAction func tableViewEntryTapped(_ sender: Any) {
+        let indexPath = entriesTableView.indexPathForRow(at: (sender as AnyObject).location(in: entriesTableView))
+        if indexPath == nil {return}
+        let key = self.basicEntryDataList[indexPath!.row]["key"]!
+        db.collection("journalEntries").document(key).getDocument(completion: {(snapshot, Error) in
+            if Error != nil {
+                print(Error!)
+            } else {
+                self.manageMoveToEntry(key: key, data: snapshot!.data(), targetToLookFor: self.formattedChallengeTarget)
             }
         })
     }
