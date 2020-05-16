@@ -97,7 +97,7 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CardBacksCollectionViewCell
             cell.ind = i
-            cell.imageView.image = UIImage(named: "AddOns/" + "CardBacks/" + "Backgrounds/" +  cardBackImageNumbers[i])!
+            cell.imageView.image = UIImage(named: "AddOns/" + "CardBacks/" + "Backgrounds/" + cardBackImageNumbers[i])!
             cell.imageNameLabel.text = cardBackImageNames[i]
             if cardBacksPurchased.contains(cardBackImageNames[i]) {
                 cell.imageView.layer.opacity = purchasedOpacity
@@ -140,7 +140,7 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
                     packsPurchased.sort()
                     db.collection("userData").document(userKey).setData(["packsUnlocked": [packNumber: true]], merge: true)
                 } else {
-                    let cardBackNumber = cardBackImageNames[purchasedItemInd]
+                    let cardBackNumber = cardBackImageNumbers[purchasedItemInd]
                     path = "AddOns/" + "CardBacks/" + "Backgrounds/" +  cardBackNumber
                     let visibleCell = cardBacksCollectionView.cellForItem(at: IndexPath(item: purchasedItemInd, section: 0)) as? CardBacksCollectionViewCell
                     if visibleCell != nil {
