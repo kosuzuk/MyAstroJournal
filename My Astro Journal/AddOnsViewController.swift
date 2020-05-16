@@ -65,6 +65,8 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
                 let userData = snapshot!.data()!
                 self.packsPurchased = Array((userData["packsUnlocked"] as! [String: Bool]).keys).sorted()
                 self.cardBacksPurchased = Array((userData["cardBacksUnlocked"] as! [String: Bool]).keys).sorted()
+                self.packsCollectionView.reloadData()
+                self.cardBacksCollectionView.reloadData()
             }
         })
         SKPaymentQueue.default().add(self)
