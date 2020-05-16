@@ -153,7 +153,7 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
                             })
                         }
                     }
-                    self.cardBackSelected = (data["cardBackSelected"]! as! String)
+                    self.cardBackSelected = (data["cardBackSelected"] as! String)
                     self.packsUnlocked = Array((data["packsUnlocked"] as! [String: Bool]).keys).sorted()
                     checkCardGroupsUnlocked()
                     self.cardBacksUnlocked = Array((data["cardBacksUnlocked"] as! [String: Bool]).keys).sorted()
