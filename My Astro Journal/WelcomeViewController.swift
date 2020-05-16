@@ -325,6 +325,28 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
 //        db.collection("imageOfDayKeys").document(todayDate).setData(["imageKey": imageKey, "journalEntryInd": 0, "journalEntryListKey": journalEntryKey,"userKey": userKey], merge: false)
 //        db.collection("imageOfDayLikes").document(todayDate).setData(["01JodwczOB4930pEfG3e": ""], merge: false)
 //        db.collection("imageOfDayComments").document(todayDate).setData(["01JodwczOB4930pEfG3e29-08:37:00": "hi I'm Koso", "dCoSGcE9VEzij6An1wl829-11:37:00": "Hello this is Antoine"], merge: false)
+//        db.collection("basicUserData").getDocuments(completion: {(x, y) in
+//            for i in x!.documents {
+//                if i.data()["userName"] as! String != "Antoine Grelin" && i.data()["userName"]  as! String != "ipad" {
+//                    db.collection("basicUserData").document(i.documentID).delete()
+//                }
+//            }
+//        })
+//        db.collection("userData").getDocuments(completion: {(x, y) in
+//            for i in x!.documents {
+//                if i.data()["userName"] as! String != "Antoine Grelin" && i.data()["userName"]  as! String != "ipad" {
+//                    db.collection("userData").document(i.documentID).delete()
+//                }
+//            }
+//        })
+//        db.collection("journalEntries").getDocuments(completion: {(x, y) in
+//            for i in x!.documents {
+//                if i.data()["userName"] as! String != "Antoine Grelin" && i.data()["userName"]  as! String != "ipad" {
+//                    db.collection("journalEntries").document(i.documentID).delete()
+//                }
+//            }
+//        })
+        
         
         if Auth.auth().currentUser != nil {
             db.collection("userData").whereField("email", isEqualTo: Auth.auth().currentUser!.email!).getDocuments(completion: { (QuerySnapshot, Error) in

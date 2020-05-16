@@ -366,6 +366,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                     }
                     featuredImageDate = ""
                     self.imageOfDayImageView.image = nil
+                    self.imageOfDayLight.isHidden = true
                     self.imageOfDayListenerInitiated = true
                 }
                 //udpdate or initialize iod image view and data
@@ -419,6 +420,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                         self.imageOfDayImageView.image = UIImage(data: imageData!)!
                         self.imageOfDayImageData = self.imageOfDayImageView.image
                         self.imageOfDayImageView.isUserInteractionEnabled = true
+                        self.imageOfDayLight.isHidden = false
                     }
                 }
                 var docRef = db.collection("journalEntries").document(iodKeysData["journalEntryListKey"] as! String)

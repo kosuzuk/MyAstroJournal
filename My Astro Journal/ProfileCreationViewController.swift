@@ -286,6 +286,7 @@ class ProfileCreationViewController: UIViewController, UINavigationControllerDel
             }
         } else {
             firstTime = true
+            entryEditFirstTime = true
             performSegue(withIdentifier: "profileCreationToCalendar", sender: self)
         }
     }
