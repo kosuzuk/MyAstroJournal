@@ -103,7 +103,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
         }
         scrollView.delegate = (self as UIScrollViewDelegate)
         imageView.layer.borderWidth = 1
-        imageView.layer.borderColor = UIColor.orange.cgColor
+        imageView.layer.borderColor = astroOrange
         for field in [favObjField, bioField, websiteField, instaField, youtubeField, fbField, nameField, locationField, telescopeField, telescopeField2, telescopeField3, mountField, mountField2, mountField3, cameraField, cameraField2, cameraField3] {
             field!.layer.borderWidth = 1
             field!.layer.borderColor = UIColor.white.cgColor
@@ -133,7 +133,6 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
         moreOptionsDD!.selectionBackgroundColor = .darkGray
         moreOptionsDD!.selectedTextColor = .white
         moreOptionsDD!.textFont = UIFont(name: "Pacifica Condensed", size: 15)!
-        moreOptionsDD!.separatorColor = .white
         moreOptionsDD!.cellHeight = 34
         moreOptionsDD!.cornerRadius = 10
         moreOptionsDD!.anchorView = moreButton
@@ -328,7 +327,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
         //check if there are any profile copies to update if user is currently or will be featured
         if (userData["userDataCopyKeys"] as! [String: String]).count != 0 {
             for (date, userDataKey) in (userData["userDataCopyKeys"] as! [String: String]) {
-                if date == featuredImageDate || isEarlierDate(date1: dateToday, date2: date) {
+                if date == featuredImageDate || isEarlierDate(dateToday, date) {
                     userDataCopyToChangeKeys.append(userDataKey)
                 }
             }

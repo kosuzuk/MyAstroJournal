@@ -1,8 +1,8 @@
 {
   "images" : [
     {
-      "filename" : "border.png",
       "idiom" : "universal",
+      "filename" : "OPT Logo PNG.png",
       "scale" : "1x"
     },
     {
@@ -15,10 +15,7 @@
     }
   ],
   "info" : {
-    "author" : "xcode",
-    "version" : 1
-  },
-  "properties" : {
-    "template-rendering-intent" : "original"
+    "version" : 1,
+    "author" : "xcode"
   }
 }

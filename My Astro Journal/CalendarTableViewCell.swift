@@ -150,12 +150,16 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
                 } else {
                     let data = QuerySnapshot!.data()
                     var entryList: [[String: Any]]
+                    var formattedTargetsList: [String]
                     if data == nil {
                         entryList = []
+                        formattedTargetsList = []
                     } else {
                         entryList = data!["data"] as! [[String: Any]]
+                        formattedTargetsList = data!["formattedTargets"] as! [String]
                     }
                     self.cvc?.selectedEntryList = entryList
+                    self.cvc?.formattedTargetsList = formattedTargetsList
                     self.cvc?.performSegue(withIdentifier: "calendarToEdit", sender: self)
                     return
                 }
@@ -167,15 +171,15 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
                     print(Error!)
                 } else {
                     let entryList = QuerySnapshot!.data()!["data"] as! [Dictionary<String, Any>]
-                    self.cvc?.entryToShowDate = cell.entryDate
                     self.cvc?.selectedEntryList = entryList
+                    self.cvc?.formattedTargetsList = QuerySnapshot!.data()!["formattedTargets"] as! [String]
+                    self.cvc?.entryToShowDate = cell.entryDate
                     if entryList.count > 1 {
                         let dd = DropDown()
                         self.cvc!.entryDropDown = dd
                         dd.backgroundColor = .darkGray
                         dd.textColor = .white
                         dd.textFont = UIFont(name: "Pacifica Condensed", size: 14)!
-                        dd.separatorColor = .white
                         dd.cellHeight = 34
                         dd.cornerRadius = 10
                         dd.cornerRadius = 10

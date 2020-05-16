@@ -156,7 +156,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             iconGap = websiteTrailingCipad.constant
         }
         userImage.layer.borderWidth = 2
-        userImage.layer.borderColor = UIColor.orange.cgColor
+        userImage.layer.borderColor = astroOrange
         editButton.isHidden = true
         userBio.textContainerInset.top = 0
         userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
@@ -285,7 +285,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                 self.statsHours.text = String(docData["totalHours"] as! Int)
                 var numfeatures = 0
                 for (date, _) in (docData["userDataCopyKeys"] as! [String: String]) {
-                    if isEarlierDate(date1: date, date2: dateToday) {
+                    if isEarlierDate(date, dateToday) {
                         numfeatures += 1
                     }
                 }
@@ -313,7 +313,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                     self.statsHours.text = String(hours)
                     var numfeatures = 0
                     for (date, _) in copyKeys {
-                        if isEarlierDate(date1: date, date2: dateToday) {
+                        if isEarlierDate(date, dateToday) {
                             numfeatures += 1
                         }
                     }

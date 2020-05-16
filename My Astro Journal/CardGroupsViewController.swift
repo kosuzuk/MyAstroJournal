@@ -51,6 +51,7 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
     var featuredTargets: [String: String] = [:]
     var packsUnlocked: [String] = []
     var cardBacksUnlocked: [String] = []
+    var cardBackPopOverController: CardBackBackgroundsPopOverViewController? = nil
     var cardBackSelected = ""
     var groupChosen = ""
     var catalogVC: CardCatalogViewController? = nil
@@ -103,6 +104,18 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
                 item.isHidden = true
             }
         }
+        func checkCardGroupsUnlocked() {
+            if packsUnlocked.contains("1") {
+                sharplessButton.setImage(UIImage(named: "CardGroups/sharpless")!, for: .normal)
+                sharplessButton.isUserInteractionEnabled = true
+            }
+            if packsUnlocked.contains("2") || packsUnlocked.contains("4") {
+                sharplessButton.setImage(UIImage(named: "CardGroups/sharpless")!, for: .normal)
+                othersButton.setImage(UIImage(named: "CardGroups/others")!, for: .normal)
+                sharplessButton.isUserInteractionEnabled = true
+                othersButton.isUserInteractionEnabled = true
+            }
+        }
         userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
         db.collection("userData").document(userKey).addSnapshotListener (includeMetadataChanges: true, listener: {(snapshot, Error) in
             if Error != nil {
@@ -128,7 +141,7 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
                         self.doneLoading = true
                     }
                     for date in featureDates {
-                        if isEarlierDate(date1: date, date2: dateToday) {
+                        if isEarlierDate(date, dateToday) {
                             self.numFeaturedDates += 1
                             db.collection("imageOfDayKeys").document(date).getDocument(completion: {(snapshot, Error) in
                                 if Error != nil {
@@ -141,22 +154,9 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
                         }
                     }
                     self.cardBackSelected = (data["cardBackSelected"]! as! String)
-                    for (pack, _) in (data["packsUnlocked"]! as! [String: Bool]) {
-                        self.packsUnlocked.append(pack)
-                        if pack == "1" {
-                            self.sharplessButton.setImage(UIImage(named: "CardGroups/sharpless")!, for: .normal)
-                            self.sharplessButton.isUserInteractionEnabled = true
-                        } else if pack == "2" || pack == "4" {
-                            self.sharplessButton.setImage(UIImage(named: "CardGroups/sharpless")!, for: .normal)
-                            self.othersButton.setImage(UIImage(named: "CardGroups/others")!, for: .normal)
-                            self.sharplessButton.isUserInteractionEnabled = true
-                            self.othersButton.isUserInteractionEnabled = true
-                        }
-                    }
-                    for (cardBack, _) in (data["cardBacksUnlocked"]! as! [String: Bool]) {
-                        self.cardBacksUnlocked.append(cardBack)
-                    }
-                    self.cardBacksUnlocked.sort()
+                    self.packsUnlocked = Array((data["packsUnlocked"] as! [String: Bool]).keys).sorted()
+                    checkCardGroupsUnlocked()
+                    self.cardBacksUnlocked = Array((data["cardBacksUnlocked"] as! [String: Bool]).keys).sorted()
                 } else {
                     //check if user entered or deleted entries
                     let newPhotoCardTargetDates = data["photoCardTargetDates"]! as! [String: [String]]
@@ -167,6 +167,17 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
                         self.catalogVC?.photoCardTargetDatesDict = newPhotoCardTargetDates
                         self.catalogVC?.cardTargetDatesDict = newCardTargetDates
                         self.catalogVC?.dictChanged = true
+                    }
+                    let packsUnlockedData = Array((data["packsUnlocked"] as! [String: Bool]).keys).sorted()
+                    if packsUnlockedData != self.packsUnlocked {
+                        self.catalogVC?.navigationController?.popToRootViewController(animated: true)
+                        self.packsUnlocked = packsUnlockedData
+                        checkCardGroupsUnlocked()
+                    }
+                    let cardBacksUnlockedData = Array((data["cardBacksUnlocked"] as! [String: Bool]).keys).sorted()
+                    if cardBacksUnlockedData != self.cardBacksUnlocked {
+                        self.cardBackPopOverController?.dismiss(animated: true)
+                        self.cardBacksUnlocked = cardBacksUnlockedData
                     }
                 }
             }
@@ -212,8 +223,8 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
         return true
     }
     @IBAction func cardBacksButtonTapped(_ sender: Any) {
-        let popOverController = self.storyboard!.instantiateViewController(withIdentifier: "CardBackBackgroundsPopOverViewController") as? CardBackBackgroundsPopOverViewController
-        popOverController!.modalPresentationStyle = .popover
+        cardBackPopOverController = (self.storyboard!.instantiateViewController(withIdentifier: "CardBackBackgroundsPopOverViewController") as! CardBackBackgroundsPopOverViewController)
+        cardBackPopOverController!.modalPresentationStyle = .popover
         var viewW = 290
         var viewH = 280
         if screenH > 1000 {//ipads
@@ -224,16 +235,16 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
                 viewH = 420
             }
         }
-        popOverController!.preferredContentSize = CGSize(width: viewW, height: viewH)
-        popOverController!.cardBacksUnlocked = cardBacksUnlocked
-        popOverController!.cgvc = self
-        let popOverPresentationController = popOverController!.popoverPresentationController!
+        cardBackPopOverController!.preferredContentSize = CGSize(width: viewW, height: viewH)
+        cardBackPopOverController!.cardBacksUnlocked = cardBacksUnlocked
+        cardBackPopOverController!.cgvc = self
+        let popOverPresentationController = cardBackPopOverController!.popoverPresentationController!
         popOverPresentationController.permittedArrowDirections = .up
         popOverPresentationController.sourceView = self.view
         let popOverPos = CGRect(x: cardBacksButton.frame.origin.x, y: cardBacksButton.frame.origin.y, width: cardBacksButton.bounds.width, height: cardBacksButton.bounds.height)
         popOverPresentationController.sourceRect = popOverPos
         popOverPresentationController.delegate = self as UIPopoverPresentationControllerDelegate
-        present(popOverController!, animated: true, completion: nil)
+        present(cardBackPopOverController!, animated: true, completion: nil)
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination as? CardCatalogViewController

@@ -26,11 +26,13 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
     @IBOutlet weak var photographedCheckImage: UIImageView!
     @IBOutlet weak var bigImageView: UIImageView!
     @IBOutlet weak var featuredButton: UIButton!
+    @IBOutlet weak var memoriesLabel: UILabel!
     @IBOutlet weak var memoriesField: UITextView!
     @IBOutlet weak var telescopeField: UILabel!
     @IBOutlet weak var mountField: UILabel!
     @IBOutlet weak var cameraField: UILabel!
     @IBOutlet weak var acquisitionField: UITextView!
+    @IBOutlet weak var extraPhotosLabel: UILabel!
     @IBOutlet weak var imageCollectionView: UICollectionView!
     @IBOutlet weak var contentViewHC: NSLayoutConstraint!
     @IBOutlet weak var contentViewHCipad: NSLayoutConstraint!
@@ -40,13 +42,14 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
     @IBOutlet weak var targetFieldWC: NSLayoutConstraint!
     @IBOutlet weak var arrowWC: NSLayoutConstraint!
     @IBOutlet weak var mountFieldWC: NSLayoutConstraint!
-    var entryList: [Dictionary<String, Any>] = []
+    var entryList: [[String: Any]] = []
     var selectedEntryInd = 0
-    var entryData: Dictionary<String, Any> = [:]
+    var formattedTargetsList: [String]? = nil
+    var entryData: [String: Any] = [:]
     var entryDate = ""
     var imageSelected: UIImage? = nil
     var featuredDate = ""
-    var keysData: [String: Any]? = nil
+    var iodKeysData: [String: Any]? = nil
     var cvc: CalendarViewController? = nil
     var jeevc: JournalEntryEditViewController? = nil
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -63,7 +66,7 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
             bigImageView.isHidden = true
         }
         bigImageView.layer.borderWidth = 2
-        bigImageView.layer.borderColor = UIColor.orange.cgColor
+        bigImageView.layer.borderColor = astroOrange
         memoriesField.layer.borderWidth = 1
         memoriesField.layer.borderColor = UIColor.gray.cgColor
         acquisitionField.layer.borderWidth = 1
@@ -114,7 +117,8 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
             imageRef.getData(maxSize: imgMaxByte) {data, Error in
                 if let Error = Error {
                     print(Error)
-                    return
+                    mainImagePulled = true
+                    checkFinishedPullingImages()
                 } else {
                     self.bigImageView.image = UIImage(data: data!)
                     self.entryData["mainImage"] = UIImage(data: data!)
@@ -153,16 +157,19 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
                 }
             }
         } else {
+            extraPhotosLabel.isHidden = true
+            contentViewHC.constant -= 157
+            contentViewHCipad.constant -= 227
             imagesPulled = true
             checkFinishedPullingImages()
         }
         featuredDate = entryData["featuredDate"] as! String
-        if featuredDate != "" && isEarlierDate(date1: featuredDate, date2: dateToday) {
+        if featuredDate != "" && isEarlierDate(featuredDate, dateToday) {
             db.collection("imageOfDayKeys").document(featuredDate).getDocument(completion: {(snapshot, Error) in
                 if Error != nil {
                     print(Error!)
                 } else {
-                    self.keysData = snapshot!.data()!
+                    self.iodKeysData = snapshot!.data()!
                     self.featuredButton.isHidden = false
                 }
             })
@@ -204,6 +211,7 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
             vc!.entryDate = entryDate
             vc!.entryList = entryList
             vc!.selectedEntryInd = selectedEntryInd
+            vc!.formattedTargetsList = formattedTargetsList
             vc!.entryData = entryData
             vc!.featuredDate = featuredDate
             vc!.cvc = cvc
@@ -212,9 +220,9 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
         }
         let vc2 = segue.destination as? ImageOfDayViewController
         if vc2 != nil {
-            vc2!.entryKey = keysData!["journalEntryListKey"] as! String
+            vc2!.entryKey = iodKeysData!["journalEntryListKey"] as! String
             vc2!.entryInd = selectedEntryInd
-            vc2!.iodUserKey = keysData!["userKey"] as! String
+            vc2!.iodUserKey = iodKeysData!["userKey"] as! String
             vc2!.imageData = bigImageView.image
             vc2!.featuredDate = featuredDate
             vc2!.cvc = cvc

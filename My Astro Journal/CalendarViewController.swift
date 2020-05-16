@@ -79,6 +79,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     var entryToShowDate = ""
     var selectedEntryList: [[String: Any]] = []
     var selectedEntryInd = 0
+    var formattedTargetsList: [String] = []
     var jevc: JournalEntryViewController? = nil
     var iodvc: ImageOfDayViewController? = nil
     var monthTodayInt = 0
@@ -166,13 +167,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 imageOfDayBottomCipad.constant = 30
             }
         }
-        imageOfDayImageView.layer.borderColor = UIColor.orange.cgColor
+        imageOfDayImageView.layer.borderColor = astroOrange
         imageOfDayImageView.layer.borderWidth = 1.0
         monthDropDown = DropDown()
         monthDropDown!.backgroundColor = .darkGray
         monthDropDown!.textColor = .white
         monthDropDown!.textFont = UIFont(name: "Pacifica Condensed", size: 14)!
-        monthDropDown!.separatorColor = .white
         monthDropDown!.cellHeight = 34
         monthDropDown!.cornerRadius = 10
         monthDropDown!.anchorView = monthButton
@@ -181,7 +181,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         yearDropDown!.backgroundColor = .darkGray
         yearDropDown!.textColor = .white
         yearDropDown!.textFont = UIFont(name: "Pacifica Condensed", size: 14)!
-        yearDropDown!.separatorColor = .white
         yearDropDown!.cellHeight = 34
         yearDropDown!.cornerRadius = 10
         yearDropDown!.bottomOffset = CGPoint(x: 0, y: 25)
@@ -256,7 +255,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 var alertDates = userData["featuredAlertDates"] as! [String]
                 if alertDates != [] {
                     for alertDate in alertDates {
-                        if isEarlierDate(date1: alertDate, date2: dateToday) {
+                        if isEarlierDate(alertDate, dateToday) {
                             let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CongratsViewController") as! CongratsViewController
                             popOverVC.featuredDate = alertDate
                             popOverVC.cvc = self
@@ -270,7 +269,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                     db.collection("userData").document(userKey).updateData(["featuredAlertDates": alertDates])
                 }
                 self.userAlertDates = alertDates
-                if (userData["email"] as! String) == "nevadaastrophotography@gmail.com" {
+                if (userData["email"] as! String) != "nevadaastrophotography@gmail.com" {
                     self.antoinePowersButton.isHidden = false
                     db.collection("iodDeletedNotifications").addSnapshotListener(includeMetadataChanges: true, listener: {(snapshot, Error) in
                         if Error != nil {
@@ -315,7 +314,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                                     self.entryToShowDate && iodDocs[j].data()["journalEntryInd"] as? Int == i {
                                     self.entryDropDown?.hide()
                                     let iodDate = iodDocs[j].documentID
-                                    if isEarlierDate(date1: iodDate, date2: dateToday) {
+                                    if isEarlierDate(iodDate, dateToday) {
                                         self.jevc?.navigationController?.popToRootViewController(animated: true)
                                     } else {
                                         self.jevc?.featuredDate = iodDate
@@ -330,7 +329,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                                 if iodDocs[j].documentID == entryFeaturedDate {
                                     if iodDocs[j].data()["journalEntryListKey"] as? String != userKey + self.entryToShowDate || iodDocs[j].data()["journalEntryInd"] as? Int != i {
                                         self.entryDropDown?.hide()
-                                        if isEarlierDate(date1: iodDocs[j].documentID, date2: dateToday) {
+                                        if isEarlierDate(iodDocs[j].documentID, dateToday) {
                                             self.jevc?.featuredButton.isHidden = true
                                             self.jevc?.jeevc?.photographedCheckBox.isUserInteractionEnabled = true
                                             self.jevc?.jeevc?.bigImageViewRemoveButton.isHidden = false
@@ -344,7 +343,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                                 //iod doc for this date was deleted
                                 if j == iodDocs.count - 1 {
                                     self.entryDropDown?.hide()
-                                    if isEarlierDate(date1: iodDocs[j].documentID, date2: dateToday) {
+                                    if isEarlierDate(iodDocs[j].documentID, dateToday) {
                                         self.jevc?.featuredButton.isHidden = true
                                         self.jevc?.jeevc?.photographedCheckBox.isUserInteractionEnabled = true
                                         self.jevc?.jeevc?.bigImageViewRemoveButton.isHidden = false
@@ -367,6 +366,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                     }
                     featuredImageDate = ""
                     self.imageOfDayImageView.image = nil
+                    self.imageOfDayLight.isHidden = true
                     self.imageOfDayListenerInitiated = true
                 }
                 //udpdate or initialize iod image view and data
@@ -379,16 +379,16 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 var iodDocToShow = iodDocs[0]
                 for doc in iodDocs {
                     //the entry date is not in the future and latest entry seen so far not in the future
-                    if isEarlierDate(date1: doc.documentID, date2: dateToday) && (!isEarlierDate(date1: iodDocToShow.documentID, date2: dateToday) || isEarlierDate(date1: iodDocToShow.documentID, date2: doc.documentID)) {
+                    if isEarlierDate(doc.documentID, dateToday) && (!isEarlierDate(iodDocToShow.documentID, dateToday) || isEarlierDate(iodDocToShow.documentID, doc.documentID)) {
                         iodDocToShow = doc
                     }
                 }
-                if !isEarlierDate(date1: iodDocToShow.documentID, date2: dateToday) {
+                if !isEarlierDate(iodDocToShow.documentID, dateToday) {
                     print("there are only featured images for the future")
                     noIodData()
                     return
                 }
-                if featuredImageDate != "" && !isEarlierDate(date1: featuredImageDate, date2: iodDocToShow.documentID) {
+                if featuredImageDate != "" && !isEarlierDate(featuredImageDate, iodDocToShow.documentID) {
                     print("Antoine has deleted today's iod data")
                     noIodData()
                     return
@@ -420,6 +420,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                         self.imageOfDayImageView.image = UIImage(data: imageData!)!
                         self.imageOfDayImageData = self.imageOfDayImageView.image
                         self.imageOfDayImageView.isUserInteractionEnabled = true
+                        self.imageOfDayLight.isHidden = false
                     }
                 }
                 var docRef = db.collection("journalEntries").document(iodKeysData["journalEntryListKey"] as! String)
@@ -432,12 +433,25 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                             print("no iod entry doc found")
                             noIodData()
                             return
-                        } else if data!.count == 0 {
+                        }
+                        if data!.count == 0 {
                             print("empty iod entry data")
                             noIodData()
                             return
                         }
-                        var iodTarget = (data!["data"] as! [Dictionary<String, Any>])[iodKeysData["journalEntryInd"] as! Int]["formattedTarget"] as! String
+                        let entryListData = data!["data"] as! [[String: Any]]
+                        if entryListData.count <= iodKeysData["journalEntryInd"] as! Int {
+                            print("entry list ind for featured entry is out of bounds")
+                            noIodData()
+                            return
+                        }
+                        let ind = iodKeysData["journalEntryInd"] as! Int
+                        if entryListData[ind]["formattedTarget"] as! String != iodKeysData["formattedTarget"] as! String {
+                            print("wrong entry is set for featured entry")
+                            noIodData()
+                            return
+                        }
+                        var iodTarget = entryListData[ind]["formattedTarget"] as! String
                         iodTarget = formattedTargetToTargetName(target: iodTarget)
                         self.imageOfDayLabel.text = iodTarget + " by " + (data!["userName"] as! String) + " "
                         let font = UIFont(name: self.imageOfDayLabel.font.fontName, size: self.imageOfDayLabel.font.pointSize)
@@ -632,6 +646,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             vc!.entryDate = newEntryDate
             vc!.entryList = selectedEntryList
             vc!.selectedEntryInd = selectedEntryList.count
+            vc!.formattedTargetsList = formattedTargetsList
             vc!.cvc = self
             newEntryDate = ""
             newEntryButton.isHidden = false
@@ -650,6 +665,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             vc2!.entryDate = entryToShowDate
             vc2!.entryList = selectedEntryList
             vc2!.selectedEntryInd = selectedEntryInd
+            vc2!.formattedTargetsList = formattedTargetsList
             vc2!.cvc = self
             jevc = vc2!
             return

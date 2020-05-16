@@ -154,7 +154,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
         )
         likeButton.isUserInteractionEnabled = false
         commentSendButton.isUserInteractionEnabled = false
-        imageView.layer.borderColor = UIColor.orange.cgColor
+        imageView.layer.borderColor = astroOrange
         imageView.layer.borderWidth = 1.5
         commentsTableView.layer.borderColor = UIColor.gray.cgColor
         commentsTableView.layer.borderWidth = 2
@@ -227,7 +227,6 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                     dd!.backgroundColor = .darkGray
                     dd!.textColor = .white
                     dd!.textFont = UIFont(name: "Pacifica Condensed", size: 13)!
-                    dd!.separatorColor = .clear
                     dd!.cellHeight = 34
                     dd!.cornerRadius = 10
                     dd!.anchorView = anchorView
@@ -380,7 +379,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                 self.statsHours.text = String(data["totalHours"] as! Int)
                 var numfeatures = 0
                 for (date, _) in (data["userDataCopyKeys"] as! [String: String]) {
-                    if isEarlierDate(date1: date, date2: dateToday) {
+                    if isEarlierDate(date, dateToday) {
                         numfeatures += 1
                     }
                 }
@@ -594,7 +593,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
         cell.userImageView.image = (basicUserDataDict[userKey]?["userImage"] as? UIImage)
         let cellLayer = cell.userImageView.layer
         cellLayer.borderWidth = 1.5
-        cellLayer.borderColor = UIColor.orange.cgColor
+        cellLayer.borderColor = astroOrange
         cellLayer.masksToBounds = true
         cellLayer.cornerRadius = cell.userImageView.bounds.width / 2
         cell.userNameLabel.text = (basicUserDataDict[userKey]?["userName"] as? String)

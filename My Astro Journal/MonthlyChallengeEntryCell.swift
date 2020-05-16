@@ -9,4 +9,6 @@
 import UIKit
 
 class MonthlyChallengeEntryCell: UITableViewCell {
+    @IBOutlet weak var targetImageView: UIImageView!
+    @IBOutlet weak var usernameLabel: UILabel!
 }

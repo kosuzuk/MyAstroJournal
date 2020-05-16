@@ -19,16 +19,16 @@ let ICTargets = ["IC59", "IC63", "IC405", "IC417", "IC434", "IC443", "IC1318", "
 let SharplessTargets = ["SH2-129", "SH2-157", "SH2-240", "SH2-68", "SH2-136"]
 let OthersTargets = ["Milkyway", "JU1", "ARP188", "XSS J16271-2423", "OU4"]
 let GalaxyTargets = ["M31", "M32", "M33", "M49", "M51", "M58", "M59", "M60", "M61", "M63", "M64", "M65", "M66", "M74", "M77", "M81", "M82", "M83", "M84", "M85", "M86", "M87", "M88", "M89", "M90", "M91", "M94", "M95", "M96", "M98", "M99", "M100", "M101", "M102", "M104", "M105", "M106", "M108", "M109", "M110", "NGC292", "NGC3628", "NGC4565", "NGC4567", "NGC4568", "NGC4631", "NGC4656", "NGC4676", "NGC5128", "NGC5474", "NGC5907", "NGC6946", "Milkyway", "ARP188"]
-let NebulaTargets = ["M1", "M8", "M16", "M17", "M20", "M27", "M42", "M43", "M57", "M76", "M78", "M97", "NGC246", "NGC281", "NGC1499", "NGC1501", "NGC1535", "NGC1977", "NGC2024", "NGC2080", "NGC2237", "NGC2244", "NGC2264", "NGC2359", "NGC2392", "NGC2440","NGC3242", "NGC3372", "NGC6334", "NGC6369", "NGC6543", "NGC6741", "NGC6781", "NGC6826", "NGC6888", "NGC6960", "NGC6974", "NGC6992", "NGC7000", "NGC7009", "NGC7023", "NGC7293", "NGC7380", "NGC7635", "NGC7662", "IC59", "IC63", "IC405", "IC417", "IC434", "IC443", "IC1318", "IC1396", "IC1795", "IC1805", "IC1848", "IC2118", "IC2177", "IC2944", "IC4592", "IC5067", "IC5070", "IC5146", "SH2-68", "SH2-129", "SH2-136", "SH2-157", "SH2-240", "JU1", "XSS J16271-2423", "OU4"]
-let ClusterTargets = ["M2", "M3", "M4", "M5", "M6", "M7", "M9", "M10", "M11", "M12", "M13", "M14", "M15", "M18", "M19", "M21", "M22", "M23", "M24", "M25", "M26", "M28", "M29", "M30", "M34", "M35", "M36", "M37", "M38", "M39", "M41", "M44", "M45", "M46", "M47", "M48", "M50", "M52", "M53", "M54", "M55", "M56", "M62", "M67", "M68", "M69", "M70", "M71", "M72", "M75", "M79", "M80", "M92", "M93", "M103", "M107", "NGC104", "NGC457", "NGC869", "NGC884", "NGC1502", "NGC2360", "NGC2362", "NGC3532", "NGC4755", "NGC5139", "NGC5466", "NGC6388", "NGC6541", "NGC6723", "NGC6752", "IC2391", "IC2602"]
+let NebulaTargets = ["M1", "M8", "M16", "M17", "M20", "M27", "M42", "M43", "M57", "M76", "M78", "M97", "NGC246", "NGC281", "NGC1499", "NGC1501", "NGC1535", "NGC1977", "NGC2024", "NGC2070", "NGC2080", "NGC2237", "NGC2264", "NGC2359", "NGC2392", "NGC2440","NGC3242", "NGC3372", "NGC6334", "NGC6369", "NGC6543", "NGC6741", "NGC6781", "NGC6826", "NGC6888", "NGC6960", "NGC6974", "NGC6992", "NGC7000", "NGC7009", "NGC7023", "NGC7293", "NGC7380", "NGC7635", "NGC7662", "IC59", "IC63", "IC405", "IC417", "IC434", "IC443", "IC1318", "IC1396", "IC1795", "IC1805", "IC1848", "IC2118", "IC2177", "IC2944", "IC4592", "IC5067", "IC5070", "IC5146", "SH2-68", "SH2-129", "SH2-136", "SH2-157", "SH2-240", "JU1", "XSS J16271-2423", "OU4"]
+let ClusterTargets = ["M2", "M3", "M4", "M5", "M6", "M7", "M9", "M10", "M11", "M12", "M13", "M14", "M15", "M18", "M19", "M21", "M22", "M23", "M24", "M25", "M26", "M28", "M29", "M30", "M34", "M35", "M36", "M37", "M38", "M39", "M41", "M44", "M45", "M46", "M47", "M48", "M50", "M52", "M53", "M54", "M55", "M56", "M62", "M67", "M68", "M69", "M70", "M71", "M72", "M75", "M79", "M80", "M92", "M93", "M103", "M107", "NGC104", "NGC457", "NGC869", "NGC884", "NGC1502", "NGC2244", "NGC2360", "NGC2362", "NGC3532", "NGC4755", "NGC5139", "NGC5466", "NGC6388", "NGC6541", "NGC6723", "NGC6752", "IC2391", "IC2602"]
 let PlanetTargets = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"]
 
 let doubleTargets = ["IC5067": "IC5070", "IC5070": "IC5067", "NGC869": "NGC884", "NGC884": "NGC869", "NGC2237": "NGC2244", "NGC2244": "NGC2237", "NGC4567": "NGC4568", "NGC4568": "NGC4567"]
 
-let nicknames = ["crab": "M1", "butterfly": "NGC4568", "ptolemy's": "M7", "lagoon": "M8", "wild duck": "M11", "hercules": "M13", "great pegasus": "M15", "eagle": "M16", "omega": "M17", "trifid": "M20", "sagittarius star cloud": "M24", "dumbbell": "M27", "andromeda": "M31", "le gentil": "M32", "triangulum": "M33", "pinwheel cluster": "M36", "starfish": "M38", "double": "M40", "orion": "M42", "de mairan's": "M43", "beehive": "M44", "pleiades": "M45", "whirlpool": "M51", "summer rose": "M55", "ring": "M57", "sunflower": "M63", "black eye": "M64", "king cobra": "M67", "phantom": "M74", "little dumbbell": "M76", "cetus a": "M77", "bode's": "M81", "cigar": "M82", "southern pinwheel": "M83", "virgo a": "M87", "cat's eye galaxy": "M94", "owl": "NGC457", "coma pinwheel": "M99", "pinwheel galaxy": "M101", "sombrero": "M104", "surfboard": "M108", "edward's young": "M110", "ghost of cassiopeia": "IC63", "flaming": "IC405", "horsehead": "IC434", "jellyfish": "IC443", "elephant's trunk": "IC1396", "heart": "IC1805", "soul": "IC1848", "witch head": "IC2118", "pelican": "IC5067", "cocoon": "IC5146", "47 tucanae": "NGC104", "pacman": "NGC281", "small magellanic cloud": "NGC292", "double cluster in perseus": "NGC869", "california": "NGC1499", "runningman": "NGC1977", "flame": "NGC2024", "tarantula": "NGC2070", "rosette": "NGC2237", "cone": "NGC2264", "thor's helmet": "NGC2359", "eskimo": "NGC2392", "carina": "NGC3372", "hamburger": "NGC3628", "needle": "NGC4565", "whale": "NGC4631", "centaurus a": "NGC5128", "omega centauri": "NGC5139", "cat's eye nebula": "NGC6543", "crescent": "NGC6888", "fireworks": "NGC6946", "western veil": "NGC6960", "pickering's triangle": "NGC6974", "eastern veil": "NGC6992", "north america": "NGC7000", "iris": "NGC7023", "helix": "NGC7293", "wizard": "NGC7380", "bubble": "NGC7635", "oyster": "NGC1501", "flying bat": "SH2-129", "lobster claw": "SH2-157", "mice": "NGC4676", "cat's paw": "NGC6334", "spider": "IC417", "fishhead": "IC1795", "fish head": "IC1795", "seagull": "IC2177", "running chicken": "IC2944", "blue horsehead": "IC4592", "spaghetti": "SH2-240", "soap bubble": "JU1", "tadpole": "ARP188", "bow tie": "NGC2440", "saturn nebula": "NGC7009", "blue snowball": "NGC7662", "sadr region": "IC1318", "hockey stick": "NGC4656", "rho ophiuchi": "XSS J16271-2423", "kemble's cascade": "NGC1502", "football": "NGC3532", "jewel box": "NGC4755", "caroline's": "NGC2360", "tau canis majoris": "NGC2362", "omicron velorum": "IC2391", "southern pleiades": "IC2602", "skull": "NGC246", "little ghost": "NGC6369", "knife edge": "NGC5907", "phantom streak": "NGC6741", "ghost of the moon": "NGC6781", "blink": "NGC6826", "ghost head": "NGC2080", "cleopatra's eye": "NGC1535", "giant squid": "OU4", "ghost of jupiter": "NGC3242", "death eater": "SH2-68", "ghost": "SH2-136"]
+let nicknames = ["crab": "M1", "butterfly": "NGC4568", "ptolemy's": "M7", "lagoon": "M8", "wild duck": "M11", "hercules": "M13", "great pegasus": "M15", "eagle": "M16", "omega": "M17", "trifid": "M20", "sagittarius star cloud": "M24", "dumbbell": "M27", "andromeda": "M31", "le gentil": "M32", "triangulum": "M33", "pinwheel cluster": "M36", "starfish": "M38", "double": "M40", "orion": "M42", "de mairan's": "M43", "beehive": "M44", "pleiades": "M45", "whirlpool": "M51", "summer rose": "M55", "ring": "M57", "sunflower": "M63", "black eye": "M64", "king cobra": "M67", "phantom": "M74", "little dumbbell": "M76", "cetus a": "M77", "bode's": "M81", "cigar": "M82", "southern pinwheel": "M83", "virgo a": "M87", "cat's eye galaxy": "M94", "owl": "NGC457", "coma pinwheel": "M99", "pinwheel galaxy": "M101", "sombrero": "M104", "surfboard": "M108", "edward's young": "M110", "ghost of cassiopeia": "IC63", "flaming": "IC405", "horsehead": "IC434", "jellyfish": "IC443", "elephant's trunk": "IC1396", "heart": "IC1805", "soul": "IC1848", "witch head": "IC2118", "pelican": "IC5067", "cocoon": "IC5146", "47 tucanae": "NGC104", "pacman": "NGC281", "small magellanic cloud": "NGC292", "double cluster in perseus": "NGC869", "california": "NGC1499", "runningman": "NGC1977", "flame": "NGC2024", "tarantula": "NGC2070", "rosette": "NGC2237", "cone": "NGC2264", "thor's helmet": "NGC2359", "eskimo": "NGC2392", "carina": "NGC3372", "hamburger": "NGC3628", "needle": "NGC4565", "whale": "NGC4631", "centaurus a": "NGC5128", "omega centauri": "NGC5139", "cat's eye nebula": "NGC6543", "crescent": "NGC6888", "fireworks": "NGC6946", "western veil": "NGC6960", "pickering's triangle": "NGC6974", "eastern veil": "NGC6992", "north america": "NGC7000", "iris": "NGC7023", "helix": "NGC7293", "wizard": "NGC7380", "bubble": "NGC7635", "oyster": "NGC1501", "flying bat": "SH2-129", "lobster claw": "SH2-157", "mice": "NGC4676", "cat's paw": "NGC6334", "spider": "IC417", "fishhead": "IC1795", "fish head": "IC1795", "seagull": "IC2177", "running chicken": "IC2944", "blue horsehead": "IC4592", "spaghetti": "SH2-240", "soap bubble": "JU1", "tadpole": "ARP188", "bow tie": "NGC2440", "saturn nebula": "NGC7009", "blue snowball": "NGC7662", "sadr region": "IC1318", "hockey stick": "NGC4656", "rho ophiuchi": "XSS J16271-2423", "kemble's cascade": "NGC1502", "football": "NGC3532", "jewel box": "NGC4755", "caroline's": "NGC2360", "tau canis majoris": "NGC2362", "omicron velorum": "IC2391", "southern pleiades": "IC2602", "skull": "NGC246", "little ghost": "NGC6369", "knife edge": "NGC5907", "phantom streak": "NGC6741", "ghost of the moon": "NGC6781", "blink": "NGC6826", "ghost head": "NGC2080", "cleopatra's eye": "NGC1535", "giant squid": "OU4", "ghost of jupiter": "NGC3242", "death eater": "SH2-68", "ghost": "SH2-136", "milky way": "Milkyway", "milkyway": "Milkyway"]
 
 let MessierConst = [1: "Taurus", 2: "Aquarius", 3: "Canes Venatici", 4: "Scorpius", 5: "Serpens", 6: "Scorpius", 7: "Scorpius", 8: "Sagittarius", 9: "Ophiuchus", 10: "Ophiuchus", 11: "Scutum", 12: "Ophiuchus", 13: "Hercules", 14: "Ophiuchus", 15: "Pegasus", 16: "Serpens", 17: "Sagittarius", 18: "Sagittarius", 19: "Ophiuchus", 20: "Sagittarius", 21: "Sagittarius", 22: "Sagittarius", 23: "Sagittarius", 24: "Sagittarius", 25: "Sagittarius", 26: "Scutum", 27: "Vulpecula", 28: "Sagittarius", 29: "Cygnus", 30: "Capricornus", 31: "Andromeda", 32: "Andromeda", 33: "Triangulum", 34: "Perseus", 35: "Gemini", 36: "Auriga", 37: "Auriga", 38: "Auriga", 39: "Cygnus", 40: "Ursa Major", 41: "Canis Major", 42: "Orion", 43: "Orion", 44: "Cancer", 45: "Taurus", 46: "Puppis", 47: "Puppis", 48: "Hydra", 49: "Virgo", 50: "Monoceros", 51: "Canes Venatici", 52: "Cassiopeia", 53: "Coma Berenices", 54: "Sagittarius", 55: "Sagittarius", 56: "Lyra", 57: "Lyra", 58: "Virgo", 59: "Virgo", 60: "Virgo", 61: "Virgo", 62: "Ophiuchus", 63: "Canes Venatici", 64: "Coma Berenices", 65: "Leo", 66: "Leo", 67: "Cancer", 68: "Hydra", 69: "Sagittarius", 70: "Sagittarius", 71: "Sagitta", 72: "Aquarius", 73: "Aquarius", 74: "Pisces", 75: "Sagittarius", 76: "Perseus", 77: "Cetus", 78: "Orion", 79: "Lepus", 80: "Scorpius", 81: "Ursa Major", 82: "Ursa Major", 83: "Hydra", 84: "Virgo",  85: "ComaBerenices", 86: "Virgo", 87: "Virgo", 88: "Coma Berenices", 89: "Virgo", 90: "Virgo", 91: "Coma Berenices", 92: "Hercules", 93: "Puppis", 94: "Canes Venatici", 95: "Leo", 96: "Leo", 97: "Ursa Major", 98: "ComaBerenices", 99: "Coma Berenices", 100: "Coma Berenices", 101: "Ursa Major", 102: "Draco", 103: "Cassiopeia", 104: "Virgo", 105: "Leo", 106: "Canes Venatici", 107: "Ophiuchus", 108: "Ursa Major", 109: "Ursa Major", 110: "Andromeda"]
-let NGCConst = [104: "Tucana", 246: "Cetus", 281: "Cassiopeia", 292: "Tucana", 457: "Cassiopeia", 869: "Perseus", 884: "Perseus", 1499: "Perseus", 1501: "Camelopardalis", 1502: "Camelopardalis", 1535: "Eridanus", 1977: "Orion", 2024: "Orion", 2080: "Dorado", 2237: "Monoceros", 2244: "Monoceros", 2264: "Monoceros", 2359: "Canis Major", 2360: "Canis Major", 2362: "Canis Major", 2392: "Gemini", 2440: "Puppis", 3242: "Hydra", 3372: "Carina", 3532: "Carina", 3628: "Leo", 4565: "Coma Berenices", 4567: "Virgo", 4568: "Virgo", 4631: "Canes Venatici", 4656: "Canes Venatici", 4676: "Coma Berenices", 4755: "Crux", 5128: "Centaurus", 5139: "Centaurus", 5466: "Boötes", 5474: "Ursa Major", 5907: "Draco", 6334: "Scorpius", 6369: "Ophiuchus", 6388: "Scorpius", 6541: "Corona Australis", 6543: "Draco", 6723: "Sagittarius", 6741: "Aquila", 6752: "Pavo", 6781: "Aquila", 6826: "Cygnus", 6888: "Cygnus", 6946: "Cygnus", 6960: "Cygnus", 6974: "Cygnus", 6992: "Cygnus", 7000: "Cygnus", 7009: "Aquarius", 7023: "Cepheus", 7293: "Aquarius", 7380: "Cepheus", 7635: "Cassiopeia", 7662: "Andromeda"]
+let NGCConst = [104: "Tucana", 246: "Cetus", 281: "Cassiopeia", 292: "Tucana", 457: "Cassiopeia", 869: "Perseus", 884: "Perseus", 1499: "Perseus", 1501: "Camelopardalis", 1502: "Camelopardalis", 1535: "Eridanus", 1977: "Orion", 2024: "Orion", 2070: "Dorado", 2080: "Dorado", 2237: "Monoceros", 2244: "Monoceros", 2264: "Monoceros", 2359: "Canis Major", 2360: "Canis Major", 2362: "Canis Major", 2392: "Gemini", 2440: "Puppis", 3242: "Hydra", 3372: "Carina", 3532: "Carina", 3628: "Leo", 4565: "Coma Berenices", 4567: "Virgo", 4568: "Virgo", 4631: "Canes Venatici", 4656: "Canes Venatici", 4676: "Coma Berenices", 4755: "Crux", 5128: "Centaurus", 5139: "Centaurus", 5466: "Boötes", 5474: "Ursa Major", 5907: "Draco", 6334: "Scorpius", 6369: "Ophiuchus", 6388: "Scorpius", 6541: "Corona Australis", 6543: "Draco", 6723: "Sagittarius", 6741: "Aquila", 6752: "Pavo", 6781: "Aquila", 6826: "Cygnus", 6888: "Cygnus", 6946: "Cygnus", 6960: "Cygnus", 6974: "Cygnus", 6992: "Cygnus", 7000: "Cygnus", 7009: "Aquarius", 7023: "Cepheus", 7293: "Aquarius", 7380: "Cepheus", 7635: "Cassiopeia", 7662: "Andromeda"]
 let ICConst = [59: "Cassiopeia", 63: "Cassiopeia", 405: "Auriga", 417: "Auriga", 434: "Orion", 443: "Gemini", 1318: "Cygnus", 1396: "Cepheus", 1795: "Cassiopeia", 1805: "Cassiopeia", 1848: "Cassiopeia", 2118: "Eridanus", 2177: "Monoceros", 2391: "Vela", 2602: "Carina", 2944: "Centaurus", 4592: "Scorpius", 5067: "Cygnus", 5070: "Cygnus", 5146: "Cygnus"]
 let SharplessConst = [68: "Serpens", 129: "Cepheus", 136: "Cepheus", 157: "Cassiopeia", 240: "Taurus"]
 let OthersConst = ["JU1": "Cygnus", "ARP188": "Draco", "XSS J16271-2423": "Ophiuchus", "OU4": "Cepheus"]
@@ -60,6 +60,7 @@ let screenW = UIScreen.main.bounds.width
 let screenH = UIScreen.main.bounds.height
 let monthNames = ["January", "Feburary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 var firstTime = false
+var entryEditFirstTime = false
 var dateToday = ""
 var featuredImageDate = ""
 //communicate between profile and calendar view if featured user changes username
@@ -70,6 +71,7 @@ let calCellSize = 50
 let iodUserIconSize = 30
 let maxSize = 700
 let imageTooBigMessage = "The image size is too big. Please choose another image."
+let astroOrange = UIColor(red: 1, green: 0.62, blue: 0, alpha: 1).cgColor
 
 func formatLoadingIcon(icon: UIActivityIndicatorView) -> UIActivityIndicatorView {
     icon.center = CGPoint(x: screenW / 2, y: screenH / 2 - 75)
@@ -78,13 +80,6 @@ func formatLoadingIcon(icon: UIActivityIndicatorView) -> UIActivityIndicatorView
         icon.style = UIActivityIndicatorView.Style.large
     }
     return icon
-}
-
-infix operator ^^
-extension Bool {
-    static func ^^(a:Bool, b:Bool) -> Bool {
-        return a != b
-    }
 }
 
 func processImageAndResize(inpImg: UIImage, resizeTo: CGSize, clip: Bool) -> [Any]? {
@@ -124,7 +119,7 @@ func processImage(inpImg: UIImage) -> [Any]? {
     return [img, imgData]
 }
 
-func isEarlierDate(date1: String, date2: String) -> Bool {
+func isEarlierDate(_ date1: String, _ date2: String) -> Bool {
     let year1 = Int(String(date1.suffix(4)))!
     let year2 = Int(String(date2.suffix(4)))!
     if year1 != year2 {
@@ -143,17 +138,23 @@ func isEarlierDate(date1: String, date2: String) -> Bool {
     return true
 }
 
-func formatTarget(inputTarget: String) -> String {
+func isEarlierMonth(_ month1: String, _ month2: String) -> Bool {
+    let date1 = String(month1.prefix(2) + "01" + month1.suffix(4))
+    let date2 = String(month2.prefix(2) + "01" + month2.suffix(4))
+    return isEarlierDate(date1, date2)
+}
+
+func formatTarget(_ inputTarget: String) -> String {
     //remove special chars and make it lowercased
     var target = inputTarget.trimmingCharacters(in: .whitespacesAndNewlines).replacingOccurrences(of: "’", with: "'").replacingOccurrences(of: "”", with: "\"").lowercased()
-    if target.prefix(4) == "the " {
-        target = String(target.suffix(target.count - 4))
-    }
-    if target.suffix(7) == " galaxy" && target != "cat's eye galaxy" && target != "pinwheel galaxy" {
-        target = String(target.prefix(target.count - 7))
-    }
     //check if a target nickname was inputted
     var res = target
+    if res.prefix(4) == "the " {
+        res = String(res.suffix(res.count - 4))
+    }
+    if res.suffix(7) == " galaxy" && res != "cat's eye galaxy" && res != "pinwheel galaxy" {
+        res = String(res.prefix(res.count - 7))
+    }
     if res.suffix(5) == " star" {
         res = String(res.prefix(res.count - 5))
     }
@@ -240,6 +241,22 @@ func formattedTargetToImageName(target: String) -> String {
     }
     return imageName
 }
+
+infix operator ^^
+extension Bool {
+    static func ^^ (a: Bool, b: Bool) -> Bool {
+        return a != b
+    }
+}
+
+infix operator ¬
+//returns true if entry1 was entered later than or on the same day as entry2
+func ¬ (entry1: Dictionary<String, Any>, entry2: Dictionary<String, Any>) -> Bool {
+    let date1 = String((entry1["key"] as! String).suffix(8))
+    let date2 = String((entry2["key"] as! String).suffix(8))
+    return isEarlierDate(date2, date1)
+}
+
 class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollViewDelegate, MFMailComposeViewControllerDelegate {
     @IBOutlet weak var welcomeView: UIView!
     @IBOutlet weak var background: UIImageView!
@@ -308,6 +325,28 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
 //        db.collection("imageOfDayKeys").document(todayDate).setData(["imageKey": imageKey, "journalEntryInd": 0, "journalEntryListKey": journalEntryKey,"userKey": userKey], merge: false)
 //        db.collection("imageOfDayLikes").document(todayDate).setData(["01JodwczOB4930pEfG3e": ""], merge: false)
 //        db.collection("imageOfDayComments").document(todayDate).setData(["01JodwczOB4930pEfG3e29-08:37:00": "hi I'm Koso", "dCoSGcE9VEzij6An1wl829-11:37:00": "Hello this is Antoine"], merge: false)
+//        db.collection("basicUserData").getDocuments(completion: {(x, y) in
+//            for i in x!.documents {
+//                if i.data()["userName"] as! String != "Antoine Grelin" && i.data()["userName"]  as! String != "ipad" {
+//                    db.collection("basicUserData").document(i.documentID).delete()
+//                }
+//            }
+//        })
+//        db.collection("userData").getDocuments(completion: {(x, y) in
+//            for i in x!.documents {
+//                if i.data()["userName"] as! String != "Antoine Grelin" && i.data()["userName"]  as! String != "ipad" {
+//                    db.collection("userData").document(i.documentID).delete()
+//                }
+//            }
+//        })
+//        db.collection("journalEntries").getDocuments(completion: {(x, y) in
+//            for i in x!.documents {
+//                if i.data()["userName"] as! String != "Antoine Grelin" && i.data()["userName"]  as! String != "ipad" {
+//                    db.collection("journalEntries").document(i.documentID).delete()
+//                }
+//            }
+//        })
+        
         
         if Auth.auth().currentUser != nil {
             db.collection("userData").whereField("email", isEqualTo: Auth.auth().currentUser!.email!).getDocuments(completion: { (QuerySnapshot, Error) in

@@ -63,7 +63,7 @@ class CardBackBackgroundsPopOverViewController: UIViewController, UICollectionVi
                 cell.layer.borderColor = (UIColor(red: 0.2, green: 0.7, blue: 0.2, alpha: 1).cgColor)
             } else {
                 cell.layer.borderWidth = 1.3
-                cell.layer.borderColor = UIColor.orange.cgColor
+                cell.layer.borderColor = astroOrange
             }
         }
         var selectedCardBackNum = String(selectedInd + 1)
@@ -111,7 +111,7 @@ class CardBackBackgroundsPopOverViewController: UIViewController, UICollectionVi
             cell.layer.borderColor = (UIColor(red: 0.2, green: 0.7, blue: 0.2, alpha: 1).cgColor)
         } else {
             cell.layer.borderWidth = 1.3
-            cell.layer.borderColor = UIColor.orange.cgColor
+            cell.layer.borderColor = astroOrange
         }
         if cell.imageView.gestureRecognizers == nil {
             cell.imageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(cardBackTapped)))
