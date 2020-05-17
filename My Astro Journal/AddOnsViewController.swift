@@ -185,9 +185,14 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
             } else if transaction.transactionState == .restored {
                 print("restored")
             }
+            endNoInput()
+            loadingIcon.stopAnimating()
         }
     }
     func purchase(productID: String) {
+        startNoInput()
+        view.addSubview(formatLoadingIcon(icon: loadingIcon))
+        loadingIcon.startAnimating()
         if SKPaymentQueue.canMakePayments() {
             let paymentRequest = SKMutablePayment()
             paymentRequest.productIdentifier = productID
