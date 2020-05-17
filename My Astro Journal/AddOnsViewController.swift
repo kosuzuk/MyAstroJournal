@@ -146,6 +146,25 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
                     }
                     packsPurchased.append(packNumber)
                     packsPurchased.sort()
+                    
+                    var jeevc: JournalEntryEditViewController? = nil
+                    var jeevcOpen = false
+                    if tabBarController!.viewControllers![0].children.count > 1 {
+                        if tabBarController!.viewControllers![0].children[1] as? JournalEntryEditViewController != nil {
+                            jeevc = (tabBarController!.viewControllers![0].children[1] as! JournalEntryEditViewController)
+                            jeevcOpen = true
+                        } else if tabBarController!.viewControllers![0].children.count > 2 && tabBarController!.viewControllers![0].children[2] as? JournalEntryEditViewController != nil {
+                            jeevc = (tabBarController!.viewControllers![0].children[2] as! JournalEntryEditViewController)
+                            jeevcOpen = true
+                        }
+                        if jeevcOpen {
+                            var userData = jeevc!.userData
+                            var packsUnlockedData = (userData["packsUnlocked"] as! [String: Bool])
+                            packsUnlockedData[packNumber] = true
+                            userData["packsUnlocked"] = packsUnlockedData
+                            jeevc!.userData = userData
+                        }
+                    }
                     db.collection("userData").document(userKey).setData(["packsUnlocked": [packNumber: true]], merge: true)
                 } else {
                     let cardBackNumber = cardBackImageNames[purchasedItemInd]
