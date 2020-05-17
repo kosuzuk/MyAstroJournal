@@ -27,6 +27,7 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
     var cardBackImageNumbers = ["6", "7", "8", "9", "10", "11", "12", "13"]
     var cardBackImageNames = ["Foggy Dreams", "Colors of Space", "Canyon Nights", "Digital Space", "Starburst", "Into the Wormhole", "Dusty", "Sparklers"]
     var cardBacksPurchased: [String] = []
+    var loaded = false
     let purchasedOpacity: Float = 0.4
     var purchasedItemType = ""
     var purchasedItemInd = 0
@@ -65,6 +66,7 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
                 let userData = snapshot!.data()!
                 self.packsPurchased = Array((userData["packsUnlocked"] as! [String: Bool]).keys).sorted()
                 self.cardBacksPurchased = Array((userData["cardBacksUnlocked"] as! [String: Bool]).keys).sorted()
+                self.loaded = true
                 self.packsCollectionView.reloadData()
                 self.cardBacksCollectionView.reloadData()
             }
@@ -72,10 +74,14 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
         SKPaymentQueue.default().add(self)
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if collectionView == packsCollectionView {
-            return packImageNumbers.count
+        if !loaded {
+            return 0
         } else {
-            return cardBackImageNumbers.count
+            if collectionView == packsCollectionView {
+                return packImageNumbers.count
+            } else {
+                return cardBackImageNumbers.count
+            }
         }
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
