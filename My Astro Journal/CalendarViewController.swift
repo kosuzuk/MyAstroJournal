@@ -142,13 +142,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         super.viewDidLoad()
         view.addSubview(formatLoadingIcon(icon: loadingIcon))
         loadingIcon.startAnimating()
-        if (screenH < 670) {//iphone 8
+        if (screenH < 670) {//iphone 8, 5s
             earlierMonthButtonTopC.constant = -50
-        }
-        if (screenH < 750) {//iphone 8 and plus
             imageOfDayMainLabel.font = imageOfDayMainLabel.font.withSize(18)
-        }
-        else if (screenH == 896) {//iphone 11 pro max
+        } else if (screenH == 896) {//iphone 11 pro max
             newEntryButtonTopC.constant = 30
             yearButtonTopC.constant = 30
             imageOfDayBottomC.constant = 15
@@ -156,8 +153,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         else if screenH > 1000 {//ipads
             background.image = UIImage(named: "Calendar/background-ipad")
             imageOfDayMainLabel.font = imageOfDayMainLabel.font.withSize(31)
-            if screenH < 1050 {//small ipads
-            } else if (screenH > 1140) {//big ipads
+            if (screenH > 1140) {//big ipads
                 imageOfDayBottomCipad.constant = 30
             }
         }
