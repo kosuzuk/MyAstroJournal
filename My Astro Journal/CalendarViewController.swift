@@ -40,9 +40,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var calendarWCipad: NSLayoutConstraint!
     @IBOutlet weak var calendarHCipad: NSLayoutConstraint!
     @IBOutlet weak var earlierMonthButtonTopC: NSLayoutConstraint!
-    @IBOutlet weak var imageOfDayLabelTopC: NSLayoutConstraint!
-    @IBOutlet weak var imageOfDayTopC: NSLayoutConstraint!
-    @IBOutlet weak var imageOfDayTopCipad: NSLayoutConstraint!
     @IBOutlet weak var imageOfDayBottomC: NSLayoutConstraint!
     @IBOutlet weak var imageOfDayBottomCipad: NSLayoutConstraint!
     @IBOutlet weak var imageOfDayWC: NSLayoutConstraint!
@@ -145,25 +142,18 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         super.viewDidLoad()
         view.addSubview(formatLoadingIcon(icon: loadingIcon))
         loadingIcon.startAnimating()
-        if (screenH < 670) {//iphone 8
+        if (screenH < 670) {//iphone 8, 5s
             earlierMonthButtonTopC.constant = -50
-        }
-        if (screenH < 750) {//iphone 8 and plus
-            imageOfDayTopC.constant = -4
             imageOfDayMainLabel.font = imageOfDayMainLabel.font.withSize(18)
-        }
-        else if (screenH == 896) {//iphone 11 pro max
+        } else if (screenH == 896) {//iphone 11 pro max
             newEntryButtonTopC.constant = 30
             yearButtonTopC.constant = 30
-            imageOfDayLabelTopC.constant = 40
             imageOfDayBottomC.constant = 15
         }
         else if screenH > 1000 {//ipads
             background.image = UIImage(named: "Calendar/background-ipad")
             imageOfDayMainLabel.font = imageOfDayMainLabel.font.withSize(31)
-            if screenH < 1050 {//small ipads
-                imageOfDayTopCipad.constant = 0
-            } else if (screenH > 1140) {//big ipads
+            if (screenH > 1140) {//big ipads
                 imageOfDayBottomCipad.constant = 30
             }
         }
@@ -536,7 +526,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             yearButtonLeadingC.constant = 20
             earlierMonthButtonTopC.constant = -38
             imageOfDayMainLabel.text = ""
-            imageOfDayTopC.constant = 7
             imageOfDayWC.constant = 287
         }
         let calendarSize = screenW * 0.9
