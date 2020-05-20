@@ -10,7 +10,6 @@ import UIKit
 import StoreKit
     
 class TransactionObserver: NSObject, SKPaymentTransactionObserver {
-    
     func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
         print("restore finished")
     }
@@ -19,7 +18,7 @@ class TransactionObserver: NSObject, SKPaymentTransactionObserver {
         for transaction in transactions {
             if transaction.transactionState == .purchased {
                 print("Transaction Successful")
-//                manageSuccessfulPurchase()
+                a!.manageSuccessfulPurchase()
                 queue.finishTransaction(transaction)
             } else if transaction.transactionState == .failed {
                 print("Transaction Failed")

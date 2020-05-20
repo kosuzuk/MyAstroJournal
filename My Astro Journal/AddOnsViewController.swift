@@ -10,6 +10,7 @@ import UIKit
 import SwiftKeychainWrapper
 import StoreKit
 
+var a:AddOnsViewController? = nil
 class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     @IBOutlet weak var background: UIImageView!
     @IBOutlet weak var packsCollectionView: UICollectionView!
@@ -36,6 +37,7 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        a = self
         if screenH > 1000 {//ipads
             background.image = UIImage(named: "Info/background-ipad")!
             let cardBacksLayout = cardBacksCollectionView!.collectionViewLayout as! UICollectionViewFlowLayout
