@@ -25,7 +25,7 @@ let PlanetTargets = ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Satu
 
 let doubleTargets = ["IC5067": "IC5070", "IC5070": "IC5067", "NGC869": "NGC884", "NGC884": "NGC869", "NGC2237": "NGC2244", "NGC2244": "NGC2237", "NGC4567": "NGC4568", "NGC4568": "NGC4567"]
 
-let nicknames = ["crab": "M1", "butterfly": "NGC4568", "ptolemy's": "M7", "lagoon": "M8", "wild duck": "M11", "hercules": "M13", "great pegasus": "M15", "eagle": "M16", "omega": "M17", "trifid": "M20", "sagittarius star cloud": "M24", "dumbbell": "M27", "andromeda": "M31", "le gentil": "M32", "triangulum": "M33", "pinwheel cluster": "M36", "starfish": "M38", "double": "M40", "orion": "M42", "de mairan's": "M43", "beehive": "M44", "pleiades": "M45", "whirlpool": "M51", "summer rose": "M55", "ring": "M57", "sunflower": "M63", "black eye": "M64", "king cobra": "M67", "phantom": "M74", "little dumbbell": "M76", "cetus a": "M77", "bode's": "M81", "cigar": "M82", "southern pinwheel": "M83", "virgo a": "M87", "cat's eye galaxy": "M94", "owl": "NGC457", "coma pinwheel": "M99", "pinwheel galaxy": "M101", "sombrero": "M104", "surfboard": "M108", "edward's young": "M110", "ghost of cassiopeia": "IC63", "flaming": "IC405", "horsehead": "IC434", "jellyfish": "IC443", "elephant's trunk": "IC1396", "heart": "IC1805", "soul": "IC1848", "witch head": "IC2118", "pelican": "IC5067", "cocoon": "IC5146", "47 tucanae": "NGC104", "pacman": "NGC281", "small magellanic cloud": "NGC292", "double cluster in perseus": "NGC869", "california": "NGC1499", "runningman": "NGC1977", "flame": "NGC2024", "tarantula": "NGC2070", "rosette": "NGC2237", "cone": "NGC2264", "thor's helmet": "NGC2359", "eskimo": "NGC2392", "carina": "NGC3372", "hamburger": "NGC3628", "needle": "NGC4565", "whale": "NGC4631", "centaurus a": "NGC5128", "omega centauri": "NGC5139", "cat's eye nebula": "NGC6543", "crescent": "NGC6888", "fireworks": "NGC6946", "western veil": "NGC6960", "pickering's triangle": "NGC6974", "eastern veil": "NGC6992", "north america": "NGC7000", "iris": "NGC7023", "helix": "NGC7293", "wizard": "NGC7380", "bubble": "NGC7635", "oyster": "NGC1501", "flying bat": "SH2-129", "lobster claw": "SH2-157", "mice": "NGC4676", "cat's paw": "NGC6334", "spider": "IC417", "fishhead": "IC1795", "fish head": "IC1795", "seagull": "IC2177", "running chicken": "IC2944", "blue horsehead": "IC4592", "spaghetti": "SH2-240", "soap bubble": "JU1", "tadpole": "ARP188", "bow tie": "NGC2440", "saturn nebula": "NGC7009", "blue snowball": "NGC7662", "sadr region": "IC1318", "hockey stick": "NGC4656", "rho ophiuchi": "XSS J16271-2423", "kemble's cascade": "NGC1502", "football": "NGC3532", "jewel box": "NGC4755", "caroline's": "NGC2360", "tau canis majoris": "NGC2362", "omicron velorum": "IC2391", "southern pleiades": "IC2602", "skull": "NGC246", "little ghost": "NGC6369", "knife edge": "NGC5907", "phantom streak": "NGC6741", "ghost of the moon": "NGC6781", "blink": "NGC6826", "ghost head": "NGC2080", "cleopatra's eye": "NGC1535", "giant squid": "OU4", "ghost of jupiter": "NGC3242", "death eater": "SH2-68", "ghost": "SH2-136", "milky way": "Milkyway", "milkyway": "Milkyway"]
+let nicknames = ["crab": "M1", "butterfly": "NGC4568", "ptolemy's": "M7", "lagoon": "M8", "wild duck": "M11", "hercules": "M13", "great pegasus": "M15", "eagle": "M16", "omega": "M17", "trifid": "M20", "sagittarius star cloud": "M24", "dumbbell": "M27", "andromeda": "M31", "le gentil": "M32", "triangulum": "M33", "pinwheel cluster": "M36", "starfish": "M38", "double": "M40", "orion": "M42", "de mairan's": "M43", "beehive": "M44", "pleiades": "M45", "whirlpool": "M51", "summer rose": "M55", "ring": "M57", "sunflower": "M63", "black eye": "M64", "king cobra": "M67", "phantom": "M74", "little dumbbell": "M76", "cetus a": "M77", "bode's": "M81", "cigar": "M82", "southern pinwheel": "M83", "virgo a": "M87", "cat's eye galaxy": "M94", "owl": "NGC457", "coma pinwheel": "M99", "pinwheel galaxy": "M101", "sombrero": "M104", "surfboard": "M108", "edward's young": "M110", "ghost of cassiopeia": "IC63", "flaming": "IC405", "horsehead": "IC434", "jellyfish": "IC443", "elephant's trunk": "IC1396", "heart": "IC1805", "soul": "IC1848", "witch head": "IC2118", "pelican": "IC5067", "cocoon": "IC5146", "47 tucanae": "NGC104", "pacman": "NGC281", "small magellanic cloud": "NGC292", "double cluster in perseus": "NGC869", "california": "NGC1499", "runningman": "NGC1977", "flame": "NGC2024", "tarantula": "NGC2070", "rosette": "NGC2237", "cone": "NGC2264", "thor's helmet": "NGC2359", "eskimo": "NGC2392", "carina": "NGC3372", "hamburger": "NGC3628", "needle": "NGC4565", "whale": "NGC4631", "centaurus a": "NGC5128", "omega centauri": "NGC5139", "cat's eye nebula": "NGC6543", "crescent": "NGC6888", "fireworks": "NGC6946", "western veil": "NGC6960", "pickering's triangle": "NGC6974", "eastern veil": "NGC6992", "north america": "NGC7000", "iris": "NGC7023", "helix": "NGC7293", "wizard": "NGC7380", "bubble": "NGC7635", "oyster": "NGC1501", "flying bat": "SH2-129", "lobster claw": "SH2-157", "mice": "NGC4676", "cat's paw": "NGC6334", "spider": "IC417", "fishhead": "IC1795", "fish head": "IC1795", "seagull": "IC2177", "running chicken": "IC2944", "blue horsehead": "IC4592", "spaghetti": "SH2-240", "soap bubble": "JU1", "tadpole": "ARP188", "bow tie": "NGC2440", "saturn nebula": "NGC7009", "blue snowball": "NGC7662", "sadr region": "IC1318", "hockey stick": "NGC4656", "rho ophiuchi": "XSS J16271-2423", "kemble's cascade": "NGC1502", "football": "NGC3532", "jewel box": "NGC4755", "caroline's": "NGC2360", "tau canis majoris": "NGC2362", "omicron velorum": "IC2391", "southern pleiades": "IC2602", "skull": "NGC246", "little ghost": "NGC6369", "knife edge": "NGC5907", "phantom streak": "NGC6741", "ghost of the moon": "NGC6781", "blink": "NGC6826", "ghost head": "NGC2080", "cleopatra's eye": "NGC1535", "giant squid": "OU4", "ghost of jupiter": "NGC3242", "death eater": "SH2-68", "ghost": "SH2-136", "milky way": "Milkyway", "milkyway": "Milkyway", "sun": "Sun", "moon": "Moon"]
 
 let MessierConst = [1: "Taurus", 2: "Aquarius", 3: "Canes Venatici", 4: "Scorpius", 5: "Serpens", 6: "Scorpius", 7: "Scorpius", 8: "Sagittarius", 9: "Ophiuchus", 10: "Ophiuchus", 11: "Scutum", 12: "Ophiuchus", 13: "Hercules", 14: "Ophiuchus", 15: "Pegasus", 16: "Serpens", 17: "Sagittarius", 18: "Sagittarius", 19: "Ophiuchus", 20: "Sagittarius", 21: "Sagittarius", 22: "Sagittarius", 23: "Sagittarius", 24: "Sagittarius", 25: "Sagittarius", 26: "Scutum", 27: "Vulpecula", 28: "Sagittarius", 29: "Cygnus", 30: "Capricornus", 31: "Andromeda", 32: "Andromeda", 33: "Triangulum", 34: "Perseus", 35: "Gemini", 36: "Auriga", 37: "Auriga", 38: "Auriga", 39: "Cygnus", 40: "Ursa Major", 41: "Canis Major", 42: "Orion", 43: "Orion", 44: "Cancer", 45: "Taurus", 46: "Puppis", 47: "Puppis", 48: "Hydra", 49: "Virgo", 50: "Monoceros", 51: "Canes Venatici", 52: "Cassiopeia", 53: "Coma Berenices", 54: "Sagittarius", 55: "Sagittarius", 56: "Lyra", 57: "Lyra", 58: "Virgo", 59: "Virgo", 60: "Virgo", 61: "Virgo", 62: "Ophiuchus", 63: "Canes Venatici", 64: "Coma Berenices", 65: "Leo", 66: "Leo", 67: "Cancer", 68: "Hydra", 69: "Sagittarius", 70: "Sagittarius", 71: "Sagitta", 72: "Aquarius", 73: "Aquarius", 74: "Pisces", 75: "Sagittarius", 76: "Perseus", 77: "Cetus", 78: "Orion", 79: "Lepus", 80: "Scorpius", 81: "Ursa Major", 82: "Ursa Major", 83: "Hydra", 84: "Virgo",  85: "ComaBerenices", 86: "Virgo", 87: "Virgo", 88: "Coma Berenices", 89: "Virgo", 90: "Virgo", 91: "Coma Berenices", 92: "Hercules", 93: "Puppis", 94: "Canes Venatici", 95: "Leo", 96: "Leo", 97: "Ursa Major", 98: "ComaBerenices", 99: "Coma Berenices", 100: "Coma Berenices", 101: "Ursa Major", 102: "Draco", 103: "Cassiopeia", 104: "Virgo", 105: "Leo", 106: "Canes Venatici", 107: "Ophiuchus", 108: "Ursa Major", 109: "Ursa Major", 110: "Andromeda"]
 let NGCConst = [104: "Tucana", 246: "Cetus", 281: "Cassiopeia", 292: "Tucana", 457: "Cassiopeia", 869: "Perseus", 884: "Perseus", 1499: "Perseus", 1501: "Camelopardalis", 1502: "Camelopardalis", 1535: "Eridanus", 1977: "Orion", 2024: "Orion", 2070: "Dorado", 2080: "Dorado", 2237: "Monoceros", 2244: "Monoceros", 2264: "Monoceros", 2359: "Canis Major", 2360: "Canis Major", 2362: "Canis Major", 2392: "Gemini", 2440: "Puppis", 3242: "Hydra", 3372: "Carina", 3532: "Carina", 3628: "Leo", 4565: "Coma Berenices", 4567: "Virgo", 4568: "Virgo", 4631: "Canes Venatici", 4656: "Canes Venatici", 4676: "Coma Berenices", 4755: "Crux", 5128: "Centaurus", 5139: "Centaurus", 5466: "Boötes", 5474: "Ursa Major", 5907: "Draco", 6334: "Scorpius", 6369: "Ophiuchus", 6388: "Scorpius", 6541: "Corona Australis", 6543: "Draco", 6723: "Sagittarius", 6741: "Aquila", 6752: "Pavo", 6781: "Aquila", 6826: "Cygnus", 6888: "Cygnus", 6946: "Cygnus", 6960: "Cygnus", 6974: "Cygnus", 6992: "Cygnus", 7000: "Cygnus", 7009: "Aquarius", 7023: "Cepheus", 7293: "Aquarius", 7380: "Cepheus", 7635: "Cassiopeia", 7662: "Andromeda"]
@@ -63,8 +63,6 @@ var firstTime = false
 var entryEditFirstTime = false
 var dateToday = ""
 var featuredImageDate = ""
-//communicate between profile and calendar view if featured user changes username
-var newIodUserName = ""
 //max image size to push and pull from db is 3MB
 let imgMaxByte: Int64 = 1024 * 1024 * 3
 let calCellSize = 50
@@ -72,6 +70,8 @@ let iodUserIconSize = 30
 let maxSize = 700
 let imageTooBigMessage = "The image size is too big. Please choose another image."
 let astroOrange = UIColor(red: 1, green: 0.62, blue: 0, alpha: 1).cgColor
+let packProductIDs = ["100", "101", "102", "103"]
+let cardBackProductIDs = ["201", "202", "203", "204", "205", "206", "207", "208"]
 
 func formatLoadingIcon(icon: UIActivityIndicatorView) -> UIActivityIndicatorView {
     icon.center = CGPoint(x: screenW / 2, y: screenH / 2 - 75)
@@ -279,6 +279,8 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
     @IBOutlet weak var loginButtonTrailingC: NSLayoutConstraint!
     @IBOutlet weak var forgotEmailTopC: NSLayoutConstraint!
     var activeField: UIView? = nil
+    var userData: [String: Any]? = nil
+    var email = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -381,9 +383,11 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
                         KeychainWrapper.standard.set(data.documentID, forKey: "dbKey")
                         let userName = data["userName"]
                         if userName == nil {
+                            self.email = data["email"] as! String
                             self.performSegue(withIdentifier: "welcomeToProfileCreation", sender: self)
                         } else {
                             KeychainWrapper.standard.set(userName as! String, forKey: "userName")
+                            self.userData = data.data()
                             self.performSegue(withIdentifier: "welcomeToCalendar", sender: nil)
                         }
                     }
@@ -440,6 +444,7 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
                             KeychainWrapper.standard.set(docKey, forKey: "dbKey")
                         }
                     }
+                    self.email = self.signUpEmailField.text!
                     self.performSegue(withIdentifier: "welcomeToProfileCreation", sender: self)
                 }
                 endNoInput()
@@ -465,16 +470,29 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
                         let data = QuerySnapshot!.documents[0]
                         KeychainWrapper.standard.set(data.documentID, forKey: "dbKey")
                         if data["userName"] == nil {
+                            self.email = data["email"] as! String
                             self.performSegue(withIdentifier: "welcomeToProfileCreation", sender: self)
                         } else {
-                            KeychainWrapper.standard.set(data["userName"] as! String, forKey: "userName")
                             print("sign-in successful")
+                            KeychainWrapper.standard.set(data["userName"] as! String, forKey: "userName")
+                            self.userData = data.data()
                             self.performSegue(withIdentifier: "welcomeToCalendar", sender: self)
                         }
                     }
                 })
             }
             endNoInput()
+        }
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let tvc = segue.destination as? UITabBarController
+        if tvc != nil {
+            let cvc = tvc!.viewControllers![0].children[0] as! CalendarViewController
+            cvc.userData = userData
+        }
+        let pcvc = segue.destination as? ProfileCreationViewController
+        if pcvc != nil {
+            pcvc!.email = email
         }
     }
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {

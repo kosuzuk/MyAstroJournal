@@ -97,7 +97,7 @@ class CardViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if screenH < 600 {
-            imageViewTopC.constant = 5
+            imageViewTopC.constant = 37
         }
         else if screenH > 1000 {//ipads
             entryDatesButton.titleLabel?.font =  entryDatesButton.titleLabel?.font.withSize(22)

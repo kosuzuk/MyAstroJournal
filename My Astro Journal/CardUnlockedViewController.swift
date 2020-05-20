@@ -3,6 +3,8 @@ class CardUnlockedViewController: UIViewController {
     @IBOutlet weak var unlockedLabel: UIImageView!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var unlockedDateLabel: UILabel!
+    
+    @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var imageViewWC: NSLayoutConstraint!
     @IBOutlet weak var imageViewWCipad: NSLayoutConstraint!
     @IBOutlet weak var unlockedLabelTopC: NSLayoutConstraint!

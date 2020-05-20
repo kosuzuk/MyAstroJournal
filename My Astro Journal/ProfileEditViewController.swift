@@ -386,7 +386,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
             })
             //user is currently featured. Change username in iod banner in calendar view
             if (userData["userDataCopyKeys"] as! [String: String])[featuredImageDate] != nil {
-                newIodUserName = newUserName
+                (tabBarController!.viewControllers![0].children[0] as! CalendarViewController).newIodUserName = newUserName
             }
         }
         if userDataCopyToChangeKeys.count != 0 {

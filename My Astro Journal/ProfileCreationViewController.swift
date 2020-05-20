@@ -65,6 +65,9 @@ class ProfileCreationViewController: UIViewController, UINavigationControllerDel
             eqField.resignFirstResponder()
         }
     }
+    var email = ""
+    var newUserData: [String: Any]? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if screenH > 1000 {//ipads
@@ -253,10 +256,10 @@ class ProfileCreationViewController: UIViewController, UINavigationControllerDel
             }
         }
         let eqDict = ["telescopes": telescopes, "mounts": mounts, "cameras": cameras]
-        let newUserData = ["userName": nameField.text!, "userLocation": locationField.text!, "favoriteObject": favObjField.text!, "userBio": bioField.text!, "websiteName": websiteField.text!, "instaUsername": instaField.text!, "youtubeChannel": youtubeField.text!, "fbPage": fbField.text!, "userEquipment": eqDict, "profileImageKey": "", "compressedProfileImageKey": "", "locationsVisited": [], "firstJournalEntryDate": "", "calendarImages": Dictionary<String, String>(), "numEntriesInDate": Dictionary<String, Int>(), "photoCardTargetDates": Dictionary<String, [String]>(), "cardTargetDates": Dictionary<String, [String]>(), "photoTargetNum": Dictionary<String, Int>(), "obsTargetNum": Dictionary<String, Int>(), "totalHours": 0, "cardBackSelected": "1", "packsUnlocked": Dictionary<String, Bool>(), "cardBacksUnlocked": Dictionary<String, Bool>(), "featuredAlertDates": [], "userDataCopyKeys": Dictionary<String, String>()] as [String : Any]
+        newUserData = ["email": email, "userName": nameField.text!, "userLocation": locationField.text!, "favoriteObject": favObjField.text!, "userBio": bioField.text!, "websiteName": websiteField.text!, "instaUsername": instaField.text!, "youtubeChannel": youtubeField.text!, "fbPage": fbField.text!, "userEquipment": eqDict, "profileImageKey": "", "compressedProfileImageKey": "", "locationsVisited": [], "firstJournalEntryDate": "", "calendarImages": Dictionary<String, String>(), "numEntriesInDate": Dictionary<String, Int>(), "photoCardTargetDates": Dictionary<String, [String]>(), "cardTargetDates": Dictionary<String, [String]>(), "photoTargetNum": Dictionary<String, Int>(), "obsTargetNum": Dictionary<String, Int>(), "totalHours": 0, "cardBackSelected": "1", "packsUnlocked": Dictionary<String, Bool>(), "cardBacksUnlocked": Dictionary<String, Bool>(), "featuredAlertDates": [], "userDataCopyKeys": Dictionary<String, String>()] as [String : Any]
         KeychainWrapper.standard.set(nameField.text!, forKey: "userName")
         let docKey = KeychainWrapper.standard.string(forKey: "dbKey")!
-        db.collection("userData").document(docKey).setData(newUserData, merge: true)
+        db.collection("userData").document(docKey).setData(newUserData!, merge: true)
         db.collection("basicUserData").document(docKey).setData(["userName": nameField.text!, "compressedProfileImageKey": ""], merge: true)
         if (imageView.image != nil) {
             let imageKey = NSUUID().uuidString
@@ -270,8 +273,6 @@ class ProfileCreationViewController: UIViewController, UINavigationControllerDel
                     return
                 } else {
                     print("done storing profile image")
-                    firstTime = true
-                    entryEditFirstTime = true
                     self.performSegue(withIdentifier: "profileCreationToCalendar", sender: self)
                 }
             }
@@ -285,9 +286,17 @@ class ProfileCreationViewController: UIViewController, UINavigationControllerDel
                 }
             }
         } else {
+            performSegue(withIdentifier: "profileCreationToCalendar", sender: self)
+        }
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let tvc = segue.destination as? UITabBarController
+        if tvc != nil {
             firstTime = true
             entryEditFirstTime = true
-            performSegue(withIdentifier: "profileCreationToCalendar", sender: self)
+            let cvc = tvc!.viewControllers![0].children[0] as! CalendarViewController
+            cvc.userData = newUserData
         }
     }
     
