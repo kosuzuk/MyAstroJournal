@@ -222,38 +222,30 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         cameraField.autocorrectionType = .no
         bigImageViewRemoveButton.isHidden = true
         deleteButton.isHidden = true
-        let docRef = db.collection("userData").document(userKey)
-        docRef.getDocument(completion: {(QuerySnapshot, Error) in
-            if Error != nil {
-                print(Error!)
-            } else {
-                let docData = QuerySnapshot!.data()!
-                if docData["firstJournalEntryDate"] as! String == "" {
-                    self.firstJournalEntry = true
-                } else {
-                    let dayInt = Int(self.entryDate.prefix(4).suffix(2))!
-                    let yearInt = Int(self.entryDate.suffix(4))!
-                    let fjeStr = docData["firstJournalEntryDate"] as! String
-                    let fjeStrMonth = Int(fjeStr.prefix(2))!
-                    let fjeStrDay = Int(fjeStr.prefix(4).suffix(2))!
-                    let fjeStrYear = Int(fjeStr.suffix(4))!
-                    if yearInt < fjeStrYear || (yearInt == fjeStrYear && monthInt < fjeStrMonth) || (yearInt == fjeStrYear && monthInt == fjeStrMonth && dayInt < fjeStrDay) {
-                        self.firstJournalEntry = true
-                    }
-                }
-                if (docData["calendarImages"] as! [String: String])[self.entryDate] != nil {
-                    self.calImageKey = (docData["calendarImages"] as! [String: String])[self.entryDate]!
-                }
-                self.locationsVisited = docData["locationsVisited"] as! [String]
-                let eqData = docData["userEquipment"] as! Dictionary<String, [String]>
-                self.setAutoComp(self.targetField, ["Messier", "Sharpless", "SH2-", "Milky Way", "Rho Ophiuchi", "XSS J16271-2423", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"], 0)
-                self.setAutoComp(self.locationField, self.locationsVisited, 1)
-                self.setAutoComp(self.telescopeField, eqData["telescopes"]!, 2)
-                self.setAutoComp(self.mountField, eqData["mounts"]!, 2)
-                self.setAutoComp(self.cameraField, eqData["cameras"]!, 2)
-                self.userData = docData
+        userData = (tabBarController!.viewControllers![0].children[0] as! CalendarViewController).userData!
+        if userData["firstJournalEntryDate"] as! String == "" {
+            firstJournalEntry = true
+        } else {
+            let dayInt = Int(entryDate.prefix(4).suffix(2))!
+            let yearInt = Int(entryDate.suffix(4))!
+            let fjeStr = userData["firstJournalEntryDate"] as! String
+            let fjeStrMonth = Int(fjeStr.prefix(2))!
+            let fjeStrDay = Int(fjeStr.prefix(4).suffix(2))!
+            let fjeStrYear = Int(fjeStr.suffix(4))!
+            if yearInt < fjeStrYear || (yearInt == fjeStrYear && monthInt < fjeStrMonth) || (yearInt == fjeStrYear && monthInt == fjeStrMonth && dayInt < fjeStrDay) {
+                firstJournalEntry = true
             }
-        })
+        }
+        if (userData["calendarImages"] as! [String: String])[entryDate] != nil {
+            calImageKey = (userData["calendarImages"] as! [String: String])[entryDate]!
+        }
+        locationsVisited = userData["locationsVisited"] as! [String]
+        let eqData = userData["userEquipment"] as! Dictionary<String, [String]>
+        setAutoComp(targetField, ["Messier", "Sharpless", "SH2-", "Milky Way", "Rho Ophiuchi", "XSS J16271-2423", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"], 0)
+        setAutoComp(locationField, locationsVisited, 1)
+        setAutoComp(telescopeField, eqData["telescopes"]!, 2)
+        setAutoComp(mountField, eqData["mounts"]!, 2)
+        setAutoComp(cameraField, eqData["cameras"]!, 2)
         if entryData.count != 0 {
             targetField.isUserInteractionEnabled = false
             targetField.borderStyle = UITextField.BorderStyle.none
@@ -740,7 +732,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         var photoCardTargetDatesDict: Dictionary<String, Any> = userData["photoCardTargetDates"] as! Dictionary<String, [String]>
         var photoTargetNumDict: Dictionary<String, Any> = userData["photoTargetNum"] as! Dictionary<String, Int>
         var obsTargetNumDict: Dictionary<String, Any> = userData["obsTargetNum"] as! Dictionary<String, Int>
-        var totalHours = userData["totalHours"] as! Int
+        let totalHours = userData["totalHours"] as! Int
 
         func cardListContainsTarget(_ target: String) -> Bool {
             for lst in [MessierTargets, NGCTargets, ICTargets, SharplessTargets, OthersTargets, PlanetTargets] {
@@ -1158,7 +1150,6 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         var photoCardTargetDatesDict: Dictionary<String, Any> = userData["photoCardTargetDates"] as! Dictionary<String, [String]>
         var photoTargetNumDict: Dictionary<String, Any> = userData["photoTargetNum"] as! Dictionary<String, Int>
         var obsTargetNumDict: Dictionary<String, Any> = userData["obsTargetNum"] as! Dictionary<String, Int>
-        var totalHours = userData["totalHours"] as! Int
         
         //update date of first journal entry if deleted entry was the first entry
         if firstEntryDate == entryDate && entryList.count == 0 {
@@ -1166,7 +1157,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
                 firstEntryDate = ""
             } else {
                 var earliestDate = "99999999"
-                for (key, value) in (userData["calendarImages"] as! Dictionary<String, String>) {
+                for (key, _) in (userData["calendarImages"] as! Dictionary<String, String>) {
                     if key == entryDate {
                         continue
                     }

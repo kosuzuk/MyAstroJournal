@@ -154,9 +154,9 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
                         }
                     }
                     self.cardBackSelected = (data["cardBackSelected"] as! String)
-                    self.packsUnlocked = Array((data["packsUnlocked"] as! [String: Bool]).keys).sorted()
+                    self.packsUnlocked = (Array((data["packsUnlocked"] as! [String: Bool]).keys).map {Int($0)!}.sorted()).map{String($0)}
                     checkCardGroupsUnlocked()
-                    self.cardBacksUnlocked = Array((data["cardBacksUnlocked"] as! [String: Bool]).keys).sorted()
+                    self.cardBacksUnlocked = (Array((data["cardBacksUnlocked"] as! [String: Bool]).keys).map {Int($0)!}.sorted()).map{String($0)}
                 } else {
                     //check if user entered or deleted entries
                     let newPhotoCardTargetDates = data["photoCardTargetDates"]! as! [String: [String]]
@@ -168,13 +168,13 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
                         self.catalogVC?.cardTargetDatesDict = newCardTargetDates
                         self.catalogVC?.dictChanged = true
                     }
-                    let packsUnlockedData = Array((data["packsUnlocked"] as! [String: Bool]).keys).sorted()
+                    let packsUnlockedData = (Array((data["packsUnlocked"] as! [String: Bool]).keys).map {Int($0)!}.sorted()).map{String($0)}
                     if packsUnlockedData != self.packsUnlocked {
                         self.catalogVC?.navigationController?.popToRootViewController(animated: true)
                         self.packsUnlocked = packsUnlockedData
                         checkCardGroupsUnlocked()
                     }
-                    let cardBacksUnlockedData = Array((data["cardBacksUnlocked"] as! [String: Bool]).keys).sorted()
+                    let cardBacksUnlockedData = (Array((data["cardBacksUnlocked"] as! [String: Bool]).keys).map {Int($0)!}.sorted()).map{String($0)}
                     if cardBacksUnlockedData != self.cardBacksUnlocked {
                         self.cardBackPopOverController?.dismiss(animated: true)
                         self.cardBacksUnlocked = cardBacksUnlockedData

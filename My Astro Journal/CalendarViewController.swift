@@ -10,6 +10,7 @@ import UIKit
 import Foundation
 import SwiftKeychainWrapper
 import DropDown
+import StoreKit
 
 extension UINavigationController {
    open override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -44,12 +45,15 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var imageOfDayBottomCipad: NSLayoutConstraint!
     @IBOutlet weak var imageOfDayWC: NSLayoutConstraint!
     @IBOutlet weak var imageOfDayLightWC: NSLayoutConstraint!
-    var monthDropDown: DropDown? = nil
-    var yearDropDown: DropDown? = nil
+    var userData: [String: Any]? = nil
+    var userKey: String = ""
+    var userDataInitialized = false
     var firstJournalEntryDate = ""
     var startMonth = 0
     var startYear = 0
     var numMonths = 0
+    var monthDropDown: DropDown? = nil
+    var yearDropDown: DropDown? = nil
     var numCalendarImagesAndPlaceholders = 0
     var imageDict: [String: UIImage] = [:] {
         didSet {
@@ -66,6 +70,18 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     var imageOfDayKeysData: [String: Any]? = nil
     var imageOfDayImageData: UIImage? = nil
     var imageOfDayTarget = ""
+    var newIodUserName = "" {
+        didSet {
+            if newIodUserName != "" {
+                imageOfDayLabel.text = imageOfDayTarget + " by " + newIodUserName + " "
+                let font = UIFont(name: self.imageOfDayLabel.font.fontName, size: self.imageOfDayLabel.font.pointSize)
+                let fontAttributes = [NSAttributedString.Key.font: font]
+                let size = (self.imageOfDayLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
+                self.imageOfDayLightWC.constant = size.width + 30
+                newIodUserName = ""
+            }
+        }
+    }
     var newEntryMode = false
     var numEarlierMonthsAdded = 0
     var newEntryDate = ""
@@ -175,7 +191,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         yearDropDown!.cornerRadius = 10
         yearDropDown!.bottomOffset = CGPoint(x: 0, y: 25)
         yearDropDown!.anchorView = yearButton
-        
         for item in [antoinePowersButton, selectDateText, cancelButton, showEarlierMonthButton, todayButton, monthButton, yearButton, calendarsListView, imageOfDayImageView, imageOfDayLight, imageOfDayMainLabel, imageOfDayLabel] {
             item!.isHidden = true
         }
@@ -195,93 +210,100 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         dateToday += String(dateComps.day!)
         dateToday += String(yearTodayInt)
         Timer.scheduledTimer(timeInterval: TimeInterval(60), target: self, selector: #selector(checkDayChange), userInfo: nil,  repeats: true)
-        let userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
-        db.collection("userData").document(userKey).getDocument(completion: {(QuerySnapshot, Error) in
-            if Error != nil {
-                print(Error!)
-            } else {
-                let userData = QuerySnapshot!.data()!
-                if userData["firstJournalEntryDate"] as! String == "" {
-                    self.monthDropDown!.dataSource = [monthNames[self.monthTodayInt - 1]]
-                    self.yearDropDown!.dataSource = [String(self.yearTodayInt)]
-                    self.numMonths = 1
-                    self.calendarsListView.reloadData()
-                    loadingIcon.stopAnimating()
+        userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
+        if userData!["firstJournalEntryDate"] as! String == "" {
+            self.monthDropDown!.dataSource = [monthNames[self.monthTodayInt - 1]]
+            self.yearDropDown!.dataSource = [String(self.yearTodayInt)]
+            self.numMonths = 1
+            self.calendarsListView.reloadData()
+            loadingIcon.stopAnimating()
+        } else {
+            self.firstJournalEntryDate = userData!["firstJournalEntryDate"] as! String
+            self.startMonth = Int(self.firstJournalEntryDate.prefix(2))!
+            self.startYear = Int(self.firstJournalEntryDate.suffix(4))!
+            self.numMonths = (self.monthTodayInt - self.startMonth) % 12 + 1
+            if self.yearTodayInt - self.startYear > 0 {
+                self.numMonths += (self.yearTodayInt - self.startYear) * 12
+            }
+            self.addDropDownData()
+            self.monthDropDown!.selectionAction = {(index: Int, item: String) in
+                self.scrollToCalendar()
+            }
+            self.yearDropDown!.selectionAction = {(index: Int, item: String) in
+                self.scrollToCalendar()
+            }
+            
+            let imageKeyDict = userData!["calendarImages"] as! [String : String]
+            self.numCalendarImagesAndPlaceholders = imageKeyDict.count
+            for (dateString, imageKey) in imageKeyDict {
+                if imageKey == "" {
+                    self.imageDict[dateString] = UIImage(named: "Calendar/placeholder")!
+                    continue
+                }
+                let imageRef = storage.child(imageKey)
+                imageRef.getData(maxSize: imgMaxByte) {data, Error in
+                    if let Error = Error {
+                        print(Error)
+                        return
+                    } else {
+                        self.imageDict[dateString] = UIImage(data: data!)!
+                    }
+                }
+            }
+            self.numEntriesDict = userData!["numEntriesInDate"] as! [String : Int]
+        }
+        var alertDates = userData!["featuredAlertDates"] as! [String]
+        if alertDates != [] {
+            for alertDate in alertDates {
+                if isEarlierDate(alertDate, dateToday) {
+                    let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CongratsViewController") as! CongratsViewController
+                    popOverVC.featuredDate = alertDate
+                    popOverVC.cvc = self
+                    self.addChild(popOverVC)
+                    popOverVC.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+                    self.view.addSubview(popOverVC.view)
+                    popOverVC.didMove(toParent: self)
+                    alertDates.remove(at: alertDates.index(of: alertDate)!)
+                }
+            }
+            db.collection("userData").document(userKey).updateData(["featuredAlertDates": alertDates])
+        }
+        self.userAlertDates = alertDates
+        if (userData!["email"] as! String) != "nevadaastrophotography@gmail.com" {
+            self.antoinePowersButton.isHidden = false
+            db.collection("iodDeletedNotifications").addSnapshotListener(includeMetadataChanges: true, listener: {(snapshot, Error) in
+                if Error != nil {
+                    print(Error!)
                 } else {
-                    self.firstJournalEntryDate = userData["firstJournalEntryDate"] as! String
-                    self.startMonth = Int(self.firstJournalEntryDate.prefix(2))!
-                    self.startYear = Int(self.firstJournalEntryDate.suffix(4))!
-                    self.numMonths = (self.monthTodayInt - self.startMonth) % 12 + 1
-                    if self.yearTodayInt - self.startYear > 0 {
-                        self.numMonths += (self.yearTodayInt - self.startYear) * 12
+                    if (snapshot?.metadata.isFromCache)! {
+                        return
                     }
-                    self.addDropDownData()
-                    self.monthDropDown!.selectionAction = {(index: Int, item: String) in
-                        self.scrollToCalendar()
+                    var deletedStr = ""
+                    for doc in snapshot!.documents {
+                        deletedStr += doc.documentID + ": " + String(doc.data()["target"] as! String) + "\n"
+                        db.collection("iodDeletedNotifications").document(doc.documentID).delete()
                     }
-                    self.yearDropDown!.selectionAction = {(index: Int, item: String) in
-                        self.scrollToCalendar()
+                    if deletedStr != "" {
+                        let alertController = UIAlertController(title: "Notification", message: "These chosen entries were deleted by the user:\n\n" + deletedStr, preferredStyle: .alert)
+                        let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                        alertController.addAction(defaultAction)
+                        self.present(alertController, animated: true, completion: nil)
                     }
-                    
-                    let imageKeyDict = userData["calendarImages"] as! [String : String]
-                    self.numCalendarImagesAndPlaceholders = imageKeyDict.count
-                    for (dateString, imageKey) in imageKeyDict {
-                        if imageKey == "" {
-                            self.imageDict[dateString] = UIImage(named: "Calendar/placeholder")!
-                            continue
-                        }
-                        let imageRef = storage.child(imageKey)
-                        imageRef.getData(maxSize: imgMaxByte) {data, Error in
-                            if let Error = Error {
-                                print(Error)
-                                return
-                            } else {
-                                self.imageDict[dateString] = UIImage(data: data!)!
-                            }
-                        }
-                    }
-                    self.numEntriesDict = userData["numEntriesInDate"] as! [String : Int]
                 }
-                var alertDates = userData["featuredAlertDates"] as! [String]
-                if alertDates != [] {
-                    for alertDate in alertDates {
-                        if isEarlierDate(alertDate, dateToday) {
-                            let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CongratsViewController") as! CongratsViewController
-                            popOverVC.featuredDate = alertDate
-                            popOverVC.cvc = self
-                            self.addChild(popOverVC)
-                            popOverVC.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
-                            self.view.addSubview(popOverVC.view)
-                            popOverVC.didMove(toParent: self)
-                            alertDates.remove(at: alertDates.index(of: alertDate)!)
-                        }
-                    }
-                    db.collection("userData").document(userKey).updateData(["featuredAlertDates": alertDates])
-                }
-                self.userAlertDates = alertDates
-                if (userData["email"] as! String) != "nevadaastrophotography@gmail.com" {
-                    self.antoinePowersButton.isHidden = false
-                    db.collection("iodDeletedNotifications").addSnapshotListener(includeMetadataChanges: true, listener: {(snapshot, Error) in
-                        if Error != nil {
-                            print(Error!)
-                        } else {
-                            if (snapshot?.metadata.isFromCache)! {
-                                return
-                            }
-                            var deletedStr = ""
-                            for doc in snapshot!.documents {
-                                deletedStr += doc.documentID + ": " + String(doc.data()["target"] as! String) + "\n"
-                                db.collection("iodDeletedNotifications").document(doc.documentID).delete()
-                            }
-                            if deletedStr != "" {
-                                let alertController = UIAlertController(title: "Notification", message: "These chosen entries were deleted by the user:\n\n" + deletedStr, preferredStyle: .alert)
-                                let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-                                alertController.addAction(defaultAction)
-                                self.present(alertController, animated: true, completion: nil)
-                            }
-                        }
-                    })
-                }
+            })
+        }
+        db.collection("userData").document(userKey).addSnapshotListener (includeMetadataChanges: true, listener: {(QuerySnapshot, error) in
+            if error != nil {
+                print("Error fetching user document: \(error!)")
+                return
+            }
+            if (QuerySnapshot?.metadata.isFromCache)! {
+                return
+            }
+            if !self.userDataInitialized {
+                self.userDataInitialized = true
+            } else {
+                self.userData = QuerySnapshot!.data()!
             }
         })
         db.collection("imageOfDayKeys").addSnapshotListener(includeMetadataChanges: true, listener: {(snapshot, Error) in
@@ -300,7 +322,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                         //entry was just picked as iod for today or future
                         if entryFeaturedDate == "" {
                             for j in 0..<iodDocs.count {
-                                if iodDocs[j].data()["journalEntryListKey"] as? String == userKey +
+                                if iodDocs[j].data()["journalEntryListKey"] as? String == self.userKey +
                                     self.entryToShowDate && iodDocs[j].data()["journalEntryInd"] as? Int == i {
                                     self.entryDropDown?.hide()
                                     let iodDate = iodDocs[j].documentID
@@ -317,7 +339,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                             for j in 0..<iodDocs.count {
                                 //different entry was selected
                                 if iodDocs[j].documentID == entryFeaturedDate {
-                                    if iodDocs[j].data()["journalEntryListKey"] as? String != userKey + self.entryToShowDate || iodDocs[j].data()["journalEntryInd"] as? Int != i {
+                                    if iodDocs[j].data()["journalEntryListKey"] as? String != self.userKey + self.entryToShowDate || iodDocs[j].data()["journalEntryInd"] as? Int != i {
                                         self.entryDropDown?.hide()
                                         if isEarlierDate(iodDocs[j].documentID, dateToday) {
                                             self.jevc?.featuredButton.isHidden = true
@@ -470,7 +492,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                     self.iodvc?.navigationController?.popToRootViewController(animated: true)
                     let iodEntryListKey = iodKeysData["journalEntryListKey"] as! String
                     //check if this user was picked for iod while app was on. If so, show congrats alert
-                    if (iodEntryListKey).prefix(iodEntryListKey.count - 8) == userKey {
+                    if (iodEntryListKey).prefix(iodEntryListKey.count - 8) == self.userKey {
                         self.entryDropDown?.hide()
                         let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CongratsViewController") as! CongratsViewController
                         popOverVC.featuredDate = iodDocToShow.documentID
@@ -479,7 +501,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                         popOverVC.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
                         self.view.addSubview(popOverVC.view)
                         popOverVC.didMove(toParent: self)
-                        db.collection("userData").document(userKey).updateData(["featuredAlertDates": self.userAlertDates])
+                        db.collection("userData").document(self.userKey).updateData(["featuredAlertDates": self.userAlertDates])
                     }
                 }
             }
@@ -510,13 +532,17 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             viewDidAppear(true)
         }
     }
-    func showUnlockAnimation(_ cardName: String) {
+    func showUnlockAnimation(imagePath: String) {
         let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CardUnlockedViewController") as! CardUnlockedViewController
         self.addChild(popOverVC)
         popOverVC.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         self.view.addSubview(popOverVC.view)
-        popOverVC.unlockedDateLabel.text = monthNames[Int(unlockedDate.prefix(2))! - 1] + " " + String(Int(unlockedDate.prefix(4).suffix(2))!) + " " + String(unlockedDate.suffix(4))
-        popOverVC.imageView.image = UIImage(named: "UnlockedCards/" + formattedTargetToImageName(target: cardName))
+        if imagePath.prefix(13) == "UnlockedCards" {//showing card
+            popOverVC.unlockedDateLabel.text = monthNames[Int(unlockedDate.prefix(2))! - 1] + " " + String(Int(unlockedDate.prefix(4).suffix(2))!) + " " + String(unlockedDate.suffix(4))
+        } else {
+            popOverVC.unlockedDateLabel.isHidden = true
+        }
+        popOverVC.imageView.image = UIImage(named: imagePath)
         popOverVC.didMove(toParent: self)
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -554,9 +580,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         if cardUnlocked != "" {
             let othertarget = doubleTargets[cardUnlocked]
             if othertarget != nil {
-                showUnlockAnimation(othertarget!)
+                showUnlockAnimation(imagePath: "UnlockedCards/" + formattedTargetToImageName(target: othertarget!))
             }
-            showUnlockAnimation(cardUnlocked)
+            showUnlockAnimation(imagePath: "UnlockedCards/" + formattedTargetToImageName(target: cardUnlocked))
             unlockedDate = ""
             cardUnlocked = ""
         }
@@ -564,14 +590,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         endNoInput()
         for item in [todayButton, monthButton, yearButton, calendarsListView, imageOfDayImageView, imageOfDayLight, imageOfDayMainLabel, imageOfDayLabel] {
             item!.isHidden = false
-        }
-        if newIodUserName != "" {
-            imageOfDayLabel.text = imageOfDayTarget + " by " + newIodUserName + " "
-            let font = UIFont(name: self.imageOfDayLabel.font.fontName, size: self.imageOfDayLabel.font.pointSize)
-            let fontAttributes = [NSAttributedString.Key.font: font]
-            let size = (self.imageOfDayLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
-            self.imageOfDayLightWC.constant = size.width + 30
-            newIodUserName = ""
         }
         iodvc = nil
     }

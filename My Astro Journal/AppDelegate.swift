@@ -8,17 +8,18 @@
 
 import UIKit
 import Firebase
+import StoreKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     var restrictRotation:UIInterfaceOrientationMask = .portrait
-
-
+    let transactionObserver = TransactionObserver()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        SKPaymentQueue.default().add(transactionObserver)
         FirebaseApp.configure()
         return true
     }
