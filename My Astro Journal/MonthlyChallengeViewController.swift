@@ -102,6 +102,8 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
             vc!.featuredButton.isUserInteractionEnabled = false
             vc!.memoriesLabel.isHidden = true
             vc!.memoriesField.isHidden = true
+            vc!.extraPhotosLabel.isHidden = true
+            vc!.imageCollectionView.isHidden = true
             vc!.contentViewHC.constant -= 177
             vc!.contentViewHCipad.constant -= 444
             return

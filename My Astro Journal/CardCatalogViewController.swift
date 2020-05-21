@@ -184,15 +184,6 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
         resetButton.isHidden = true
         searchIcon.isHidden = true
         cardCollectionView.isHidden = true
-        let dropDown = VPAutoComplete()
-        dropDown.dataSource = ["Messier", "Sharpless", "Milky Way", "Rho Ophiuchi"]
-        dropDown.onTextField = searchField
-        dropDown.onView = self.view
-        dropDown.cellHeight = 34
-        dropDown.frame.origin.y = searchField.frame.origin.y + 39
-        dropDown.show {(str, index) in
-            self.searchField.text = str
-        }
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
@@ -221,6 +212,15 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
             }
             cardCollectionView.contentOffset.y = 0.0
             cardCollectionView.isHidden = false
+            let dropDown = VPAutoComplete()
+            dropDown.dataSource = ["Messier", "Sharpless", "Milky Way", "Rho Ophiuchi"]
+            dropDown.onTextField = searchField
+            dropDown.onView = self.view
+            dropDown.cellHeight = 34
+            dropDown.frame.origin.y = searchField.frame.origin.y + 39
+            dropDown.show {(str, index) in
+                self.searchField.text = str
+            }
             loaded = true
         }
         searchField.resignFirstResponder()

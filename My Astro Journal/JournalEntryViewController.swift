@@ -17,6 +17,7 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var gearImage: UIImageView!
     @IBOutlet weak var editButton: UIButton!
+    @IBOutlet weak var targetArrow: UIImageView!
     @IBOutlet weak var targetField: UILabel!
     @IBOutlet weak var constellationField: UILabel!
     @IBOutlet weak var dateField: UILabel!
@@ -63,14 +64,11 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
         if screenH > 1000 {//ipads
             background.image = UIImage(named: "ViewEntry/background-ipad")
             border.image = UIImage(named: "border-ipad")
+            targetArrow.image = UIImage(named: "ViewEntry/arrow-ipad")
             bigImageView.isHidden = true
         }
         bigImageView.layer.borderWidth = 2
         bigImageView.layer.borderColor = astroOrange
-        memoriesField.layer.borderWidth = 1
-        memoriesField.layer.borderColor = UIColor.gray.cgColor
-        acquisitionField.layer.borderWidth = 1
-        acquisitionField.layer.borderColor = UIColor.gray.cgColor
         editButton.isHidden = true
         gearImage.isHidden = true
         imageCollectionView.isHidden = true

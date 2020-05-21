@@ -50,6 +50,8 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
     }
     var featuredTargets: [String: String] = [:]
     var packsUnlocked: [String] = []
+    var sharplessUnlocked = false
+    var othersUnlocked = false
     var cardBacksUnlocked: [String] = []
     var cardBackPopOverController: CardBackBackgroundsPopOverViewController? = nil
     var cardBackSelected = ""
@@ -97,8 +99,6 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
                 }
             }
         }
-        sharplessButton.isUserInteractionEnabled = false
-        othersButton.isUserInteractionEnabled = false
         for item in view.subviews {
             if item is UIButton {
                 item.isHidden = true
@@ -107,13 +107,13 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
         func checkCardGroupsUnlocked() {
             if packsUnlocked.contains("1") {
                 sharplessButton.setImage(UIImage(named: "CardGroups/sharpless")!, for: .normal)
-                sharplessButton.isUserInteractionEnabled = true
+                sharplessUnlocked = true
             }
             if packsUnlocked.contains("2") || packsUnlocked.contains("4") {
                 sharplessButton.setImage(UIImage(named: "CardGroups/sharpless")!, for: .normal)
                 othersButton.setImage(UIImage(named: "CardGroups/others")!, for: .normal)
-                sharplessButton.isUserInteractionEnabled = true
-                othersButton.isUserInteractionEnabled = true
+                sharplessUnlocked = true
+                othersUnlocked = true
             }
         }
         userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
@@ -274,6 +274,20 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
     @IBAction func NGCPressed(_ sender: Any) {
         callPerformSegue(groupName: "NGC")
     }
+    @IBAction func sharplessPressed(_ sender: Any) {
+        if sharplessUnlocked {
+            callPerformSegue(groupName: "Sharpless")
+        } else {
+            performSegue(withIdentifier: "cardGroupsToAddOns", sender: self)
+        }
+    }
+    @IBAction func othersPressed(_ sender: Any) {
+        if othersUnlocked {
+            callPerformSegue(groupName: "Others")
+        } else {
+            performSegue(withIdentifier: "cardGroupsToAddOns", sender: self)
+        }
+    }
     @IBAction func galaxiesPressed(_ sender: Any) {
         callPerformSegue(groupName: "Galaxies")
     }
@@ -283,14 +297,8 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
     @IBAction func clustersPressed(_ sender: Any) {
         callPerformSegue(groupName: "Clusters")
     }
-    @IBAction func sharplessPressed(_ sender: Any) {
-        callPerformSegue(groupName: "Sharpless")
-    }
     @IBAction func planetsPressed(_ sender: Any) {
         callPerformSegue(groupName: "Planets")
-    }
-    @IBAction func othersPressed(_ sender: Any) {
-        callPerformSegue(groupName: "Others")
     }
 }
 

@@ -8,6 +8,7 @@ class CardViewController: UIViewController {
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var unlockedDateLabel: UILabel!
     @IBOutlet weak var backgroundImageView: UIImageView!
+    @IBOutlet weak var imageViewCenterYC: NSLayoutConstraint!
     @IBOutlet weak var imageViewTopC: NSLayoutConstraint!
     @IBOutlet weak var imageViewHCipad: NSLayoutConstraint!
     @IBOutlet weak var unlockedDateLabelTrailingC: NSLayoutConstraint!
@@ -97,7 +98,8 @@ class CardViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if screenH < 600 {
-            imageViewTopC.constant = 37
+            imageViewCenterYC.constant = -20
+            imageViewTopC.constant = 17
         }
         else if screenH > 1000 {//ipads
             entryDatesButton.titleLabel?.font =  entryDatesButton.titleLabel?.font.withSize(22)

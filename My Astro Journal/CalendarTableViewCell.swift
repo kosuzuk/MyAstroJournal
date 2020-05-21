@@ -52,7 +52,6 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
         }
     }
     var cvc: CalendarViewController? = nil
-    
     override func awakeFromNib() {
         super.awakeFromNib()
         let tap = UITapGestureRecognizer(target: self, action: #selector(calendarTapped))
@@ -184,7 +183,8 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
                         dd.cornerRadius = 10
                         dd.cornerRadius = 10
                         dd.anchorView = cell
-                        dd.bottomOffset = CGPoint(x: 1, y: 41)
+                        let cellH = floor(self.calendarView.bounds.height / 6)
+                        dd.bottomOffset = CGPoint(x: 1, y: cellH)
                         dd.dataSource = []
                         for entry in entryList {
                             dd.dataSource.append((entry["target"] as! String).uppercased())
