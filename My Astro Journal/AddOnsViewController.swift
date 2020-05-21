@@ -10,7 +10,6 @@ import UIKit
 import SwiftKeychainWrapper
 import StoreKit
 
-var a:AddOnsViewController? = nil
 class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     @IBOutlet weak var background: UIImageView!
     @IBOutlet weak var packsCollectionView: UICollectionView!
@@ -37,7 +36,6 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        a = self
         if screenH > 1000 {//ipads
             background.image = UIImage(named: "Info/background-ipad")!
             let cardBacksLayout = cardBacksCollectionView!.collectionViewLayout as! UICollectionViewFlowLayout
@@ -69,6 +67,7 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
                 self.loaded = true
             }
         })
+        appDelegate.transactionObserver.addOnsVC = self
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if !loaded {
@@ -135,6 +134,9 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
         if #available(iOS 13.3, *) {
             popOverVC.closeButton.setTitle("", for: .normal)
             popOverVC.closeButton.setImage(UIImage(systemName: "x.circle")!, for: .normal)
+        } else {
+            popOverVC.closeButton.titleLabel?.font =  UIFont(name: "Helvetica Neue", size: 35)
+            popOverVC.closeButton.titleLabel?.textColor = .white
         }
         popOverVC.imageView.image = UIImage(named: imageName)
         popOverVC.didMove(toParent: self)
@@ -192,48 +194,10 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
         loadingIcon.stopAnimating()
         endNoInput()
     }
-//    func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
-//        print("restore finished")
-//        for transaction in queue.transactions {
-//            let productID = transaction.payment.productIdentifier
-//            if packProductIDs.contains(productID) {
-//                let packNumberToRestore = packImageNames[packProductIDs.index(of: productID)!]
-//                if !packsPurchased.contains(packNumberToRestore) {
-//                    purchasedItemType = "pack"
-//                    purchasedItemInd = packProductIDs.index(of: productID)!
-//                    manageSuccessfulPurchase()
-//                }
-//            } else {
-//                let cardBackNumberToRestore = cardBackImageNames[cardBackProductIDs.index(of: productID)!]
-//                if !cardBacksPurchased.contains(cardBackNumberToRestore) {
-//                    purchasedItemType = "card back"
-//                    purchasedItemInd = cardBackProductIDs.index(of: productID)!
-//                    manageSuccessfulPurchase()
-//                }
-//            }
-//            queue.finishTransaction(transaction)
-//        }
-//        loadingIcon.stopAnimating()
-//        endNoInput()
-//    }
-//    func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
-//        for transaction in transactions {
-//            if transaction.transactionState == .purchased {
-//                print("Transaction Successful")
-//                manageSuccessfulPurchase()
-//                queue.finishTransaction(transaction)
-//            } else if transaction.transactionState == .failed {
-//                print("Transaction Failed")
-//                queue.finishTransaction(transaction)
-//                loadingIcon.stopAnimating()
-//                endNoInput()
-//            } else if transaction.transactionState == .restored {
-//                print("restored an item")
-//            } else {
-//                print(transaction.transactionState)
-//            }
-//        }
-//    }
+    func manageFailedPurchase() {
+        loadingIcon.stopAnimating()
+        endNoInput()
+    }
     func purchase(productID: String) {
         startNoInput()
         view.addSubview(formatLoadingIcon(icon: loadingIcon))
@@ -272,6 +236,25 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
         popOverVC.imageView.image = UIImage(named: "AddOns/" + "CardBacks/" + "Previews/" +  cardBackImageNames[ind])!
         popOverVC.textView.text = "This add-on will add the \"" +  cardBackNames[ind] + "\" card back to your collection."
         popOverVC.didMove(toParent: self)
+    }
+    func manageRestore(_ productID: String) {
+        if packProductIDs.contains(productID) {
+            let packNumberToRestore = packImageNames[packProductIDs.index(of: productID)!]
+            if !packsPurchased.contains(packNumberToRestore) {
+                purchasedItemType = "pack"
+                purchasedItemInd = packProductIDs.index(of: productID)!
+                manageSuccessfulPurchase()
+            }
+        } else {
+            let cardBackNumberToRestore = cardBackImageNames[cardBackProductIDs.index(of: productID)!]
+            if !cardBacksPurchased.contains(cardBackNumberToRestore) {
+                purchasedItemType = "card back"
+                purchasedItemInd = cardBackProductIDs.index(of: productID)!
+                manageSuccessfulPurchase()
+            }
+        }
+        loadingIcon.stopAnimating()
+        endNoInput()
     }
     @IBAction func restoreButtonTapped(_ sender: Any) {
         SKPaymentQueue.default().restoreCompletedTransactions()
