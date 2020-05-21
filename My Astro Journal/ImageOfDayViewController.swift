@@ -161,8 +161,8 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
         commentInputTextView.layer.borderColor = UIColor.gray.cgColor
         commentInputTextView.layer.borderWidth = 1
         commentInputTextView.autocorrectionType = .yes
-        bioField.layer.borderColor = UIColor.gray.cgColor
-        bioField.layer.borderWidth = 1
+        bioField.textContainer.lineFragmentPadding = 0
+        bioField.textContainerInset = .zero
         scrollView.delegate = (self as UIScrollViewDelegate)
         commentInputTextView.delegate = (self as UITextViewDelegate)
         format.timeZone = TimeZone(abbreviation: "PDT")!
@@ -200,14 +200,14 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                 }
                 let data = (snapshot?.data()!["data"] as! [[String: Any]])[self.entryInd]
                 self.entryData = data
-                var target = formattedTargetToTargetName(target: (data["formattedTarget"] as! String))
+                let target = formattedTargetToTargetName(target: (data["formattedTarget"] as! String))
                 self.targetField.text = target
                 let entryDate = String(self.entryKey.suffix(8))
                 self.dateField.text = monthNames[Int(entryDate.prefix(2))! - 1] + " " + String(Int(entryDate.prefix(4).suffix(2))!) + " " + String(entryDate.suffix(4))
                 self.locationField.text = (data["locations"] as! [String]).joined(separator: ", ")
-                var font = UIFont(name: self.locationField.font.fontName, size: self.locationField.font.pointSize)
-                var fontAttributes = [NSAttributedString.Key.font: font]
-                var size = (self.locationField.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
+                let font = UIFont(name: self.locationField.font.fontName, size: self.locationField.font.pointSize)
+                let fontAttributes = [NSAttributedString.Key.font: font]
+                let size = (self.locationField.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
                 if size.width < self.locationWidthDefault {
                     self.locationFieldWC.constant = size.width + 10
                     self.locationFieldWCipad.constant = size.width + 10
@@ -324,9 +324,6 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                 let data = snapshot!.data()!
                 self.userData = data
                 self.nameField.text = (data["userName"] as! String)
-                let font = UIFont(name: self.nameField.font.fontName, size: self.nameField.font.pointSize)
-                let fontAttributes = [NSAttributedString.Key.font: font]
-                let size = (self.nameField.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
                 self.bioField.text = (data["userBio"] as! String)
                 let imageKey = (data["profileImageKey"] as! String)
                 if imageKey != oldUserImageKey {

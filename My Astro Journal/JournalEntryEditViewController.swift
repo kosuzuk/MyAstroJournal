@@ -47,8 +47,9 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
     @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var contentView: UIView!
-    @IBOutlet weak var multTargetWarning: UILabel!
+    @IBOutlet weak var targetArrow: UIImageView!
     @IBOutlet weak var targetField: UITextField!
+    @IBOutlet weak var multTargetWarning: UILabel!
     @IBOutlet weak var constellationField: UILabel!
     @IBOutlet weak var dateField: UILabel!
     @IBOutlet weak var timeStartField: UITextField!
@@ -145,19 +146,12 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
             }
         }
     }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-        if screenH < 600 {//iphone SE, 5s
-            targetFieldWC.constant = 140
-            arrowWC.constant = 130
-            mountFieldWC.constant = 98
-        }
-    }
     override func viewDidLoad() {
         super.viewDidLoad()
         if screenH > 1000 {//ipads
             background.image = UIImage(named: "ViewEntry/background-ipad")
             border.image = UIImage(named: "border-ipad")
+            targetArrow.image = UIImage(named: "ViewEntry/arrow-ipad")
             let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
             layout.itemSize = CGSize(width: imageCollectionView.bounds.height, height: imageCollectionView.bounds.height)
             imageCollectionView.collectionViewLayout = layout
@@ -240,12 +234,6 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
             calImageKey = (userData["calendarImages"] as! [String: String])[entryDate]!
         }
         locationsVisited = userData["locationsVisited"] as! [String]
-        let eqData = userData["userEquipment"] as! Dictionary<String, [String]>
-        setAutoComp(targetField, ["Messier", "Sharpless", "SH2-", "Milky Way", "Rho Ophiuchi", "XSS J16271-2423", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"], 0)
-        setAutoComp(locationField, locationsVisited, 1)
-        setAutoComp(telescopeField, eqData["telescopes"]!, 2)
-        setAutoComp(mountField, eqData["mounts"]!, 2)
-        setAutoComp(cameraField, eqData["cameras"]!, 2)
         if entryData.count != 0 {
             targetField.isUserInteractionEnabled = false
             targetField.borderStyle = UITextField.BorderStyle.none
@@ -321,6 +309,20 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         xLabel.isUserInteractionEnabled = true
         cell.addSubview(xLabel)
         return cell
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        if screenH < 600 {//iphone SE, 5s
+            targetFieldWC.constant = 140
+            arrowWC.constant = 130
+            mountFieldWC.constant = 98
+        }
+        setAutoComp(targetField, ["Messier", "Sharpless", "SH2-", "Milky Way", "Rho Ophiuchi", "XSS J16271-2423", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"], 0)
+        setAutoComp(locationField, locationsVisited, 1)
+        let eqData = userData["userEquipment"] as! Dictionary<String, [String]>
+        setAutoComp(telescopeField, eqData["telescopes"]!, 2)
+        setAutoComp(mountField, eqData["mounts"]!, 2)
+        setAutoComp(cameraField, eqData["cameras"]!, 2)
     }
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         activeField?.resignFirstResponder()

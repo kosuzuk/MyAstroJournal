@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "Arrow for behind name of target PNG.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "arrow.png",
       "idiom" : "universal",
       "scale" : "2x"
     },

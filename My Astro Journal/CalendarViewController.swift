@@ -35,7 +35,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var bannerHC: NSLayoutConstraint!
     @IBOutlet weak var newEntryButtonTopC: NSLayoutConstraint!
     @IBOutlet weak var yearButtonTopC: NSLayoutConstraint!
-    @IBOutlet weak var yearButtonLeadingC: NSLayoutConstraint!
     @IBOutlet weak var calendarWC: NSLayoutConstraint!
     @IBOutlet weak var calendarHC: NSLayoutConstraint!
     @IBOutlet weak var calendarWCipad: NSLayoutConstraint!
@@ -183,6 +182,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         monthDropDown!.cornerRadius = 10
         monthDropDown!.anchorView = monthButton
         monthDropDown!.bottomOffset = CGPoint(x: 0, y: 25)
+        if screenH > 1000 {
+            monthDropDown!.bottomOffset = CGPoint(x: 0, y: 31)
+        }
         yearDropDown = DropDown()
         yearDropDown!.backgroundColor = .darkGray
         yearDropDown!.textColor = .white
@@ -190,6 +192,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         yearDropDown!.cellHeight = 34
         yearDropDown!.cornerRadius = 10
         yearDropDown!.bottomOffset = CGPoint(x: 0, y: 25)
+        if screenH > 1000 {
+            yearDropDown!.bottomOffset = CGPoint(x: 0, y: 31)
+        }
         yearDropDown!.anchorView = yearButton
         for item in [antoinePowersButton, selectDateText, cancelButton, showEarlierMonthButton, todayButton, monthButton, yearButton, calendarsListView, imageOfDayImageView, imageOfDayLight, imageOfDayMainLabel, imageOfDayLabel] {
             item!.isHidden = true
@@ -509,6 +514,28 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 self.imageOfDayListenerInitiated = true
             }
         })
+        NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        if appDelegate.transactionObserver.incompletePurchaseProductIDs != [] {
+            let IDs = appDelegate.transactionObserver.incompletePurchaseProductIDs
+            for id in IDs {
+                //a pack item
+                if packProductIDs.contains(id) {
+                    let packImageNames = ["1", "2", "3", "4"]
+                    let packNumberToRestore = packImageNames[packProductIDs.index(of: id)!]
+                    
+                    showUnlockAnimation(imagePath: "AddOns/" + "Packs/" + packNumberToRestore)
+                    db.collection("userData").document(userKey).setData(["packsUnlocked": [packNumberToRestore: true]], merge: true)
+                }
+                //a card back item
+                else if cardBackProductIDs.contains(id) {
+                    let cardBackImageNames = ["6", "7", "8", "9", "10", "11", "12", "13"]
+                    let cardBackNumberToRestore = cardBackImageNames[cardBackProductIDs.index(of: id)!]
+                    showUnlockAnimation(imagePath: "AddOns/" + "CardBacks/" + "Backgrounds/" +  cardBackNumberToRestore)
+                    db.collection("userData").document(userKey).setData(["cardBacksUnlocked": [cardBackNumberToRestore: true]], merge: true)
+                }
+            }
+            appDelegate.transactionObserver.incompletePurchaseProductIDs = []
+        }
         if firstTime {
             let alertController = UIAlertController(title: "Tutorial", message: "This is the Calendar screen where you can add, view, and edit journal entries for any date. Upon entering a target and attaching your image, its card will unlock! Cards can be viewed in the Catalog tab. Try to collect them all!", preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
@@ -539,6 +566,13 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.view.addSubview(popOverVC.view)
         if imagePath.prefix(13) == "UnlockedCards" {//showing card
             popOverVC.unlockedDateLabel.text = monthNames[Int(unlockedDate.prefix(2))! - 1] + " " + String(Int(unlockedDate.prefix(4).suffix(2))!) + " " + String(unlockedDate.suffix(4))
+            if #available(iOS 13.3, *) {
+                popOverVC.closeButton.setTitle("", for: .normal)
+                popOverVC.closeButton.setImage(UIImage(systemName: "x.circle")!, for: .normal)
+            } else {
+                popOverVC.closeButton.titleLabel?.font =  UIFont(name: "Helvetica Neue", size: 35)
+                popOverVC.closeButton.titleLabel?.textColor = .white
+            }
         } else {
             popOverVC.unlockedDateLabel.isHidden = true
         }
@@ -549,7 +583,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         super.viewDidAppear(true)
         if (screenH < 600) {//iphone SE, 5s
             bannerHC.constant = 35
-            yearButtonLeadingC.constant = 20
             earlierMonthButtonTopC.constant = -38
             imageOfDayMainLabel.text = ""
             imageOfDayWC.constant = 287
@@ -606,6 +639,12 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return tableView.frame.size.height
+    }
+    @objc func willEnterForeground() {
+        for cell in calendarsListView.visibleCells {
+            let calendarCell = cell as! CalendarTableViewCell
+            calendarCell.sunLabelLeadingC.constant = floor(calendarCell.bounds.width / 7) / 2 - calendarCell.sunLabelW / 2
+        }
     }
     @IBAction func pickerButtonTapped(_ sender: Any) {
         performSegue(withIdentifier: "calendarToPicker", sender: self)
