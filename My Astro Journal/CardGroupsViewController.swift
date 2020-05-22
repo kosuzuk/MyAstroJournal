@@ -122,7 +122,7 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
                 print(Error!)
             } else {
                 if (snapshot?.metadata.isFromCache)! {
-                    return
+                    print("using cached data")
                 }
                 let data = snapshot!.data()!
                 //initial pull
@@ -223,6 +223,7 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
         return true
     }
     @IBAction func cardBacksButtonTapped(_ sender: Any) {
+        return
         cardBackPopOverController = (self.storyboard!.instantiateViewController(withIdentifier: "CardBackBackgroundsPopOverViewController") as! CardBackBackgroundsPopOverViewController)
         cardBackPopOverController!.modalPresentationStyle = .popover
         var viewW = 290

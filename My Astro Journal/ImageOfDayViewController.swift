@@ -75,6 +75,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
     @IBOutlet weak var statsSeen: UILabel!
     @IBOutlet weak var contentViewHC: NSLayoutConstraint!
     @IBOutlet weak var contentViewHCipad: NSLayoutConstraint!
+    @IBOutlet weak var dateLabelLeadingC: NSLayoutConstraint!
     @IBOutlet weak var locationFieldWC: NSLayoutConstraint!
     @IBOutlet weak var locationFieldWCipad: NSLayoutConstraint!
     @IBOutlet weak var mountFieldWC: NSLayoutConstraint!
@@ -123,6 +124,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
     var cameraDD: DropDown? = nil
     var sentEvenNumComments = true
     var locationWidthDefault = CGFloat(0)
+    var locationLabelW = CGFloat(0)
     var commentTextViewHeightDefault = 36
     var commentInputHeightMax = CGFloat(85)
     var commentsTableViewWidth = CGFloat(0)
@@ -193,7 +195,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                 print(Error!)
             } else {
                 if (snapshot?.metadata.isFromCache)! {
-                    return
+                    print("using cached data")
                 }
                 if snapshot?.data() == nil {
                     return
@@ -207,13 +209,10 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                 self.locationField.text = (data["locations"] as! [String]).joined(separator: ", ")
                 let font = UIFont(name: self.locationField.font.fontName, size: self.locationField.font.pointSize)
                 let fontAttributes = [NSAttributedString.Key.font: font]
-                let size = (self.locationField.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
-                if size.width < self.locationWidthDefault {
-                    self.locationFieldWC.constant = size.width + 10
-                    self.locationFieldWCipad.constant = size.width + 10
-                } else {
-                    self.locationFieldWC.constant = self.locationWidthDefault
-                    self.locationFieldWCipad.constant = self.locationWidthDefault
+                self.locationLabelW = (self.locationField.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any]).width
+                if self.locationLabelW < self.locationWidthDefault {
+                    self.locationFieldWC.constant = self.locationLabelW + 10
+                    self.locationFieldWCipad.constant = self.locationLabelW + 10
                 }
                 if self.locationField.text! == "" {
                     self.locationIcon.isHidden = true
@@ -315,7 +314,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                 print(Error!)
             } else {
                 if (snapshot?.metadata.isFromCache)! {
-                    return
+                    print("using cached data")
                 }
                 let oldUserImageKey = self.userData?["profileImageKey"] as? String
                 if snapshot!.data() == nil {
@@ -427,7 +426,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                 return
             } else {
                 if (snapshot?.metadata.isFromCache)! {
-                    return
+                    print("using cached data")
                 }
                 self.likesList = []
                 let likesData = snapshot!.data()! as! [String: String]
@@ -505,7 +504,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                 return
             } else {
                 if (snapshot?.metadata.isFromCache)! {
-                    return
+                    print("using cached data")
                 }
                 if self.commentsListenerInitiated {
                     let oldCommentsList = self.commentsList
@@ -521,11 +520,12 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
             }
         })
         imageView.isHidden = true
-        endNoInput()
+        NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         if screenH < 600 {//iphone SE, 5s
+            dateLabelLeadingC.constant = 7
             imageViewWC.constant = 300
             mountFieldWC.constant = 98
             circle1TrailingC.constant = 5
@@ -553,6 +553,12 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
         }
         imageView.isHidden = false
         keyForDifferentProfile = ""
+    }
+    @objc func willEnterForeground() {
+        if locationLabelW < locationWidthDefault {
+            locationFieldWC.constant = locationLabelW + 10
+            locationFieldWCipad.constant = locationLabelW + 10
+        }
     }
     func getNumLines(str: String, fontAttr: [NSAttributedString.Key : Any], containerW: CGFloat) -> Int {
         var strCopy = str

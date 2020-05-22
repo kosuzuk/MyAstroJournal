@@ -39,6 +39,8 @@ class CardViewController: UIViewController {
                 entryDatesDropDown.backgroundColor = .darkGray
                 entryDatesDropDown.textColor = .white
                 entryDatesDropDown.textFont = UIFont(name: "Pacifica Condensed", size: 16)!
+                entryDatesDropDown.selectionBackgroundColor = .darkGray
+                entryDatesDropDown.selectedTextColor = .white
                 entryDatesDropDown.cellHeight = 34
                 entryDatesDropDown.cornerRadius = 10
                 entryDatesDropDown.bottomOffset = CGPoint(x: -5, y: 28)

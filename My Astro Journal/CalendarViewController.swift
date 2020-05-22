@@ -281,7 +281,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                     print(Error!)
                 } else {
                     if (snapshot?.metadata.isFromCache)! {
-                        return
+                        print("iodDeletedNotifications using cached data")
                     }
                     var deletedStr = ""
                     for doc in snapshot!.documents {
@@ -303,7 +303,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 return
             }
             if (QuerySnapshot?.metadata.isFromCache)! {
-                return
+                print("userData using cached data")
             }
             if !self.userDataInitialized {
                 self.userDataInitialized = true
@@ -316,7 +316,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 print(Error!)
             } else {
                 if (snapshot?.metadata.isFromCache)! {
-                    return
+                    print("imageOfDayKeys using cached data")
                 }
                 self.imageOfDayImageView.isUserInteractionEnabled = false
                 let iodDocs = snapshot!.documents
@@ -566,6 +566,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.view.addSubview(popOverVC.view)
         if imagePath.prefix(13) == "UnlockedCards" {//showing card
             popOverVC.unlockedDateLabel.text = monthNames[Int(unlockedDate.prefix(2))! - 1] + " " + String(Int(unlockedDate.prefix(4).suffix(2))!) + " " + String(unlockedDate.suffix(4))
+        } else {
+            popOverVC.unlockedDateLabel.isHidden = true
             if #available(iOS 13.3, *) {
                 popOverVC.closeButton.setTitle("", for: .normal)
                 popOverVC.closeButton.setImage(UIImage(systemName: "x.circle")!, for: .normal)
@@ -573,8 +575,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 popOverVC.closeButton.titleLabel?.font =  UIFont(name: "Helvetica Neue", size: 35)
                 popOverVC.closeButton.titleLabel?.textColor = .white
             }
-        } else {
-            popOverVC.unlockedDateLabel.isHidden = true
         }
         popOverVC.imageView.image = UIImage(named: imagePath)
         popOverVC.didMove(toParent: self)
@@ -685,7 +685,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         yearDropDown!.show()
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        startNoInput()
         let vc = segue.destination as? JournalEntryEditViewController
         vc?.entryDate = newEntryDate
         if vc != nil {

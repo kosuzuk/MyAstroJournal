@@ -12,6 +12,7 @@ import StoreKit
 
 class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     @IBOutlet weak var background: UIImageView!
+    @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var packsCollectionView: UICollectionView!
     @IBOutlet weak var cardBacksCollectionView: UICollectionView!
     @IBOutlet weak var contentViewHCipad: NSLayoutConstraint!
@@ -38,6 +39,7 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
         super.viewDidLoad()
         if screenH > 1000 {//ipads
             background.image = UIImage(named: "Info/background-ipad")!
+            border.image = UIImage(named: "border-ipad")!
             let cardBacksLayout = cardBacksCollectionView!.collectionViewLayout as! UICollectionViewFlowLayout
             cardBacksLayout.minimumLineSpacing = 120
             cardBacksCollectionView.collectionViewLayout = cardBacksLayout
