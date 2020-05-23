@@ -401,7 +401,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
                 if imageState == "no change" {
                     self.pvc!.userData = newUserData
                     if self.imageView.image == nil {
-                        self.pvc!.newImage = UIImage(named: "ImageOfTheDay/placeholderProfileImage")
+                        self.pvc!.newImage = UIImage(named: "Profile/placeholderProfileImage")
                     } else {
                         self.pvc!.newImage = self.imageView.image
                     }
@@ -464,7 +464,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
             newUserData["profileImageKey"] = ""
             newUserData["compressedProfileImageKey"] = ""
             pvc!.userData = newUserData
-            pvc!.newImage = UIImage(named: "ImageOfTheDay/placeholderProfileImage")
+            pvc!.newImage = UIImage(named: "Profile/placeholderProfileImage")
             db.collection("userData").document(userKey).setData(["profileImageKey": "", "compressedProfileImageKey": ""], merge: true)
             db.collection("basicUserData").document(userKey).setData(["compressedProfileImageKey": ""], merge: true)
             if userDataCopyToChangeKeys.count != 0 {

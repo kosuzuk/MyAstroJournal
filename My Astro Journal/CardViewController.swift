@@ -8,6 +8,7 @@ class CardViewController: UIViewController {
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var unlockedDateLabel: UILabel!
     @IBOutlet weak var backgroundImageView: UIImageView!
+    @IBOutlet weak var nasaButton: UIButton!
     @IBOutlet weak var imageViewCenterYC: NSLayoutConstraint!
     @IBOutlet weak var imageViewTopC: NSLayoutConstraint!
     @IBOutlet weak var imageViewHCipad: NSLayoutConstraint!
@@ -15,6 +16,7 @@ class CardViewController: UIViewController {
     @IBOutlet weak var unlockedDateLabelBottomC: NSLayoutConstraint!
     @IBOutlet weak var unlockedDateLabelTrailingCipad: NSLayoutConstraint!
     @IBOutlet weak var unlockedDateLabelBottomCipad: NSLayoutConstraint!
+    @IBOutlet weak var nasaButtonTopC: NSLayoutConstraint!
     var target = ""
     var cardImage: UIImage? = nil
     var unlockedDate: String = "" {
@@ -73,6 +75,7 @@ class CardViewController: UIViewController {
     var cardInfoImage: UIImage? = nil
     var backgroundImage: UIImage? = nil
     var items: [UIView] = []
+    var photographerProfileKeys = ["a": "a"]
     var catalogVC: CardCatalogViewController? = nil
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -111,13 +114,18 @@ class CardViewController: UIViewController {
             }
         }
         self.view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
-        items = [imageView, entryDatesButton, closeButton, unlockedDateLabel, featuredIcon, backgroundImageView]
+        items = [imageView, backgroundImageView, entryDatesButton, unlockedDateLabel, featuredIcon, nasaButton, closeButton]
         let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(swipeWhileDDShowing))
         swipeRight.direction = UISwipeGestureRecognizer.Direction.right
         let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(swipeWhileDDShowing))
         swipeLeft.direction = UISwipeGestureRecognizer.Direction.left
         entryDatesDropDown.plainView.addGestureRecognizer(swipeRight)
         entryDatesDropDown.plainView.addGestureRecognizer(swipeLeft)
+        nasaButton.isHidden = true
+        if photographerProfileKeys[target] != nil {
+            nasaButton.setImage(UIImage(named: "Profile/placeholderProfileImage")!, for: .normal)
+        }
+        nasaButton.imageView?.contentMode = .scaleAspectFill
         self.showAnimate()
     }
     func adjustUnlockedDateLabelPos() {
@@ -132,6 +140,7 @@ class CardViewController: UIViewController {
     }
     override func viewDidAppear(_ animated: Bool) {
         adjustUnlockedDateLabelPos()
+        nasaButtonTopC.constant = imageView.bounds.height * 0.537
         entryDatesButton.isHidden = journalEntryDateList == []
         unlockedDateLabel.isHidden = unlockedDate == ""
         featuredIcon.isHidden = featuredDate == ""
@@ -181,10 +190,12 @@ class CardViewController: UIViewController {
                     self.backgroundImageView.transform = CGAffineTransform.identity
                 }, completion: {_ in
                     self.closeButton.isHidden = false
+                    self.nasaButton.isHidden = false
                     endNoInput()
                 })
             })
         } else {
+            nasaButton.isHidden = true
             UIView.animate(withDuration: 0.25, animations: {
                 self.imageView.transform = CGAffineTransform(scaleX: 0.001, y: 1)
                 self.backgroundImageView.transform = CGAffineTransform(scaleX: 0.001, y: 1)
@@ -205,8 +216,25 @@ class CardViewController: UIViewController {
         }
         frontDisplayed = !frontDisplayed
     }
+    @IBAction func nasaButtonTapped(_ sender: Any) {
+        if photographerProfileKeys[target] != nil {
+            performSegue(withIdentifier: "cardToProfile", sender: self)
+        } else {
+            var link = ""
+            if catalogVC!.group == "Messier" {
+                link = "https://www.nasa.gov/content/goddard/hubble-s-messier-catalog#images"
+            } else if catalogVC!.group == "Planets" {
+                link = "https://solarsystem.nasa.gov/planets/overview"
+            } else {
+                link = "https://www.spacetelescope.org/images"
+            }
+            let webURL = NSURL(string: link)!
+            application.open(webURL as URL)
+        }
+    }
     func moveL(_: Bool) {
         for item in items {item.frame.origin.x -= screenW * 2}
+        nasaButton.isHidden = true
         catalogVC!.swipeDir = "right"
         UIView.animate(withDuration: 0.2, animations: {
             for item in self.items {item.frame.origin.x += screenW}
@@ -217,6 +245,7 @@ class CardViewController: UIViewController {
     }
     func moveR(_: Bool) {
         for item in items {item.frame.origin.x += screenW * 2}
+        nasaButton.isHidden = true
         catalogVC!.swipeDir = "left"
         UIView.animate(withDuration: 0.2, animations: {
             for item in self.items {item.frame.origin.x -= screenW}
@@ -289,6 +318,10 @@ class CardViewController: UIViewController {
             }
             cvc.iodvc = vc2
             return
+        }
+        let vc3 = segue.destination as? ProfileViewController
+        if vc3 != nil {
+            vc3?.keyForDifferentProfile = photographerProfileKeys[target]!
         }
     }
 }

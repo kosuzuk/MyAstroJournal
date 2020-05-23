@@ -133,7 +133,6 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
     var commentFontAttributes: [NSAttributedString.Key : Any]? = nil
     var keyBoardH = CGFloat(0.0)
     var keyForDifferentProfile = ""
-    let application = UIApplication.shared
     var cvc: CalendarViewController? = nil
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -232,7 +231,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                     dd!.bottomOffset = CGPoint(x: 0, y: 35)
                     dd!.dataSource = [ddString]
                     dd!.selectionAction = {(index: Int, item: String) in
-                        self.application.open(NSURL(string: eqLink)! as URL)
+                        application.open(NSURL(string: eqLink)! as URL)
                     }
                 }
                 
@@ -327,7 +326,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                 let imageKey = (data["profileImageKey"] as! String)
                 if imageKey != oldUserImageKey {
                     if imageKey == "" {
-                        self.userImage.image = UIImage(named: "ImageOfTheDay/placeholderProfileImage")!
+                        self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")!
                     } else {
                         let imageRef = storage.child(imageKey)
                         imageRef.getData(maxSize: imgMaxByte) {imageData, Error in
@@ -409,7 +408,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
             if Error == nil {
                 let imageKey = QuerySnapshot!.data()!["compressedProfileImageKey"] as! String
                 if imageKey == "" {
-                    setUserInfo(key: self.currentUserKey, name: currentUserName, img: UIImage(named: "ImageOfTheDay/placeholderProfileImage")!)
+                    setUserInfo(key: self.currentUserKey, name: currentUserName, img: UIImage(named: "Profile/placeholderProfileImage")!)
                 } else {
                     let imageRef = storage.child(imageKey)
                     imageRef.getData(maxSize: imgMaxByte) {imageData, Error in
@@ -462,7 +461,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                             self.basicUserDataDict[userKey]!["userName"] = userName
                             let imageKey = QuerySnapshot!.data()!["compressedProfileImageKey"] as! String
                             if imageKey == "" {
-                                setUserInfo(key:userKey, name: userName, img: UIImage(named: "ImageOfTheDay/placeholderProfileImage")!)
+                                setUserInfo(key:userKey, name: userName, img: UIImage(named: "Profile/placeholderProfileImage")!)
                             } else {
                                 storage.child(imageKey).getData(maxSize: imgMaxByte) {imageData, Error in
                                     if Error == nil {
