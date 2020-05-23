@@ -73,7 +73,7 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
                 c.featuredDate = featuredTargets[target]!
             }
             let imageName = "Catalog/CardBacks/Info/" + formattedTargetToImageName(target: cardsToDisplay[curCardInd])
-            c.cardInfoImage = UIImage(named: imageName)!
+            c.cardInfoImage = UIImage(named: imageName)
             c.backgroundImageView.image = nil
         }
     }
@@ -243,7 +243,7 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
         } else {
             imageName = "UnlockedCards/" + imageName
         }
-        cell.cardImageView.image = UIImage(named: imageName)!
+        cell.cardImageView.image = UIImage(named: imageName)
         if featuredTargets[target] == nil {
             cell.featuredIcon.isHidden = true
         } else {
@@ -315,11 +315,11 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
         }
         c.userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
         let imageName = "Catalog/CardBacks/Info/" + formattedTargetToImageName(target: cardsToDisplay[indexPath!.row])
-        c.cardInfoImage = UIImage(named: imageName)!
+        c.cardInfoImage = UIImage(named: imageName)
         if Int(cardBackSelected)! < 6 {
-            c.backgroundImage = UIImage(named: "Catalog/CardBacks/Backgrounds/" + cardBackSelected)!
+            c.backgroundImage = UIImage(named: "Catalog/CardBacks/Backgrounds/" + cardBackSelected)
         } else {
-            c.backgroundImage = UIImage(named: "AddOns/CardBacks/Backgrounds/" + cardBackSelected)!
+            c.backgroundImage = UIImage(named: "AddOns/CardBacks/Backgrounds/" + cardBackSelected)
         }
         c.catalogVC = self
         c.didMove(toParent: self)

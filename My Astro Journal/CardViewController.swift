@@ -7,8 +7,10 @@ class CardViewController: UIViewController {
     @IBOutlet weak var featuredIcon: UIButton!
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var unlockedDateLabel: UILabel!
+    @IBOutlet weak var flipCardButton: UIButton!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var nasaButton: UIButton!
+    @IBOutlet weak var mapButton: UIButton!
     @IBOutlet weak var imageViewCenterYC: NSLayoutConstraint!
     @IBOutlet weak var imageViewTopC: NSLayoutConstraint!
     @IBOutlet weak var imageViewHCipad: NSLayoutConstraint!
@@ -17,6 +19,7 @@ class CardViewController: UIViewController {
     @IBOutlet weak var unlockedDateLabelTrailingCipad: NSLayoutConstraint!
     @IBOutlet weak var unlockedDateLabelBottomCipad: NSLayoutConstraint!
     @IBOutlet weak var nasaButtonTopC: NSLayoutConstraint!
+    @IBOutlet weak var nasaButtonTrailingC: NSLayoutConstraint!
     var target = ""
     var cardImage: UIImage? = nil
     var unlockedDate: String = "" {
@@ -76,6 +79,13 @@ class CardViewController: UIViewController {
     var backgroundImage: UIImage? = nil
     var items: [UIView] = []
     var photographerProfileKeys = ["a": "a"]
+    var didDismissFullImage = false {
+        didSet {
+            imageView.isHidden = false
+            closeButton.isHidden = false
+            flipCardButton.isHidden = false
+        }
+    }
     var catalogVC: CardCatalogViewController? = nil
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -123,9 +133,10 @@ class CardViewController: UIViewController {
         entryDatesDropDown.plainView.addGestureRecognizer(swipeLeft)
         nasaButton.isHidden = true
         if photographerProfileKeys[target] != nil {
-            nasaButton.setImage(UIImage(named: "Profile/placeholderProfileImage")!, for: .normal)
+            nasaButton.setImage(UIImage(named: "Profile/placeholderProfileImage"), for: .normal)
         }
         nasaButton.imageView?.contentMode = .scaleAspectFill
+        mapButton.isUserInteractionEnabled = false
         self.showAnimate()
     }
     func adjustUnlockedDateLabelPos() {
@@ -140,7 +151,11 @@ class CardViewController: UIViewController {
     }
     override func viewDidAppear(_ animated: Bool) {
         adjustUnlockedDateLabelPos()
-        nasaButtonTopC.constant = imageView.bounds.height * 0.537
+        nasaButtonTopC.constant = imageView.bounds.height * 0.465
+        if screenH < 670 {
+            nasaButtonTopC.constant -= 10
+        }
+        nasaButtonTrailingC.constant = -imageView.bounds.width * 0.06
         entryDatesButton.isHidden = journalEntryDateList == []
         unlockedDateLabel.isHidden = unlockedDate == ""
         featuredIcon.isHidden = featuredDate == ""
@@ -191,11 +206,13 @@ class CardViewController: UIViewController {
                 }, completion: {_ in
                     self.closeButton.isHidden = false
                     self.nasaButton.isHidden = false
+                    self.mapButton.isUserInteractionEnabled = true
                     endNoInput()
                 })
             })
         } else {
             nasaButton.isHidden = true
+            mapButton.isUserInteractionEnabled = false
             UIView.animate(withDuration: 0.25, animations: {
                 self.imageView.transform = CGAffineTransform(scaleX: 0.001, y: 1)
                 self.backgroundImageView.transform = CGAffineTransform(scaleX: 0.001, y: 1)
@@ -216,6 +233,25 @@ class CardViewController: UIViewController {
         }
         frontDisplayed = !frontDisplayed
     }
+    @IBAction func mapButtonTapped(_ sender: Any) {
+        if !frontDisplayed {
+            let imageName = formattedTargetToImageName(target: target)
+            //planets and milky way don't have constellation maps
+            if imageName.prefix(1) == "P" || target == "Milkyway" {
+                return
+            }
+            imageView.isHidden = true
+            closeButton.isHidden = true
+            flipCardButton.isHidden = true
+            let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "FullImageViewController") as! FullImageViewController
+            popOverVC.cardVC = self
+            self.addChild(popOverVC)
+            popOverVC.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+            self.view.addSubview(popOverVC.view)
+            popOverVC.imageView.image = UIImage(named: "Catalog/CardBacks/ConstMaps/" + imageName)
+            popOverVC.didMove(toParent: self)
+        }
+    }
     @IBAction func nasaButtonTapped(_ sender: Any) {
         if photographerProfileKeys[target] != nil {
             performSegue(withIdentifier: "cardToProfile", sender: self)
@@ -235,6 +271,7 @@ class CardViewController: UIViewController {
     func moveL(_: Bool) {
         for item in items {item.frame.origin.x -= screenW * 2}
         nasaButton.isHidden = true
+        mapButton.isUserInteractionEnabled = false
         catalogVC!.swipeDir = "right"
         UIView.animate(withDuration: 0.2, animations: {
             for item in self.items {item.frame.origin.x += screenW}
@@ -246,6 +283,7 @@ class CardViewController: UIViewController {
     func moveR(_: Bool) {
         for item in items {item.frame.origin.x += screenW * 2}
         nasaButton.isHidden = true
+        mapButton.isUserInteractionEnabled = false
         catalogVC!.swipeDir = "left"
         UIView.animate(withDuration: 0.2, animations: {
             for item in self.items {item.frame.origin.x -= screenW}

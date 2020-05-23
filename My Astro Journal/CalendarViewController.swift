@@ -10,6 +10,7 @@ import UIKit
 import Foundation
 import SwiftKeychainWrapper
 import DropDown
+import CoreMotion
 import StoreKit
 
 extension UINavigationController {
@@ -97,6 +98,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     var monthTodayInt = 0
     var yearTodayInt = 0
     var unlockedDate = ""
+    var motionManager = CMMotionManager()
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -514,6 +516,25 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 self.imageOfDayListenerInitiated = true
             }
         })
+        motionManager.gyroUpdateInterval = 0.02
+        motionManager.startGyroUpdates(to: OperationQueue.current!) {(data, error) in
+            if data != nil {
+                self.background.frame.origin.x += CGFloat(data!.rotationRate.y / 4.5)
+                self.background.frame.origin.y += CGFloat(data!.rotationRate.x / 4.5)
+                if self.background.frame.origin.x < -10 {
+                    self.background.frame.origin.x = -10
+                }
+                if self.background.frame.origin.x > 0 {
+                    self.background.frame.origin.x = 0
+                }
+                if self.background.frame.origin.y < -10 {
+                    self.background.frame.origin.y = -10
+                }
+                if self.background.frame.origin.y > 0 {
+                    self.background.frame.origin.y = 0
+                }
+            }
+        }
         NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         if appDelegate.transactionObserver.incompletePurchaseProductIDs != [] {
             let IDs = appDelegate.transactionObserver.incompletePurchaseProductIDs

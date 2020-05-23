@@ -944,14 +944,14 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
                         //no main image in later entries
                     } else {
                         calImageDataRef.delete {error in}
-                        cvc?.newImage = UIImage(named: "Calendar/placeholder")!
+                        cvc?.newImage = UIImage(named: "Calendar/placeholder")
                         finishManageCalendarImages()
                         return
                     }
                     //there are no later entries
                 } else {
                     calImageDataRef.delete {error in}
-                    cvc?.newImage = UIImage(named: "Calendar/placeholder")!
+                    cvc?.newImage = UIImage(named: "Calendar/placeholder")
                     finishManageCalendarImages()
                     return
                 }
@@ -1176,7 +1176,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
             if noCalImage {
                 calImageKeys[entryDate] = ""
                 calImageDataRef.delete() {error in}
-                cvc?.newImage = UIImage(named: "Calendar/placeholder")!
+                cvc?.newImage = UIImage(named: "Calendar/placeholder")
             }
             if entryList.count == 0 {
                 numEntriesInDate[entryDate] = nil

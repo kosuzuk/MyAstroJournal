@@ -6,6 +6,7 @@ class FullImageViewController: UIViewController {
     @IBOutlet weak var removeButton: UIButton!
     @IBOutlet weak var removeButtonTopC: NSLayoutConstraint!
     @IBOutlet weak var removeButtonTrailingC: NSLayoutConstraint!
+    var cardVC: CardViewController? = nil
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -13,7 +14,6 @@ class FullImageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
-        showAnimate()
         removeButton.isHidden = true
     }
 
@@ -28,20 +28,23 @@ class FullImageViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        let imageW = imageView.image!.size.width
-        let imageH = imageView.image!.size.height
-        let imageViewW = imageView.bounds.width
-        let imageViewH = imageView.bounds.height
-        var xOffset = CGFloat(0)
-        var yOffset = CGFloat(0)
-        if (imageViewH / imageViewW) > (imageH / imageW) {
-            yOffset = (imageViewH - imageH * (imageViewW / imageW)) / 2
-        } else {
-            xOffset = -(imageViewW - imageW * (imageViewH / imageH)) / 2
+        if cardVC == nil {
+            let imageW = imageView.image!.size.width
+            let imageH = imageView.image!.size.height
+            let imageViewW = imageView.bounds.width
+            let imageViewH = imageView.bounds.height
+            var xOffset = CGFloat(0)
+            var yOffset = CGFloat(0)
+            if (imageViewH / imageViewW) > (imageH / imageW) {
+                yOffset = (imageViewH - imageH * (imageViewW / imageW)) / 2
+            } else {
+                xOffset = -(imageViewW - imageW * (imageViewH / imageH)) / 2
+            }
+            removeButtonTrailingC.constant = xOffset
+            removeButtonTopC.constant = yOffset
+            removeButton.isHidden = false
+            showAnimate()
         }
-        removeButtonTrailingC.constant = xOffset
-        removeButtonTopC.constant = yOffset
-        removeButton.isHidden = false
     }
     
     func removeAnimate() {
@@ -57,5 +60,11 @@ class FullImageViewController: UIViewController {
     }
     @IBAction func closePopup(sender: AnyObject) {
         removeAnimate()
+    }
+    @IBAction func imageViewTapped(_ sender: Any) {
+        if cardVC != nil {
+            self.view.removeFromSuperview()
+            cardVC!.didDismissFullImage = true
+        }
     }
 }

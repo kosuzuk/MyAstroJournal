@@ -82,13 +82,13 @@ class CardBackBackgroundsPopOverViewController: UIViewController, UICollectionVi
         var selected = false
         if ind != numCardBacks - 1 {
             if ind < 5 {
-                cell.imageView.image = UIImage(named: "Catalog/CardBacks/Backgrounds/" + String(ind + 1))!
+                cell.imageView.image = UIImage(named: "Catalog/CardBacks/Backgrounds/" + String(ind + 1))
                 cell.backgroundNameLabel.text = backgroundNames[ind]
                 if String(ind + 1) == cgvc!.cardBackSelected {
                     selected = true
                 }
             } else {
-                cell.imageView.image = UIImage(named: "AddOns/CardBacks/Backgrounds/" + cardBacksUnlocked[ind - 5])!
+                cell.imageView.image = UIImage(named: "AddOns/CardBacks/Backgrounds/" + cardBacksUnlocked[ind - 5])
                 cell.backgroundNameLabel.text = backgroundNames[Int(cardBacksUnlocked[ind - 5])! - 1]
                 if ind - 5 == cardBacksUnlocked.index(of: cgvc!.cardBackSelected) {
                     selected = true
