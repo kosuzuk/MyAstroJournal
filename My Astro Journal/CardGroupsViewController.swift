@@ -106,12 +106,12 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
         }
         func checkCardGroupsUnlocked() {
             if packsUnlocked.contains("1") {
-                sharplessButton.setImage(UIImage(named: "CardGroups/sharpless")!, for: .normal)
+                sharplessButton.setImage(UIImage(named: "CardGroups/sharpless"), for: .normal)
                 sharplessUnlocked = true
             }
             if packsUnlocked.contains("2") || packsUnlocked.contains("4") {
-                sharplessButton.setImage(UIImage(named: "CardGroups/sharpless")!, for: .normal)
-                othersButton.setImage(UIImage(named: "CardGroups/others")!, for: .normal)
+                sharplessButton.setImage(UIImage(named: "CardGroups/sharpless"), for: .normal)
+                othersButton.setImage(UIImage(named: "CardGroups/others"), for: .normal)
                 sharplessUnlocked = true
                 othersUnlocked = true
             }

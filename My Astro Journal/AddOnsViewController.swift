@@ -38,8 +38,8 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
     override func viewDidLoad() {
         super.viewDidLoad()
         if screenH > 1000 {//ipads
-            background.image = UIImage(named: "Info/background-ipad")!
-            border.image = UIImage(named: "border-ipad")!
+            background.image = UIImage(named: "Info/background-ipad")
+            border.image = UIImage(named: "border-ipad")
             let cardBacksLayout = cardBacksCollectionView!.collectionViewLayout as! UICollectionViewFlowLayout
             cardBacksLayout.minimumLineSpacing = 120
             cardBacksCollectionView.collectionViewLayout = cardBacksLayout
@@ -87,7 +87,7 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
         if collectionView == packsCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! PacksCollectionViewCell
             cell.ind = i
-            cell.imageView.image = UIImage(named: "AddOns/" + "Packs/" + packImageNames[i])!
+            cell.imageView.image = UIImage(named: "AddOns/" + "Packs/" + packImageNames[i])
             cell.descriptionTextView.text = packShortDescriptions[i]
             if packsPurchased.contains(packImageNames[i]) {
                 cell.imageView.layer.opacity = purchasedOpacity
@@ -103,7 +103,7 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! CardBacksCollectionViewCell
             cell.ind = i
-            cell.imageView.image = UIImage(named: "AddOns/" + "CardBacks/" + "Backgrounds/" + cardBackImageNames[i])!
+            cell.imageView.image = UIImage(named: "AddOns/" + "CardBacks/" + "Backgrounds/" + cardBackImageNames[i])
             cell.imageNameLabel.text = cardBackNames[i]
             if cardBacksPurchased.contains(cardBackImageNames[i]) {
                 cell.imageView.layer.opacity = purchasedOpacity
@@ -235,7 +235,7 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
         self.addChild(popOverVC)
         popOverVC.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         self.view.addSubview(popOverVC.view)
-        popOverVC.imageView.image = UIImage(named: "AddOns/" + "CardBacks/" + "Previews/" +  cardBackImageNames[ind])!
+        popOverVC.imageView.image = UIImage(named: "AddOns/" + "CardBacks/" + "Previews/" +  cardBackImageNames[ind])
         popOverVC.textView.text = "This add-on will add the \"" +  cardBackNames[ind] + "\" card back to your collection."
         popOverVC.didMove(toParent: self)
     }

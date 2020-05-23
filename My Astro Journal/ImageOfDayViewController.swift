@@ -326,7 +326,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                 let imageKey = (data["profileImageKey"] as! String)
                 if imageKey != oldUserImageKey {
                     if imageKey == "" {
-                        self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")!
+                        self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")
                     } else {
                         let imageRef = storage.child(imageKey)
                         imageRef.getData(maxSize: imgMaxByte) {imageData, Error in
