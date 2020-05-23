@@ -287,7 +287,6 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         acquisitionField.autocorrectionType = .yes
         memoriesField.autocapitalizationType = .none
         memoriesField.autocorrectionType = .yes
-        endNoInput()
         if entryEditFirstTime {
             let alertController = UIAlertController(title: "Tutorial", message: "First, add the object's name on the top left, the constellation should be recognized automatically! Then, input the time, location, equipment used, and write down your memories from the night. Check Observed if you have seen the object through an eyepiece, and Photographed if you have captured the target and are proud of the result! Besides your final image, you can also add 3 extra photographs from the night. ", preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)

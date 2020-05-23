@@ -18,7 +18,7 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     @IBOutlet weak var messageField: UITextView!
     @IBOutlet weak var sendMessageButton: UIButton!
     @IBOutlet weak var thankYouMessage: UILabel!
-    @IBOutlet var toolbar: UIToolbar!
+    @IBOutlet weak var toolbar: UIToolbar!
     @IBOutlet weak var contentViewHC: NSLayoutConstraint!
     @IBOutlet weak var contentViewHCipad: NSLayoutConstraint!
     @IBOutlet weak var howItWorksTopCipad: NSLayoutConstraint!

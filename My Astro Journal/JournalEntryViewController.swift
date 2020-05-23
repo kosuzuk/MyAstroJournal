@@ -15,7 +15,6 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
     @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var gearImage: UIImageView!
     @IBOutlet weak var editButton: UIButton!
     @IBOutlet weak var targetArrow: UIImageView!
     @IBOutlet weak var targetField: UILabel!
@@ -37,17 +36,21 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
     @IBOutlet weak var imageCollectionView: UICollectionView!
     @IBOutlet weak var contentViewHC: NSLayoutConstraint!
     @IBOutlet weak var contentViewHCipad: NSLayoutConstraint!
-    @IBOutlet weak var imageViewHCipad: NSLayoutConstraint!
-    @IBOutlet weak var imageViewBottomC: NSLayoutConstraint!
-    @IBOutlet weak var imageViewBottomCipad: NSLayoutConstraint!
-    @IBOutlet weak var targetFieldWC: NSLayoutConstraint!
     @IBOutlet weak var arrowWC: NSLayoutConstraint!
+    @IBOutlet weak var targetFieldWC: NSLayoutConstraint!
+    @IBOutlet weak var imageViewHCipad: NSLayoutConstraint!
+    @IBOutlet weak var memoriesLabelTopC: NSLayoutConstraint!
+    @IBOutlet weak var memoriesLabelTopCipad: NSLayoutConstraint!
+    @IBOutlet weak var acquisitionLabelTopC: NSLayoutConstraint!
+    @IBOutlet weak var acquisitionLabelTopCipad: NSLayoutConstraint!
     @IBOutlet weak var mountFieldWC: NSLayoutConstraint!
     var entryList: [[String: Any]] = []
     var selectedEntryInd = 0
     var formattedTargetsList: [String]? = nil
     var entryData: [String: Any] = [:]
     var entryDate = ""
+    var contentViewH = CGFloat(0.0)
+    var contentViewHipad = CGFloat(0.0)
     var imageSelected: UIImage? = nil
     var featuredDate = ""
     var iodKeysData: [String: Any]? = nil
@@ -70,7 +73,6 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
         bigImageView.layer.borderWidth = 2
         bigImageView.layer.borderColor = astroOrange
         editButton.isHidden = true
-        gearImage.isHidden = true
         imageCollectionView.isHidden = true
         featuredButton.isHidden = true
         
@@ -103,10 +105,11 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
             if mainImagePulled && imagesPulled {
                 if cvc != nil {//moved from calendar view controller
                     editButton.isHidden = false
-                    gearImage.isHidden = false
+                }
+                if iodKeysData != nil {
+                    featuredButton.isHidden = false
                 }
                 loadingIcon.stopAnimating()
-                endNoInput()
             }
         }
         let mainImageKey = entryData["mainImageKey"] as! String
@@ -127,10 +130,6 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
         } else {
             bigImageView.isHidden = true
             mainImagePulled = true
-            imageViewBottomC.constant = -140
-            contentViewHC.constant = 910
-            imageViewBottomCipad.constant = -140
-            contentViewHCipad.constant = 910
         }
         let imageKeyList = entryData["imageKeys"] as! [String]
         var imageList = Dictionary<Int, UIImage>()
@@ -156,8 +155,6 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
             }
         } else {
             extraPhotosLabel.isHidden = true
-            contentViewHC.constant -= 157
-            contentViewHCipad.constant -= 227
             imagesPulled = true
             checkFinishedPullingImages()
         }
@@ -168,10 +165,13 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
                     print(Error!)
                 } else {
                     self.iodKeysData = snapshot!.data()!
-                    self.featuredButton.isHidden = false
+                    if mainImagePulled && imagesPulled {
+                        self.featuredButton.isHidden = false
+                    }
                 }
             })
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
@@ -185,16 +185,33 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
             contentViewHCipad.constant = imageCollectionView.frame.origin.y + imageViewHCipad.constant
             if entryData["mainImageKey"] as! String != "" {
                 self.bigImageView.isHidden = false
-            } else {
-                imageViewBottomCipad.constant = -imageViewHCipad.constant + 20
-                contentViewHCipad.constant = contentViewHCipad.constant - imageViewHCipad.constant * 0.6
             }
             let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
             layout.itemSize = CGSize(width: imageCollectionView.bounds.height, height: imageCollectionView.bounds.height)
             imageCollectionView.collectionViewLayout = layout
         }
+        if entryData["imageKeys"] as! [String] != [] {
+            imageCollectionView.isHidden = false
+        }
+        if bigImageView.isHidden {
+            contentViewHC.constant -= 190
+            contentViewHCipad.constant -= bigImageView.bounds.width * 0.6
+            memoriesLabelTopC.constant = -160
+            memoriesLabelTopCipad.constant = -bigImageView.bounds.width * 0.6 + 20
+        }
+        if memoriesField.isHidden {
+            contentViewHC.constant -= 150
+            contentViewHCipad.constant -= bigImageView.bounds.height * 0.37
+            acquisitionLabelTopC.constant = -120
+            acquisitionLabelTopCipad.constant = -bigImageView.bounds.height * 0.37
+        }
+        if imageCollectionView.isHidden {
+            contentViewHC.constant -= 140
+            contentViewHCipad.constant -= 200
+        }
+        contentViewH = contentViewHC.constant
+        contentViewHipad = contentViewHCipad.constant
         jeevc = nil
-        imageCollectionView.isHidden = false
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 3
@@ -202,6 +219,10 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! JournalEntryImageCell
         return cell
+    }
+    @objc func willEnterForeground() {
+        contentViewHC.constant = contentViewH
+        contentViewHCipad.constant = contentViewHipad
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination as? JournalEntryEditViewController

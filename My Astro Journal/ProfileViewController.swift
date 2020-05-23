@@ -301,7 +301,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                 print(Error!)
             } else {
                 if (snapshot?.metadata.isFromCache)! {
-                    return
+                    print("using cached data")
                 }
                 if self.userData != nil {
                     let data = snapshot!.data()!

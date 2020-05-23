@@ -337,7 +337,7 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
 //        })
 //        db.collection("userData").getDocuments(completion: {(x, y) in
 //            for i in x!.documents {
-//                if i.data()["userName"] as! String != "Antoine Grelin" && i.data()["userName"]  as! String != "ipad" {
+//                if i.data()["userName"] as? String ?? "" != "Antoine Grelin" && i.data()["userName"] as? String ?? "" != "ipad" {
 //                    db.collection("userData").document(i.documentID).delete()
 //                }
 //            }
@@ -349,7 +349,6 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
 //                }
 //            }
 //        })
-        
         
         if Auth.auth().currentUser != nil {
             db.collection("userData").whereField("email", isEqualTo: Auth.auth().currentUser!.email!).getDocuments(completion: { (QuerySnapshot, Error) in

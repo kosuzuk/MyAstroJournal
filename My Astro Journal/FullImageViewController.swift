@@ -28,9 +28,19 @@ class FullImageViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        let imageFrame = AVMakeRect(aspectRatio: imageView.image!.size, insideRect: imageView.bounds)
-        removeButtonTopC.constant = imageFrame.origin.y
-        removeButtonTrailingC.constant = imageFrame.origin.x
+        let imageW = imageView.image!.size.width
+        let imageH = imageView.image!.size.height
+        let imageViewW = imageView.bounds.width
+        let imageViewH = imageView.bounds.height
+        var xOffset = CGFloat(0)
+        var yOffset = CGFloat(0)
+        if (imageViewH / imageViewW) > (imageH / imageW) {
+            yOffset = (imageViewH - imageH * (imageViewW / imageW)) / 2
+        } else {
+            xOffset = -(imageViewW - imageW * (imageViewH / imageH)) / 2
+        }
+        removeButtonTrailingC.constant = xOffset
+        removeButtonTopC.constant = yOffset
         removeButton.isHidden = false
     }
     
