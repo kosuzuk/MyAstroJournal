@@ -23,7 +23,6 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     @IBOutlet weak var contentViewHCipad: NSLayoutConstraint!
     @IBOutlet weak var howItWorksTopCipad: NSLayoutConstraint!
     @IBOutlet weak var bigTextHCipad: NSLayoutConstraint!
-    let application = UIApplication.shared
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }

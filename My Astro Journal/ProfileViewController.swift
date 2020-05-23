@@ -51,7 +51,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
     @IBOutlet weak var userImageWCipad: NSLayoutConstraint!
     @IBOutlet weak var userImageLeadingCipad: NSLayoutConstraint!
     @IBOutlet weak var userNameTopC: NSLayoutConstraint!
-    @IBOutlet weak var bioHC: NSLayoutConstraint!
     @IBOutlet weak var websiteWC: NSLayoutConstraint!
     @IBOutlet weak var websiteLeadingC: NSLayoutConstraint!
     @IBOutlet weak var websiteTrailingC: NSLayoutConstraint!
@@ -82,7 +81,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
     var userKey = ""
     var userData: Dictionary<String, Any>! = nil
     var eqFields: [UILabel] = []
-    let application = UIApplication.shared
     var websiteLeadingCDefault = CGFloat(0.0)
     var websiteLeadingCipadDefault = CGFloat(0.0)
     var iconW = CGFloat(0.0)
@@ -93,6 +91,69 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
     var pevc: ProfileEditViewController? = nil
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
+    }
+    func layOutSMIcons() {
+        let websiteName = (userData["websiteName"] as! String)
+        let instaUsername = (userData["instaUsername"] as! String)
+        let youtubeChannel = (userData["youtubeChannel"] as! String)
+        let fbPage = (userData["fbPage"] as! String)
+        var numIconsPresent = 0
+        for field in [websiteName, instaUsername, youtubeChannel, fbPage] {
+            if field != "" {numIconsPresent += 1}
+        }
+        if numIconsPresent == 1 {
+            websiteLeadingC.constant = websiteLeadingCDefault + iconW + iconGap + iconW / 2
+            websiteLeadingCipad.constant = websiteLeadingCipadDefault + iconW + iconGap + iconW / 2
+        } else if numIconsPresent == 2 {
+            websiteLeadingC.constant = websiteLeadingCDefault + iconW + iconGap
+            websiteLeadingCipad.constant = websiteLeadingCipadDefault + iconW + iconGap
+        } else if numIconsPresent == 3 {
+            websiteLeadingC.constant = websiteLeadingCDefault + iconW / 2
+            websiteLeadingCipad.constant = websiteLeadingCipadDefault + iconW / 2
+        } else if numIconsPresent == 4 {
+            websiteLeadingC.constant = websiteLeadingCDefault
+            websiteLeadingCipad.constant = websiteLeadingCipadDefault
+        }
+        if websiteName == "" {
+            websiteWC.constant = 0
+            websiteTrailingC.constant = 0
+            websiteWCipad.constant = 0
+            websiteTrailingCipad.constant = 0
+        } else {
+            websiteWC.constant = 21
+            websiteTrailingC.constant = 10
+            websiteWCipad.constant = 31
+            websiteTrailingCipad.constant = 15
+        }
+        if instaUsername == "" {
+            instaWC.constant = 0
+            instaTrailingC.constant = 0
+            instaWCipad.constant = 0
+            instaTrailingCipad.constant = 0
+        } else {
+            instaWC.constant = 21
+            instaTrailingC.constant = 10
+            instaWCipad.constant = 31
+            instaTrailingCipad.constant = 15
+        }
+        if youtubeChannel == "" {
+            youtubeWC.constant = 0
+            youtubeTrailingC.constant = 0
+            youtubeWCipad.constant = 0
+            youtubeTrailingCipad.constant = 0
+        } else {
+            youtubeWC.constant = 21
+            youtubeTrailingC.constant = 10
+            youtubeWCipad.constant = 31
+            youtubeTrailingCipad.constant = 15
+        }
+        if fbPage == "" {
+            fbWC.constant = 0
+            fbWCipad.constant = 0
+        } else {
+            fbWC.constant = 21
+            fbWCipad.constant = 31
+        }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -121,7 +182,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             dividerTopC.constant = 6
         } else if (screenH > 820 && screenH < 900) {//11, pro max
             userNameTopC.constant = 14
-            bioHC.constant = 85
             dividerTopC.constant = 30
             circleTopC.constant = 45
             circleBottomC.constant = 45
@@ -185,6 +245,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                     self.navigationController?.popViewController(animated: true)
                 }
                 let docData = QuerySnapshot!.data()!
+                self.userData = docData
                 let imageKey = (docData["profileImageKey"] as! String)
                 if imageKey != "" {
                     self.view.addSubview(formatLoadingIcon(icon: loadingIcon))
@@ -207,7 +268,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                         }
                     }
                 } else {
-                    self.userImage.image = UIImage(named: "ImageOfTheDay/placeholderProfileImage")
+                    self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")
                     if self.keyForDifferentProfile == "" {
                         self.editButton.isHidden = false
                     }
@@ -216,46 +277,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                 self.userLocation.text = (docData["userLocation"] as! String)
                 self.favObjField.text = " " + (docData["favoriteObject"] as! String)
                 self.userBio.text = (docData["userBio"] as! String)
-                let websiteName = (docData["websiteName"] as! String)
-                let instaUsername = (docData["instaUsername"] as! String)
-                let youtubeChannel = (docData["youtubeChannel"] as! String)
-                let fbPage = (docData["fbPage"] as! String)
-                var numIconsPresent = 0
-                for field in [websiteName, instaUsername, youtubeChannel, fbPage] {
-                    if field != "" {numIconsPresent += 1}
-                }
-                if numIconsPresent == 1 {
-                    self.websiteLeadingC.constant = self.websiteLeadingCDefault + self.iconW + self.iconGap + self.iconW / 2
-                    self.websiteLeadingCipad.constant = self.websiteLeadingCipadDefault + self.iconW + self.iconGap + self.iconW / 2
-                } else if numIconsPresent == 2 {
-                    self.websiteLeadingC.constant = self.websiteLeadingCDefault + self.iconW + self.iconGap
-                    self.websiteLeadingCipad.constant = self.websiteLeadingCipadDefault + self.iconW + self.iconGap
-                } else if numIconsPresent == 3 {
-                    self.websiteLeadingC.constant = self.websiteLeadingCDefault + self.self.iconW / 2
-                    self.websiteLeadingCipad.constant = self.websiteLeadingCipadDefault + self.self.iconW / 2
-                }
-                if websiteName == "" {
-                    self.websiteWC.constant = 0
-                    self.websiteTrailingC.constant = 0
-                    self.websiteWCipad.constant = 0
-                    self.websiteTrailingCipad.constant = 0
-                }
-                if instaUsername == "" {
-                    self.instaWC.constant = 0
-                    self.instaTrailingC.constant = 0
-                    self.instaWCipad.constant = 0
-                    self.instaTrailingCipad.constant = 0
-                }
-                if youtubeChannel == "" {
-                    self.youtubeWC.constant = 0
-                    self.youtubeTrailingC.constant = 0
-                    self.youtubeWCipad.constant = 0
-                    self.youtubeTrailingCipad.constant = 0
-                }
-                if fbPage == "" {
-                    self.fbWC.constant = 0
-                    self.fbWCipad.constant = 0
-                }
+                self.layOutSMIcons()
                 self.websiteButton.isHidden = false
                 self.instaButton.isHidden = false
                 self.youtubeButton.isHidden = false
@@ -324,6 +346,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                 }
             }
         })
+        NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -334,67 +357,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             userLocation.text = (userData["userLocation"] as! String)
             favObjField.text = " " + (userData["favoriteObject"] as! String)
             userBio.text = (userData["userBio"] as! String)
-            let websiteName = (userData["websiteName"] as! String)
-            let instaUsername = (userData["instaUsername"] as! String)
-            let youtubeChannel = (userData["youtubeChannel"] as! String)
-            let fbPage = (userData["fbPage"] as! String)
-            var numIconsPresent = 0
-            for field in [websiteName, instaUsername, youtubeChannel, fbPage] {
-                if field != "" {numIconsPresent += 1}
-            }
-            if numIconsPresent == 1 {
-                websiteLeadingC.constant = websiteLeadingCDefault + iconW + iconGap + iconW / 2
-                websiteLeadingCipad.constant = websiteLeadingCipadDefault + iconW + iconGap + iconW / 2
-            } else if numIconsPresent == 2 {
-                websiteLeadingC.constant = websiteLeadingCDefault + iconW + iconGap
-                websiteLeadingCipad.constant = websiteLeadingCipadDefault + iconW + iconGap
-            } else if numIconsPresent == 3 {
-                websiteLeadingC.constant = websiteLeadingCDefault + iconW / 2
-                websiteLeadingCipad.constant = websiteLeadingCipadDefault + iconW / 2
-            } else if numIconsPresent == 4 {
-                websiteLeadingC.constant = websiteLeadingCDefault
-                websiteLeadingCipad.constant = websiteLeadingCipadDefault
-            }
-            if websiteName == "" {
-                websiteWC.constant = 0
-                websiteTrailingC.constant = 0
-                websiteWCipad.constant = 0
-                websiteTrailingCipad.constant = 0
-            } else {
-                websiteWC.constant = 21
-                websiteTrailingC.constant = 10
-                websiteWCipad.constant = 31
-                websiteTrailingCipad.constant = 15
-            }
-            if instaUsername == "" {
-                instaWC.constant = 0
-                instaTrailingC.constant = 0
-                instaWCipad.constant = 0
-                instaTrailingCipad.constant = 0
-            } else {
-                instaWC.constant = 21
-                instaTrailingC.constant = 10
-                instaWCipad.constant = 31
-                instaTrailingCipad.constant = 15
-            }
-            if youtubeChannel == "" {
-                youtubeWC.constant = 0
-                youtubeTrailingC.constant = 0
-                youtubeWCipad.constant = 0
-                youtubeTrailingCipad.constant = 0
-            } else {
-                youtubeWC.constant = 21
-                youtubeTrailingC.constant = 10
-                youtubeWCipad.constant = 31
-                youtubeTrailingCipad.constant = 15
-            }
-            if fbPage == "" {
-                fbWC.constant = 0
-                fbWCipad.constant = 0
-            } else {
-                fbWC.constant = 21
-                fbWCipad.constant = 31
-            }
+            layOutSMIcons()
             let eqData = userData["userEquipment"] as! Dictionary<String, [String]>
             eqFields = [userTelescope, userTelescope2, userTelescope3, userMount, userMount2, userMount3, userCamera, userCamera2, userCamera3]
             for (i, field) in eqFields.enumerated() {
@@ -432,6 +395,9 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             circleTopCipad.constant = 60
             circleBottomCipad.constant = 60
         }
+    }
+    @objc func willEnterForeground() {
+        layOutSMIcons()
     }
     @IBAction func imageTapped(_ sender: Any) {
         if (userData["profileImageKey"] as! String != "") {
@@ -493,7 +459,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
         if vc != nil {
             vc?.userKey = userKey
             vc?.userData = userData
-            if userImage.image == UIImage(named: "ImageOfTheDay/placeholderProfileImage") {
+            if userImage.image == UIImage(named: "Profile/placeholderProfileImage") {
                 vc?.image = nil
             } else {
                 vc?.image = userImage.image
