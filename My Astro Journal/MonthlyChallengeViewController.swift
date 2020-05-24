@@ -38,7 +38,7 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
     var curMonth = 0
     var userNameBackground = UIColor(patternImage: UIImage(named: "Calendar/light")!)
     var loadImageTimer: Timer = Timer.scheduledTimer(withTimeInterval: 0, repeats: false) {_ in}
-    let maxNumImages = 40
+    let maxNumImages = 10
     override func viewDidLoad() {
         super.viewDidLoad()
         if screenH < 600 {
