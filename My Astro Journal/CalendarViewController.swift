@@ -20,6 +20,7 @@ extension UINavigationController {
 }
 class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var background: UIImageView!
+    @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var newEntryButton: UIButton!
     @IBOutlet weak var selectDateText: UILabel!
     @IBOutlet weak var cancelButton: UIButton!
@@ -169,6 +170,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
         else if screenH > 1000 {//ipads
             background.image = UIImage(named: "Calendar/background-ipad")
+            border.image = UIImage(named: "border-ipad")
             imageOfDayMainLabel.font = imageOfDayMainLabel.font.withSize(31)
             if (screenH > 1140) {//big ipads
                 imageOfDayBottomCipad.constant = 30
@@ -203,19 +205,10 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
         imageOfDayImageView.isUserInteractionEnabled = false
         let date = Date()
-        let calendar = Calendar.current
-        let dateComps = calendar.dateComponents([.year, .month, .day], from: date)
+        let dateComps = Calendar.current.dateComponents([.year, .month, .day], from: date)
         monthTodayInt = dateComps.month!
         yearTodayInt = dateComps.year!
-        if String(monthTodayInt).count == 1 {
-            dateToday = "0"
-        }
-        dateToday += String(monthTodayInt)
-        if String(dateComps.day!).count == 1 {
-            dateToday += "0"
-        }
-        dateToday += String(dateComps.day!)
-        dateToday += String(yearTodayInt)
+        dateToday = String(format: "%02ld%02ld", monthTodayInt, dateComps.day!) + String(yearTodayInt)
         Timer.scheduledTimer(timeInterval: TimeInterval(60), target: self, selector: #selector(checkDayChange), userInfo: nil,  repeats: true)
         userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
         if userData!["firstJournalEntryDate"] as! String == "" {

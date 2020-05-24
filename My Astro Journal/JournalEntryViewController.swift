@@ -54,6 +54,8 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
     var imageSelected: UIImage? = nil
     var featuredDate = ""
     var iodKeysData: [String: Any]? = nil
+    var segueFromMonthlyChallenge = false
+    var loaded = false
     var cvc: CalendarViewController? = nil
     var jeevc: JournalEntryEditViewController? = nil
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -175,6 +177,9 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
+        if loaded {
+            return
+        }
         if screenH < 600 {//iphone SE, 5s
             targetFieldWC.constant = 145
             arrowWC.constant = 135
@@ -192,6 +197,13 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
         }
         if entryData["imageKeys"] as! [String] != [] {
             imageCollectionView.isHidden = false
+        }
+        if segueFromMonthlyChallenge {
+            editButton.isHidden = true
+            memoriesLabel.isHidden = true
+            memoriesField.isHidden = true
+            extraPhotosLabel.isHidden = true
+            imageCollectionView.isHidden = true
         }
         if bigImageView.isHidden {
             contentViewHC.constant -= 190
@@ -211,7 +223,7 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
         }
         contentViewH = contentViewHC.constant
         contentViewHipad = contentViewHCipad.constant
-        jeevc = nil
+        loaded = true
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 3

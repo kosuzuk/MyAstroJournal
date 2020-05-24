@@ -11,6 +11,7 @@ import SwiftKeychainWrapper
 
 class CardGroupsViewController: UIViewController, UIPopoverPresentationControllerDelegate {
     @IBOutlet weak var background: UIImageView!
+    @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var catalogsLabel: UILabel!
     @IBOutlet weak var categoriesLabel: UILabel!
     @IBOutlet weak var cardBacksButton: UIButton!
@@ -85,6 +86,7 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
             galaxiesWC.constant = 149
         } else if screenH > 1000 {//ipads
             background.image = UIImage(named: "CardGroups/background-ipad")
+            border.image = UIImage(named: "border-ipad")
             catalogsLabel.font = UIFont(name: catalogsLabel.font.fontName, size: 30)
             categoriesLabel.font = UIFont(name: categoriesLabel.font.fontName, size: 30)
             if screenH > 1150 {//ipads 11 and 12.9

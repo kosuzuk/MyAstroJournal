@@ -10,7 +10,7 @@ class CardViewController: UIViewController {
     @IBOutlet weak var flipCardButton: UIButton!
     @IBOutlet weak var backgroundImageView: UIImageView!
     @IBOutlet weak var nasaButton: UIButton!
-    @IBOutlet weak var mapButton: UIButton!
+    @IBOutlet weak var mapAreaImageView: UIImageView!
     @IBOutlet weak var imageViewCenterYC: NSLayoutConstraint!
     @IBOutlet weak var imageViewTopC: NSLayoutConstraint!
     @IBOutlet weak var imageViewHCipad: NSLayoutConstraint!
@@ -136,7 +136,7 @@ class CardViewController: UIViewController {
             nasaButton.setImage(UIImage(named: "Profile/placeholderProfileImage"), for: .normal)
         }
         nasaButton.imageView?.contentMode = .scaleAspectFill
-        mapButton.isUserInteractionEnabled = false
+        mapAreaImageView.isUserInteractionEnabled = false
         self.showAnimate()
     }
     func adjustUnlockedDateLabelPos() {
@@ -206,13 +206,13 @@ class CardViewController: UIViewController {
                 }, completion: {_ in
                     self.closeButton.isHidden = false
                     self.nasaButton.isHidden = false
-                    self.mapButton.isUserInteractionEnabled = true
+                    self.mapAreaImageView.isUserInteractionEnabled = true
                     endNoInput()
                 })
             })
         } else {
             nasaButton.isHidden = true
-            mapButton.isUserInteractionEnabled = false
+            mapAreaImageView.isUserInteractionEnabled = false
             UIView.animate(withDuration: 0.25, animations: {
                 self.imageView.transform = CGAffineTransform(scaleX: 0.001, y: 1)
                 self.backgroundImageView.transform = CGAffineTransform(scaleX: 0.001, y: 1)
@@ -233,6 +233,22 @@ class CardViewController: UIViewController {
         }
         frontDisplayed = !frontDisplayed
     }
+    @IBAction func nasaButtonTapped(_ sender: Any) {
+        if photographerProfileKeys[target] != nil {
+            performSegue(withIdentifier: "cardToProfile", sender: self)
+        } else {
+            var link = ""
+            if catalogVC!.group == "Messier" {
+                link = "https://www.nasa.gov/content/goddard/hubble-s-messier-catalog#images"
+            } else if catalogVC!.group == "Planets" {
+                link = "https://solarsystem.nasa.gov/planets/overview"
+            } else {
+                link = "https://www.spacetelescope.org/images"
+            }
+            let webURL = NSURL(string: link)!
+            application.open(webURL as URL)
+        }
+    }
     @IBAction func mapButtonTapped(_ sender: Any) {
         if !frontDisplayed {
             let imageName = formattedTargetToImageName(target: target)
@@ -252,26 +268,10 @@ class CardViewController: UIViewController {
             popOverVC.didMove(toParent: self)
         }
     }
-    @IBAction func nasaButtonTapped(_ sender: Any) {
-        if photographerProfileKeys[target] != nil {
-            performSegue(withIdentifier: "cardToProfile", sender: self)
-        } else {
-            var link = ""
-            if catalogVC!.group == "Messier" {
-                link = "https://www.nasa.gov/content/goddard/hubble-s-messier-catalog#images"
-            } else if catalogVC!.group == "Planets" {
-                link = "https://solarsystem.nasa.gov/planets/overview"
-            } else {
-                link = "https://www.spacetelescope.org/images"
-            }
-            let webURL = NSURL(string: link)!
-            application.open(webURL as URL)
-        }
-    }
     func moveL(_: Bool) {
         for item in items {item.frame.origin.x -= screenW * 2}
         nasaButton.isHidden = true
-        mapButton.isUserInteractionEnabled = false
+        mapAreaImageView.isUserInteractionEnabled = false
         catalogVC!.swipeDir = "right"
         UIView.animate(withDuration: 0.2, animations: {
             for item in self.items {item.frame.origin.x += screenW}
@@ -283,7 +283,7 @@ class CardViewController: UIViewController {
     func moveR(_: Bool) {
         for item in items {item.frame.origin.x += screenW * 2}
         nasaButton.isHidden = true
-        mapButton.isUserInteractionEnabled = false
+        mapAreaImageView.isUserInteractionEnabled = false
         catalogVC!.swipeDir = "left"
         UIView.animate(withDuration: 0.2, animations: {
             for item in self.items {item.frame.origin.x -= screenW}

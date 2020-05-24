@@ -130,6 +130,7 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
         let cell = calendarView.cellForItem(at: indexPath!) as! CalendarCell
         let userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
         if cvc!.newEntryMode && cell.cellLabel.text != "" {
+            calendarView.isUserInteractionEnabled = false
             var cellDate = String(indexPath!.row - firstDayOffset + 1)
             if cellDate.count == 1 {
                 cellDate = "0" + cellDate
@@ -160,10 +161,12 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
                     self.cvc?.selectedEntryList = entryList
                     self.cvc?.formattedTargetsList = formattedTargetsList
                     self.cvc?.performSegue(withIdentifier: "calendarToEdit", sender: self)
+                    self.calendarView.isUserInteractionEnabled = true
                     return
                 }
             })
         } else if cell.entryDate != "" {
+            calendarView.isUserInteractionEnabled = false
             let docRef = db.collection("journalEntries").document(userKey + cell.entryDate)
             docRef.getDocument(completion: {(QuerySnapshot, Error) in
                 if Error != nil {
@@ -194,10 +197,12 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
                             self.cvc?.performSegue(withIdentifier: "calendarToEntry", sender: self)
                         }
                         dd.show()
+                        self.calendarView.isUserInteractionEnabled = true
                         return
                     } else {
                         self.cvc?.selectedEntryInd = 0
                         self.cvc?.performSegue(withIdentifier: "calendarToEntry", sender: self)
+                        self.calendarView.isUserInteractionEnabled = true
                         return
                     }
                 }
