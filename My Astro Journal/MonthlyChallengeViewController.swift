@@ -24,8 +24,11 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
     @IBOutlet weak var challengeTargetImageView: UIImageView!
     @IBOutlet weak var targetLabel: UILabel!
     @IBOutlet weak var entriesTableView: UITableView!
+    @IBOutlet weak var bannerHCipad: NSLayoutConstraint!
     @IBOutlet weak var trophyWC: NSLayoutConstraint!
     @IBOutlet weak var trophyTopC: NSLayoutConstraint!
+    @IBOutlet weak var targetImageViewLeadingCipad: NSLayoutConstraint!
+    @IBOutlet weak var targetLabelWC: NSLayoutConstraint!
     @IBOutlet weak var textViewWC: NSLayoutConstraint!
     @IBOutlet weak var OPTLeadingC: NSLayoutConstraint!
     var challengeData: [String: Any]? = nil
@@ -36,7 +39,6 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
     var entryToShowInd = 0
     var entryToShowDate = ""
     var curMonth = 0
-    var userNameBackground = UIColor(patternImage: UIImage(named: "Calendar/light")!)
     var loadImageTimer: Timer = Timer.scheduledTimer(withTimeInterval: 0, repeats: false) {_ in}
     let maxNumImages = 60
     override func viewDidLoad() {
@@ -47,13 +49,17 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
             trophyTopC.constant = -50
             textViewWC.constant = 320
             OPTLeadingC.constant = -290
-            
         } else if screenH > 1000 {
             border.image = UIImage(named: "border-ipad")
+            if screenH > 1120 {//ipad 11, 12.9
+                bannerHCipad.constant = 75
+                if screenH == 1366 {//ipad 12.9
+                    targetImageViewLeadingCipad.constant = 100
+                }
+            }
         }
         challengeTargetImageView.layer.borderColor = astroOrange
         challengeTargetImageView.layer.borderWidth = 1
-        targetLabel.backgroundColor = UIColor(patternImage: UIImage(named: "Calendar/light")!)
         winnerNameLabel.isHidden = true
         targetLabel.isHidden = true
         db.collection("monthlyChallenges").document(String(dateToday.prefix(2) + dateToday.suffix(4))).getDocument(completion: {(snapshot, Error) in
@@ -72,7 +78,10 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
                 }
                 self.winnerNameLabel.text = (self.challengeData!["lastMonthWinnerName"] as! String)
                 self.targetLabel.text = (self.challengeData!["target"] as! String)
-                self.targetLabel.backgroundColor = self.userNameBackground
+                let font = UIFont(name: self.targetLabel.font.fontName, size: self.targetLabel.font.pointSize)
+                let fontAttributes = [NSAttributedString.Key.font: font]
+                let size = (self.targetLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
+                self.targetLabelWC.constant = size.width + 4
                 self.winnerNameLabel.isHidden = false
                 self.targetLabel.isHidden = false
                 self.formattedChallengeTarget = formatTarget(self.challengeData!["target"] as! String)
@@ -180,11 +189,15 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
         cell.targetImageView.layer.borderColor = astroOrange
         cell.targetImageView.image = entryImageList[indexPath.row]
         cell.usernameLabel.text = basicEntryDataList[indexPath.row]["userName"]
-        cell.usernameLabel.backgroundColor = userNameBackground
+        let font = UIFont(name: cell.usernameLabel.font.fontName, size: cell.usernameLabel.font.pointSize)
+        let fontAttributes = [NSAttributedString.Key.font: font]
+        let size = (cell.usernameLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
+        cell.usernameLabelWC.constant = size.width + 6
+        cell.usernameLabel.layer.zPosition = 3
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return challengeTargetImageView.bounds.height - 10
+        return challengeTargetImageView.bounds.height * 0.9
     }
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         loadImageTimer.invalidate()
