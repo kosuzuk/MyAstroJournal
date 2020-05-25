@@ -38,7 +38,7 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
     var curMonth = 0
     var userNameBackground = UIColor(patternImage: UIImage(named: "Calendar/light")!)
     var loadImageTimer: Timer = Timer.scheduledTimer(withTimeInterval: 0, repeats: false) {_ in}
-    let maxNumImages = 10
+    let maxNumImages = 60
     override func viewDidLoad() {
         super.viewDidLoad()
         if screenH < 600 {
@@ -95,9 +95,16 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
                     self.basicEntryDataList.sort(by: ¬)
                     self.entriesTableView.reloadData()
                     endNoInput()
-                    for i in 0..<5 {
+                    for i in 0..<10 {
                         if i == self.basicEntryDataList.count {
                             break
+                        }
+                        let cell = self.entriesTableView.cellForRow(at: IndexPath(row: i, section: 0)) as? MonthlyChallengeEntryCell
+                        self.entryImageList[i] = UIImage(named: "placeholer")
+                        if cell != nil {
+                            let loadingIcon = UIActivityIndicatorView()
+                            cell!.backgroundView = formatLoadingIcon(loadingIcon)
+                            loadingIcon.startAnimating()
                         }
                         storage.child(self.basicEntryDataList[i]["imageKey"]!).getData(maxSize: imgMaxByte) {data, Error in
                             if let Error = Error {
@@ -105,7 +112,6 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
                                 return
                             } else {
                                 let img = UIImage(data: data!)!
-                                let cell = self.entriesTableView.cellForRow(at: IndexPath(row: i, section: 0)) as? MonthlyChallengeEntryCell
                                 if cell != nil {
                                     cell!.targetImageView!.image = img
                                 }
@@ -170,6 +176,8 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MonthlyChallengeEntryCell
+        cell.targetImageView.layer.borderWidth = 1
+        cell.targetImageView.layer.borderColor = astroOrange
         cell.targetImageView.image = entryImageList[indexPath.row]
         cell.usernameLabel.text = basicEntryDataList[indexPath.row]["userName"]
         cell.usernameLabel.backgroundColor = userNameBackground
@@ -180,37 +188,46 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
     }
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         loadImageTimer.invalidate()
-        loadImageTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) {_ in
-            var indAdded = 0
-            for case let cell as MonthlyChallengeEntryCell in self.entriesTableView.visibleCells {
-                let ind = self.entriesTableView.indexPath(for: cell)!.row
-                if self.entryImageList[ind] == nil {
-                    storage.child(self.basicEntryDataList[ind]["imageKey"]!).getData(maxSize: imgMaxByte) {data, Error in
+        loadImageTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) {_ in
+            var resultingNumImages = self.entryImageList.count
+            var rowAdded = 0
+            var imageIndeces = Array(self.entryImageList.keys)
+            for i in 0..<self.entriesTableView.visibleCells.count {
+                let cell = self.entriesTableView.visibleCells[i] as! MonthlyChallengeEntryCell
+                let row = self.entriesTableView.indexPath(for: cell)!.row
+                if self.entryImageList[row] == nil {
+                    resultingNumImages += 1
+                    rowAdded = row
+                    imageIndeces.append(row)
+                    self.entryImageList[row] = UIImage(named: "placeholer")
+                    let loadingIcon = UIActivityIndicatorView()
+                    cell.backgroundView = formatLoadingIcon(loadingIcon)
+                    loadingIcon.startAnimating()
+                    storage.child(self.basicEntryDataList[row]["imageKey"]!).getData(maxSize: imgMaxByte) {data, Error in
                         if let Error = Error {
                             print(Error)
                             return
                         } else {
                             let img = UIImage(data: data!)
                             cell.targetImageView.image = img
-                            self.entryImageList[ind] = img
-                            indAdded = ind
+                            cell.backgroundView = nil
+                            self.entryImageList[row] = img
+                            loadingIcon.stopAnimating()
                         }
                     }
                 }
             }
+            imageIndeces.sort()
             //check if too many images saved
-            let listLen = self.entryImageList.count
-            if listLen > self.maxNumImages {
-                let indListSorted = Array(self.entryImageList.keys).sorted()
+            let numImagesToRemove = resultingNumImages - self.maxNumImages
+            if numImagesToRemove > 0 {
                 var startInd = 0
-                if indListSorted.index(of: indAdded)! > listLen / 2 {
-                    startInd = listLen - 5
+                //remove image near bottom of table view
+                if imageIndeces.index(of: rowAdded)! < resultingNumImages / 2 {
+                    startInd = resultingNumImages - numImagesToRemove
                 }
-                for i in 0..<5 {
-                    if i + startInd == listLen {
-                        break
-                    }
-                    self.entryImageList[indListSorted[i + startInd]] = nil
+                for i in startInd..<startInd + numImagesToRemove {
+                    self.entryImageList[imageIndeces[i]] = nil
                 }
             }
         }

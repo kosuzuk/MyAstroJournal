@@ -64,7 +64,7 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
     override func viewDidLoad() {
         super.viewDidLoad()
         startNoInput()
-        view.addSubview(formatLoadingIcon(icon: loadingIcon))
+        view.addSubview(formatLoadingIcon(loadingIcon))
         loadingIcon.startAnimating()
         if screenH < 600 {//iphone SE, 5s
             bannerHC.constant = 35

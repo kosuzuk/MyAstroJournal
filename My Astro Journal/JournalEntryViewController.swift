@@ -64,7 +64,7 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
   
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(formatLoadingIcon(icon: loadingIcon))
+        view.addSubview(formatLoadingIcon(loadingIcon))
         loadingIcon.startAnimating()
         if screenH > 1000 {//ipads
             background.image = UIImage(named: "ViewEntry/background-ipad")

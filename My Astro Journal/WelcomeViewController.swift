@@ -75,7 +75,7 @@ let astroOrange = UIColor(red: 1, green: 0.62, blue: 0, alpha: 1).cgColor
 let packProductIDs = ["100", "101", "102", "103"]
 let cardBackProductIDs = ["205", "202", "201", "203", "208", "206", "204", "207"]
 
-func formatLoadingIcon(icon: UIActivityIndicatorView) -> UIActivityIndicatorView {
+func formatLoadingIcon(_ icon: UIActivityIndicatorView) -> UIActivityIndicatorView {
     icon.center = CGPoint(x: screenW / 2, y: screenH / 2 - 75)
     icon.color = UIColor.lightGray
     if #available(iOS 13.0, *) {
