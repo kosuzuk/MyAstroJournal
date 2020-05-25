@@ -9,6 +9,7 @@
 import UIKit
 import Foundation
 import SwiftKeychainWrapper
+import DropDown
 
 class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     @IBOutlet weak var background: UIImageView!
@@ -55,6 +56,9 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
     var featuredDate = ""
     var iodKeysData: [String: Any]? = nil
     var segueFromMonthlyChallenge = false
+    var telescopeDD: DropDown? = nil
+    var mountDD: DropDown? = nil
+    var cameraDD: DropDown? = nil
     var loaded = false
     var cvc: CalendarViewController? = nil
     var jeevc: JournalEntryEditViewController? = nil
@@ -64,7 +68,7 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
   
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(formatLoadingIcon(icon: loadingIcon))
+        view.addSubview(formatLoadingIcon(loadingIcon))
         loadingIcon.startAnimating()
         if screenH > 1000 {//ipads
             background.image = UIImage(named: "ViewEntry/background-ipad")
@@ -96,10 +100,17 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
                 photographedCheckImage.image = UIImage(named: "ViewEntry/checkmark")
             }
         }
+        let eqFieldValueList = [(entryData["telescope"] as! String), (entryData["mount"] as! String), (entryData["camera"] as! String)]
+        if segueFromMonthlyChallenge {
+            let eqFieldList = [self.telescopeField!, self.mountField!, self.cameraField!]
+            telescopeDD = checkEqToLink(eqType: "telescope", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: nil, jevc: self)
+            mountDD = checkEqToLink(eqType: "mount", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: nil, jevc: self)
+            cameraDD = checkEqToLink(eqType: "camera", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: nil, jevc: self)
+        }
         memoriesField.text = (entryData["memories"] as! String)
-        telescopeField.text = (entryData["telescope"] as! String)
-        mountField.text = (entryData["mount"] as! String)
-        cameraField.text = (entryData["camera"] as! String)
+        telescopeField.text = eqFieldValueList[0]
+        mountField.text = eqFieldValueList[1]
+        cameraField.text = eqFieldValueList[2]
         acquisitionField.text = (entryData["acquisition"] as! String)
         var mainImagePulled = false
         var imagesPulled = false
@@ -276,6 +287,15 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
         self.view.addSubview(popOverVC.view)
         popOverVC.imageView.image = imageSelected
         popOverVC.didMove(toParent: self)
+    }
+    @objc func eqTapped(sender: UIGestureRecognizer) {
+        if sender.view == telescopeField {
+            telescopeDD!.show()
+        } else if sender.view == mountField {
+            mountDD!.show()
+        } else if sender.view == cameraField {
+            cameraDD!.show()
+        }
     }
     @IBAction func imageCollectionViewTapped(_ sender: Any) {
         let touch = (sender as AnyObject).location(in: imageCollectionView)

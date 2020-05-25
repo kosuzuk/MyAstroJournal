@@ -216,94 +216,12 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                 if self.locationField.text! == "" {
                     self.locationIcon.isHidden = true
                 }
-                let telescopeString = (data["telescope"] as! String)
-                let mountString = (data["mount"] as! String)
-                let cameraString = (data["camera"] as! String)
                 
-                func setUpDD(dd: inout DropDown?, anchorView: UILabel, ddString: String, eqLink: String) {
-                    dd = DropDown()
-                    dd!.backgroundColor = .darkGray
-                    dd!.textColor = .white
-                    dd!.textFont = UIFont(name: "Pacifica Condensed", size: 13)!
-                    dd!.cellHeight = 34
-                    dd!.cornerRadius = 10
-                    dd!.anchorView = anchorView
-                    dd!.bottomOffset = CGPoint(x: 0, y: 35)
-                    dd!.dataSource = [ddString]
-                    dd!.selectionAction = {(index: Int, item: String) in
-                        application.open(NSURL(string: eqLink)! as URL)
-                    }
-                }
-                
-                func checkEq(_ eqType: String) {
-                    var field = self.telescopeField
-                    var eqString = ""
-                    var eqNames: [String: [String]] = [:]
-                    var eqLinks: [String: String] = [:]
-                    if eqType == "telescope" {
-                        eqString = telescopeString
-                        eqNames = telescopeNames
-                        field = self.telescopeField
-                        eqLinks = telescopeLinks
-                    } else if eqType == "mount" {
-                        eqString = mountString
-                        eqNames = mountNames
-                        field = self.mountField
-                        eqLinks = mountLinks
-                    } else if eqType == "camera" {
-                        eqString = cameraString
-                        eqNames = cameraNames
-                        field = self.cameraField
-                        eqLinks = cameraLinks
-                    }
-                    if eqString == "" {return}
-                    field!.text = eqString
-                    var brand = ""
-                    var name = ""
-                    var i = 0
-                    if eqString.prefix(20) == "Moravian Instruments" {
-                        i = 20
-                    } else if eqString.prefix(18) == "Explore Scientific" {
-                        i = 18
-                    } else if eqString.prefix(24) == "Officina Stellare Veloce" {
-                        i = 24
-                    } else if eqString.prefix(8) == "Tele Vue" {
-                        i = 8
-                    } else if eqString.prefix(14) == "William Optics" {
-                        i = 14
-                    } else if eqString.prefix(9) == "10 Micron" {
-                        i = 9
-                    } else if eqString.prefix(15) == "Software Bisque" {
-                        i = 15
-                    } else {
-                        //may be a different brand name with no space
-                        for c in eqString {
-                            if c == " " {
-                                break
-                            }
-                            i += 1
-                        }
-                    }
-                    //invalid brand
-                    if i == 0 || i == eqString.count {return}
-                    brand = String(eqString.prefix(i))
-                    name = String(eqString.suffix(eqString.count - i - 1))
-                    if eqNames[brand]?.contains(name) ?? false {
-                        let tap = UITapGestureRecognizer(target: self, action: #selector(self.eqTapped))
-                        field!.addGestureRecognizer(tap)
-                        field!.textColor = UIColor(red: 0.3, green: 0.6, blue: 0.8, alpha: 1)
-                        if eqType == "telescope" {
-                            setUpDD(dd: &self.telescopeDD, anchorView: self.telescopeField, ddString: "shop " + brand + " telescopes", eqLink: eqLinks[String(eqString.prefix(i))]!)
-                        } else if eqType == "mount" {
-                            setUpDD(dd: &self.mountDD, anchorView: self.mountField, ddString: "shop " + brand + " mounts", eqLink: eqLinks[String(eqString.prefix(i))]!)
-                        } else if eqType == "camera" {
-                            setUpDD(dd: &self.cameraDD, anchorView: self.cameraField, ddString: "shop " + brand + " cameras", eqLink: eqLinks[String(eqString.prefix(i))]!)
-                        }
-                    }
-                }
-                checkEq("telescope")
-                checkEq("mount")
-                checkEq("camera")
+                let eqFieldList = [self.telescopeField!, self.mountField!, self.cameraField!]
+                let eqFieldValueList = [(data["telescope"] as! String), (data["mount"] as! String), (data["camera"] as! String)]
+                self.telescopeDD = checkEqToLink(eqType: "telescope", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: self, jevc: nil)
+                self.mountDD = checkEqToLink(eqType: "mount", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: self, jevc: nil)
+                self.cameraDD = checkEqToLink(eqType: "camera", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: self, jevc: nil)
             }
         })
         

@@ -24,8 +24,11 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
     @IBOutlet weak var challengeTargetImageView: UIImageView!
     @IBOutlet weak var targetLabel: UILabel!
     @IBOutlet weak var entriesTableView: UITableView!
+    @IBOutlet weak var bannerHCipad: NSLayoutConstraint!
     @IBOutlet weak var trophyWC: NSLayoutConstraint!
     @IBOutlet weak var trophyTopC: NSLayoutConstraint!
+    @IBOutlet weak var targetImageViewLeadingCipad: NSLayoutConstraint!
+    @IBOutlet weak var targetLabelWC: NSLayoutConstraint!
     @IBOutlet weak var textViewWC: NSLayoutConstraint!
     @IBOutlet weak var OPTLeadingC: NSLayoutConstraint!
     var challengeData: [String: Any]? = nil
@@ -36,9 +39,8 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
     var entryToShowInd = 0
     var entryToShowDate = ""
     var curMonth = 0
-    var userNameBackground = UIColor(patternImage: UIImage(named: "Calendar/light")!)
     var loadImageTimer: Timer = Timer.scheduledTimer(withTimeInterval: 0, repeats: false) {_ in}
-    let maxNumImages = 10
+    let maxNumImages = 60
     override func viewDidLoad() {
         super.viewDidLoad()
         if screenH < 600 {
@@ -47,13 +49,17 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
             trophyTopC.constant = -50
             textViewWC.constant = 320
             OPTLeadingC.constant = -290
-            
         } else if screenH > 1000 {
             border.image = UIImage(named: "border-ipad")
+            if screenH > 1120 {//ipad 11, 12.9
+                bannerHCipad.constant = 75
+                if screenH == 1366 {//ipad 12.9
+                    targetImageViewLeadingCipad.constant = 100
+                }
+            }
         }
         challengeTargetImageView.layer.borderColor = astroOrange
         challengeTargetImageView.layer.borderWidth = 1
-        targetLabel.backgroundColor = UIColor(patternImage: UIImage(named: "Calendar/light")!)
         winnerNameLabel.isHidden = true
         targetLabel.isHidden = true
         db.collection("monthlyChallenges").document(String(dateToday.prefix(2) + dateToday.suffix(4))).getDocument(completion: {(snapshot, Error) in
@@ -72,7 +78,10 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
                 }
                 self.winnerNameLabel.text = (self.challengeData!["lastMonthWinnerName"] as! String)
                 self.targetLabel.text = (self.challengeData!["target"] as! String)
-                self.targetLabel.backgroundColor = self.userNameBackground
+                let font = UIFont(name: self.targetLabel.font.fontName, size: self.targetLabel.font.pointSize)
+                let fontAttributes = [NSAttributedString.Key.font: font]
+                let size = (self.targetLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
+                self.targetLabelWC.constant = size.width + 4
                 self.winnerNameLabel.isHidden = false
                 self.targetLabel.isHidden = false
                 self.formattedChallengeTarget = formatTarget(self.challengeData!["target"] as! String)
@@ -95,9 +104,16 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
                     self.basicEntryDataList.sort(by: ¬)
                     self.entriesTableView.reloadData()
                     endNoInput()
-                    for i in 0..<5 {
+                    for i in 0..<10 {
                         if i == self.basicEntryDataList.count {
                             break
+                        }
+                        let cell = self.entriesTableView.cellForRow(at: IndexPath(row: i, section: 0)) as? MonthlyChallengeEntryCell
+                        self.entryImageList[i] = UIImage(named: "placeholer")
+                        if cell != nil {
+                            let loadingIcon = UIActivityIndicatorView()
+                            cell!.backgroundView = formatLoadingIcon(loadingIcon)
+                            loadingIcon.startAnimating()
                         }
                         storage.child(self.basicEntryDataList[i]["imageKey"]!).getData(maxSize: imgMaxByte) {data, Error in
                             if let Error = Error {
@@ -105,7 +121,6 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
                                 return
                             } else {
                                 let img = UIImage(data: data!)!
-                                let cell = self.entriesTableView.cellForRow(at: IndexPath(row: i, section: 0)) as? MonthlyChallengeEntryCell
                                 if cell != nil {
                                     cell!.targetImageView!.image = img
                                 }
@@ -170,47 +185,62 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! MonthlyChallengeEntryCell
+        cell.targetImageView.layer.borderWidth = 1
+        cell.targetImageView.layer.borderColor = astroOrange
         cell.targetImageView.image = entryImageList[indexPath.row]
         cell.usernameLabel.text = basicEntryDataList[indexPath.row]["userName"]
-        cell.usernameLabel.backgroundColor = userNameBackground
+        let font = UIFont(name: cell.usernameLabel.font.fontName, size: cell.usernameLabel.font.pointSize)
+        let fontAttributes = [NSAttributedString.Key.font: font]
+        let size = (cell.usernameLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
+        cell.usernameLabelWC.constant = size.width + 6
+        cell.usernameLabel.layer.zPosition = 3
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return challengeTargetImageView.bounds.height - 10
+        return challengeTargetImageView.bounds.height * 0.9
     }
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         loadImageTimer.invalidate()
-        loadImageTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) {_ in
-            var indAdded = 0
-            for case let cell as MonthlyChallengeEntryCell in self.entriesTableView.visibleCells {
-                let ind = self.entriesTableView.indexPath(for: cell)!.row
-                if self.entryImageList[ind] == nil {
-                    storage.child(self.basicEntryDataList[ind]["imageKey"]!).getData(maxSize: imgMaxByte) {data, Error in
+        loadImageTimer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false) {_ in
+            var resultingNumImages = self.entryImageList.count
+            var rowAdded = 0
+            var imageIndeces = Array(self.entryImageList.keys)
+            for i in 0..<self.entriesTableView.visibleCells.count {
+                let cell = self.entriesTableView.visibleCells[i] as! MonthlyChallengeEntryCell
+                let row = self.entriesTableView.indexPath(for: cell)!.row
+                if self.entryImageList[row] == nil {
+                    resultingNumImages += 1
+                    rowAdded = row
+                    imageIndeces.append(row)
+                    self.entryImageList[row] = UIImage(named: "placeholer")
+                    let loadingIcon = UIActivityIndicatorView()
+                    cell.backgroundView = formatLoadingIcon(loadingIcon)
+                    loadingIcon.startAnimating()
+                    storage.child(self.basicEntryDataList[row]["imageKey"]!).getData(maxSize: imgMaxByte) {data, Error in
                         if let Error = Error {
                             print(Error)
                             return
                         } else {
                             let img = UIImage(data: data!)
                             cell.targetImageView.image = img
-                            self.entryImageList[ind] = img
-                            indAdded = ind
+                            cell.backgroundView = nil
+                            self.entryImageList[row] = img
+                            loadingIcon.stopAnimating()
                         }
                     }
                 }
             }
+            imageIndeces.sort()
             //check if too many images saved
-            let listLen = self.entryImageList.count
-            if listLen > self.maxNumImages {
-                let indListSorted = Array(self.entryImageList.keys).sorted()
+            let numImagesToRemove = resultingNumImages - self.maxNumImages
+            if numImagesToRemove > 0 {
                 var startInd = 0
-                if indListSorted.index(of: indAdded)! > listLen / 2 {
-                    startInd = listLen - 5
+                //remove image near bottom of table view
+                if imageIndeces.index(of: rowAdded)! < resultingNumImages / 2 {
+                    startInd = resultingNumImages - numImagesToRemove
                 }
-                for i in 0..<5 {
-                    if i + startInd == listLen {
-                        break
-                    }
-                    self.entryImageList[indListSorted[i + startInd]] = nil
+                for i in startInd..<startInd + numImagesToRemove {
+                    self.entryImageList[imageIndeces[i]] = nil
                 }
             }
         }

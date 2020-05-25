@@ -166,7 +166,7 @@ class CardViewController: UIViewController {
     }
     @IBAction func featuredIconTapped(_ sender: Any) {
         startNoInput()
-        view.addSubview(formatLoadingIcon(icon: loadingIcon))
+        view.addSubview(formatLoadingIcon(loadingIcon))
         loadingIcon.startAnimating()
         db.collection("imageOfDayKeys").document(featuredDate).getDocument(completion: {(snapshot, Error) in
             if Error != nil {

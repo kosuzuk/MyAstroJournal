@@ -689,7 +689,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         attachImageButton.isHidden = true
         doneButton.isHidden = true
         deleteButton.isHidden = true
-        view.addSubview(formatLoadingIcon(icon: loadingIcon))
+        view.addSubview(formatLoadingIcon(loadingIcon))
         loadingIcon.startAnimating()
         let constellation = constellationField.text!
         let locations = processInput(inp: locationField.text!)
@@ -1106,7 +1106,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         processDone()
     }
     func processDelete(_ alertAction: UIAlertAction) {
-        view.addSubview(formatLoadingIcon(icon: loadingIcon))
+        view.addSubview(formatLoadingIcon(loadingIcon))
         loadingIcon.startAnimating()
         formattedTarget = formatTarget(targetField.text!)
         //these targets appear together

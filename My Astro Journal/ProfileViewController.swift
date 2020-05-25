@@ -248,7 +248,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                 self.userData = docData
                 let imageKey = (docData["profileImageKey"] as! String)
                 if imageKey != "" {
-                    self.view.addSubview(formatLoadingIcon(icon: loadingIcon))
+                    self.view.addSubview(formatLoadingIcon(loadingIcon))
                     loadingIcon.startAnimating()
                     let imageRef = storage.child(imageKey)
                     imageRef.getData(maxSize: imgMaxByte) {data, Error in

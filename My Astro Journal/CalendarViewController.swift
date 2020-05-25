@@ -158,7 +158,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(formatLoadingIcon(icon: loadingIcon))
+        view.addSubview(formatLoadingIcon(loadingIcon))
         loadingIcon.startAnimating()
         if (screenH < 670) {//iphone 8, 5s
             earlierMonthButtonTopC.constant = -50

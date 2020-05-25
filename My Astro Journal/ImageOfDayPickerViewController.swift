@@ -23,7 +23,7 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
     var endEntryInd = 0
     var curEntryRangeInPage: CountableRange = 0..<0
     var savedEntryImageData: [Int: UIImage] = [:]
-    let maxSavedImages = 30
+    let maxSavedImages = 60
     var entryIndToShow = 0
     var entryListDataToShow: [[String: Any]] = []
     var entryIndInEntryList = 0
@@ -78,7 +78,7 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
             collectionViewLeadingCipad.constant = 110
             collectionViewTrailingCipad.constant = 110
         }
-        view.addSubview(formatLoadingIcon(icon: loadingIcon))
+        view.addSubview(formatLoadingIcon(loadingIcon))
         loadingIcon.startAnimating()
         
         db.collection("journalEntries").getDocuments(completion: {(QuerySnapshot, Error) in

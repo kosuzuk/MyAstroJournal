@@ -202,7 +202,7 @@ class AddOnsViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     func purchase(productID: String) {
         startNoInput()
-        view.addSubview(formatLoadingIcon(icon: loadingIcon))
+        view.addSubview(formatLoadingIcon(loadingIcon))
         loadingIcon.startAnimating()
         if SKPaymentQueue.canMakePayments() {
             let paymentRequest = SKMutablePayment()

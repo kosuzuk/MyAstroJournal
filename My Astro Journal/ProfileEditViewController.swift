@@ -317,7 +317,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
             self.present(alertController, animated: true, completion: nil)
             return
         }
-        view.addSubview(formatLoadingIcon(icon: loadingIcon))
+        view.addSubview(formatLoadingIcon(loadingIcon))
         loadingIcon.startAnimating()
         doneButton.isHidden = true
         cancelButton.isHidden = true

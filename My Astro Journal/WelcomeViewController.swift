@@ -12,6 +12,7 @@ import FirebaseFirestore
 import FirebaseStorage
 import SwiftKeychainWrapper
 import MessageUI
+import DropDown
 
 let MessierTargets = ["M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "M10", "M11", "M12", "M13", "M14", "M15", "M16", "M17", "M18", "M19", "M20", "M21", "M22", "M23", "M24", "M25", "M26", "M27", "M28", "M29", "M30", "M31", "M32", "M33", "M34", "M35", "M36", "M37", "M38", "M39", "M40", "M41", "M42", "M43", "M44", "M45", "M46", "M47", "M48", "M49", "M50", "M51", "M52", "M53", "M54", "M55", "M56", "M57", "M58", "M59", "M60", "M61", "M62", "M63", "M64", "M65", "M66", "M67", "M68", "M69", "M70", "M71", "M72", "M73", "M74", "M75", "M76", "M77", "M78", "M79", "M80", "M81", "M82", "M83", "M84",  "M85", "M86", "M87", "M88", "M89", "M90", "M91", "M92", "M93", "M94", "M95", "M96", "M97", "M98", "M99", "M100", "M101", "M102", "M103", "M104", "M105", "M106", "M107", "M108", "M109", "M110"]
 let NGCTargets = ["NGC104", "NGC246", "NGC281", "NGC292", "NGC457", "NGC869", "NGC884", "NGC1499", "NGC1501", "NGC1502", "NGC1535", "NGC1977", "NGC2024", "NGC2070", "NGC2080", "NGC2237", "NGC2244", "NGC2264", "NGC2359", "NGC2360", "NGC2362", "NGC2392", "NGC2440", "NGC3242", "NGC3372", "NGC3532", "NGC3628", "NGC4565", "NGC4567", "NGC4568", "NGC4631", "NGC4656", "NGC4676", "NGC4755", "NGC5128", "NGC5139", "NGC5466", "NGC5474", "NGC5907", "NGC6334", "NGC6369", "NGC6388", "NGC6541", "NGC6543", "NGC6723", "NGC6741", "NGC6752", "NGC6781", "NGC6826", "NGC6888", "NGC6946", "NGC6960", "NGC6974", "NGC6992", "NGC7000", "NGC7009", "NGC7023", "NGC7293", "NGC7380", "NGC7635", "NGC7662"]
@@ -42,12 +43,12 @@ let telescopeBrands = ["Celestron", "Explore Scientific", "Meade", "Officina Ste
 let mountBrands = ["10 Micron", "Astro-Physics", "Celestron", "Hobym", "iOptron", "Meade", "Orion", "Sky-Watcher", "Software Bisque"]
 let cameraBrands = ["Atik", "Canon", "Celestron", "Meade", "Moravian Instruments", "Nikon", "Orion", "QHYCCD", "QSI", "SBIG", "ZWO"]
 
-let telescopeNames = ["Celestron": ["8\" Aplanatic", "9.25\" Schmidt-Cassegrain", "14\" Schmidt-Cassegrain", "8\" RASA f/2", "11\" RASA f/2.2", "14\" RASA f/2.2", "C11-A 11\" Starbright XLT", "C14-AF XLT 14\"", "EdgeHD 8\" Schmidt-Cassegrain", "EdgeHD 9.25\"", "EdgeHD 11\"", "EdgeHD 14\"", "NexStar 4SE", "NexStar 5SE", "NexStar 6SE", "NexStar 8SE"], "Explore Scientific": ["ED102 f/7", "ED127 f/7.5", "ED152 f/8", "EED80 f/6", "TED80 Triplet f/6"], "Meade": ["4\" 102 ED Refractor", "5\" 127 ED Refractor", "6\" 152 ED Refractor", "7\" 178 ED Refractor", "Series 6000 70mm APO", "Series 6000 80mm APO", "Series 6000 115mm APO", "Series 6000 130mm APO", "LS 6\" SCT", "LS 8\" SCT", "LX10 8\" SCT", "LX200 10\" SCT", "LX200 12\" SCT", "LX200 14\" SCT", "LX200 16\" SCT", "RCX400 10\"", "RCX400 12\"", "RCX400 14\"", "RCX400 16\"", "RCX400 20\""], "Officina Stellare Veloce": ["RH 200", "RH 250", "RH 300"], "Orion": ["CT80", "ED80T ED APO", "SkyQuest XT10i IntelliScope", "SpaceProbe 130 EQ", "SkyQuest XT6", "SkyScanner 100mm", "SkyQuest XT8", "StarBlast 4.5", "6\" Ritchey Chretien", "8\" Ritchey Chretien", "10\" Ritchey Chretien", "EON 110mm ED APO", "EON 115mm ED APO", "EON 130mm ED APO", "190mm Maksutov", "6\" Astrograph", "8\" Astrograph", "10\" Astrograph"], "Sky-Watcher": ["Esprit 100 mm ED Apo", "Esprit 120 mm ED Apo", "Esprit 150 mm ED Apo", "Esprit 80 mm ED", "Mak-Cass 102 mm", "Mak-Cass 127 mm", "Mak-Cass 150 mm", "Mak-Cass 180 mm", "SMak-Cass 190 mm", "Mak-Cass 90 mm", "ProED 100 mm Doublet Apo", "ProED 120 mm Doublet Apo", "ProED 80 mm Doublet Apo", "Quattro Newtonian 8\"", "Quattro Newtonian 10\"", "Quattro Newtonian 12\""], "Stellarvue": ["SVX070T Series", "SVX080T Series", "SVC102T Series", "SVX130T Series", "SVX140T Series", "SVX152T Series"], "Takahashi": ["FSQ-85EDX", "FSQ-106EDX4", "FS-60Q", "FOA-60 Series", "FC-76DS", "FC-100DL", "TSA-120", "FC-100 Series", "Mewlon 180C", "Mewlon 210", "Mewlon 250", "TOA-130 Series", "TOA-150 Series", "Epsilon E130D", "Epsilon E-180"], "Tele Vue": ["Apo NP Astrograph Refractor 127 mm", "Genesis 4\" Refractor", "NP-101 3.97\" Apo", "NP-101 Refractor", "NP101is 4\" Apo", "NP127fli 5\"", "Oracle 3\" Triplet Apo", "Pronto 2.8\" Refractor", "Renaissance 102 4\" Apo Refractor", "TV102iis - 4\" Apo", "TV60 2.4\" Apo", "TV60 Apo", "TV60is 2.4\" Apo", "TV76 76 Apo", "TV85 85 Apo"], "Vixen": ["3.1\" ED80SF Apo", "3.2\" A80SSWT", "VC200L 8\"", "VMC110L 4.3\"", "VMC200L 8\"", " VMC95L 3.7\""], "William Optics": ["66 mm ZenithStar", "70 mm ZenithStar", "FLT 110 Triplet Apo", "FLT 123 Super Apo", "FLT 132 Triplet Apo", "FLT 152 Triplet Apo", "FLT 158 Triplet Apo", "FLT 98 Triplet Apo", "Megrez 110 Triplet", "Megrez 88 Doublet FD", "Megrez 90 Apo", "Megrez 90 Doublet", "Megrez 90FD", "Zenith Star 80 II ED Apo", "ZenithStar 66 SD Doublet Apo"]]
+let telescopeNames = ["Celestron": ["8\" Aplanatic", "9.25\" Schmidt-Cassegrain", "14\" Schmidt-Cassegrain", "8\" RASA f/2", "11\" RASA f/2.2", "14\" RASA f/2.2", "C11-A 11\" Starbright XLT", "C14-AF XLT 14\"", "EdgeHD 8\" Schmidt-Cassegrain", "EdgeHD 9.25\"", "EdgeHD 11\"", "EdgeHD 14\"", "NexStar 4SE", "NexStar 5SE", "NexStar 6SE", "NexStar 8SE"], "Explore Scientific": ["ED102 f/7", "ED127 f/7.5", "ED152 f/8", "EED80 f/6", "TED80 Triplet f/6"], "Meade": ["4\" 102 ED Refractor", "5\" 127 ED Refractor", "6\" 152 ED Refractor", "7\" 178 ED Refractor", "S6000 70mm APO", "S6000 80mm APO", "S6000 115mm APO", "S6000 130mm APO", "LS 6\" SCT", "LS 8\" SCT", "LX10 8\" SCT", "LX200 10\" SCT", "LX200 12\" SCT", "LX200 14\" SCT", "LX200 16\" SCT", "RCX400 10\"", "RCX400 12\"", "RCX400 14\"", "RCX400 16\"", "RCX400 20\""], "Officina Stellare Veloce": ["RH 200", "RH 250", "RH 300"], "Orion": ["CT80", "ED80T ED APO", "SkyQuest XT10i IntelliScope", "SpaceProbe 130 EQ", "SkyQuest XT6", "SkyScanner 100mm", "SkyQuest XT8", "StarBlast 4.5", "6\" Ritchey Chretien", "8\" Ritchey Chretien", "10\" Ritchey Chretien", "EON 110mm ED APO", "EON 115mm ED APO", "EON 130mm ED APO", "190mm Maksutov", "6\" Astrograph", "8\" Astrograph", "10\" Astrograph"], "Sky-Watcher": ["Esprit 100 mm ED Apo", "Esprit 120 mm ED Apo", "Esprit 150 mm ED Apo", "Esprit 80 mm ED", "Mak-Cass 102 mm", "Mak-Cass 127 mm", "Mak-Cass 150 mm", "Mak-Cass 180 mm", "SMak-Cass 190 mm", "Mak-Cass 90 mm", "ProED 100 mm Doublet Apo", "ProED 120 mm Doublet Apo", "ProED 80 mm Doublet Apo", "Quattro Newtonian 8\"", "Quattro Newtonian 10\"", "Quattro Newtonian 12\""], "Stellarvue": ["SVX070T Series", "SVX080T Series", "SVC102T Series", "SVX130T Series", "SVX140T Series", "SVX152T Series"], "Takahashi": ["FSQ-85EDX", "FSQ-106EDX4", "FS-60Q", "FOA-60 Series", "FC-76DS", "FC-100DL", "TSA-120", "FC-100 Series", "Mewlon 180C", "Mewlon 210", "Mewlon 250", "TOA-130 Series", "TOA-150 Series", "Epsilon E130D", "Epsilon E-180"], "Tele Vue": ["Apo NP Astrograph Refractor 127 mm", "Genesis 4\" Refractor", "NP-101 3.97\" Apo", "NP-101 Refractor", "NP101is 4\" Apo", "NP127fli 5\"", "Oracle 3\" Triplet Apo", "Pronto 2.8\" Refractor", "Renaissance 102 4\" Apo Refractor", "TV102iis - 4\" Apo", "TV60 2.4\" Apo", "TV60 Apo", "TV60is 2.4\" Apo", "TV76 76 Apo", "TV85 85 Apo"], "Vixen": ["3.1\" ED80SF Apo", "3.2\" A80SSWT", "VC200L 8\"", "VMC110L 4.3\"", "VMC200L 8\"", " VMC95L 3.7\""], "William Optics": ["66 mm ZenithStar", "70 mm ZenithStar", "FLT 110 Triplet Apo", "FLT 123 Super Apo", "FLT 132 Triplet Apo", "FLT 152 Triplet Apo", "FLT 158 Triplet Apo", "FLT 98 Triplet Apo", "Megrez 110 Triplet", "Megrez 88 Doublet FD", "Megrez 90 Apo", "Megrez 90 Doublet", "Megrez 90FD", "Zenith Star 80 II ED Apo", "ZenithStar 66 SD Doublet Apo"]]
 let mountNames = ["10 Micron": ["GM1000 HPS", "GM2000 HPS II", "GM3000 HPS", "GM4000 HPS II"], "Astro-Physics": ["900 GTO", "1100 GTO", "1200 GTO", "1600 GTO", "3600 GTO", "Mach1 GTO", "Mach2 GTO"], "Celestron": ["AVX", "CGX", "CGX-L", "Omni CG4", "CGEM II"], "Hobym": ["CRUX 140", "CRUX 170", "CRUX 200", "CRUX 320"], "iOptron": ["CEM40", "CEM60", "CEM120", "iEQ30", "SkyGuider Pro", "SkyTracker Pro"], "Meade": ["LX65", "LX85", "LX850"], "Orion": ["Sirius EQ-G", "Atlas EQ-G"], "Sky-Watcher": ["Star Adventurer", "EQ5", "EQ6", "EQ6-R", "EQ8"], "Software Bisque": ["Paramount MyT", "Paramount ME II", "Paramount MX+", "Paramount Taurus"]]
 let cameraNames = ["Atik": ["Horizon II", "Infinity", "GP", "ACIS 2.4", "ACIS 12.3", "ACIS 7.1", "4120EX", "One 9.0", "490EX", "460EX", "16200", "11000", "383L +"], "Canon": ["Rebel TXi series", "1D Series", "5D Series", "6D Series", "7D Series", "80D", "Ra", "R", "Rp"], "Celestron": ["Neximage 10 Solar Imager", "NexImage 5 Solar Imager", "Neximage BurstC", "Neximage BurstM", "Skyris 132C", "Skyris 236C", "Skyris 236M"], "Meade": ["1616", "208", "416"], "Moravian Instruments": ["G2-0402", "G2-1600", "G2-2000", "G2-3200", "G2-4000", "G2-8300", "G3-01000", "G3-11000", "G3-16200", "G3-16200C"], "Nikon": ["D780", "D850", "D7500", "D500", "D5500", "D810", "D750", "D610", "D7200", "D810A", "Z6", "Z7"], "Orion": ["Starshoot All-In-One", "Starshoot Pro", "Starshoot Solar System Color Imaging Camera"], "QHYCCD": ["QHY9", "QHY10", "QHY11", "QHY12", "QHY600M/C", "QHY268C", "QHY347C", "QHY128C", "QHY183M/C", "QHY163M/C", "QHY247C", "QHY168C", "QHY294C", "QHY550M/C/P", "QHY174/GPS", "QHY178/290/224", "QHY16200A", "QHY695A", "QHY90A", "QHY16803A", "QHY09000A", "QHY814A"], "QSI": ["6120", "616", "6162", "632", "660", "683", "690", "RS .40", "RS 1.6", "RS 2.0", "RS 2.8", "RS 3.2", "RS 4.2", "RS 6.1", "RS 8.3", "RS 9.2", "RS"], "SBIG": ["STC-428-OEM", "STX-16803", "STXL-6303E", "STXL-16200", "STC-7", "Aluma 47-10", "Aluma AC4040", "Aluma 694", "Aluma 77-00", "Aluma 814", "Aluma 3200", "Aluma 8300", "STF-8300", "STF-3200W", "STF-4070", "STF-8050"], "ZWO": ["ASI6200MM", "ASI6200MC", "ASI2600MC", "ASI533MC", "ASI1600GT", "ASI183GT", "ASI183MC", "ASI183MM", "ASI294MC", "ASI071MC", "ASI1600MM", "ASI385MC", "ASI290MC", "ASI290MM", "ASI178MM", "ASI178MC", "ASI224MC", "ASI120MC-S", "ASI120MM-S", "ASI174MM"]]
 
-let telescopeLinks = ["Celestron": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Celestron", "Explore Scientific": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Explore$2520Scientific", "Meade": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Meade", "Officina Stellare Veloce": "https://optcorp.com/collections/telescopes##/filter:vendor:Officina$2520Stellare", "Orion": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Orion", "Sky-Watcher": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Vixen#/filter:vendor:Sky$2520Watcher", "Stellarvue": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Stellarvue", "Takahashi": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Takahashi", "Tele Vue": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Vixen#/filter:vendor:Tele$2520Vue", "Vixen": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Vixen", "William Optics": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Vixen#/filter:vendor:William$2520Optics"]
-let mountLinks = ["10 Micron": "https://optcorp.com/collections/telescope-mounts?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:10$2520Micron", "Astro-Physics": "https://optcorp.com/collections/telescope-mounts?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Astro-Physics", "Celestron": "https://optcorp.com/collections/telescope-mounts?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Celestron", "Hobym": "https://optcorp.com/collections/telescope-mounts?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:HOBYM", "iOptron": "https://optcorp.com/collections/telescope-mounts?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:iOptron", "Meade": "https://optcorp.com/collections/telescope-mounts?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Meade", "Orion": "https://optcorp.com/collections/telescope-mounts?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Orion", "Sky-Watcher": "https://optcorp.com/collections/telescope-mounts?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Orion#/filter:vendor:Sky$2520Watcher", "Software Bisque": "https://optcorp.com/collections/telescope-mounts?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Orion#/filter:vendor:Software$2520Bisque"]
+let telescopeLinks = ["Celestron": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Celestron", "Explore Scientific": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Explore$2520Scientific", "Meade": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Meade", "Officina Stellare Veloce": "https://optcorp.com/collections/telescopes#/filter:vendor:Officina$2520Stellare", "Orion": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Orion", "Sky-Watcher": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Sky$2520Watcher", "Stellarvue": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Stellarvue", "Takahashi": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Takahashi", "Tele Vue": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Tele$2520Vue", "Vixen": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Vixen", "William Optics": "https://optcorp.com/collections/telescopes?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:William$2520Optics"]
+let mountLinks = ["10 Micron": "https://optcorp.com/collections/telescope-mounts?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:10$2520Micron", "Astro-Physics": "https://optcorp.com/collections/telescope-mounts?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Astro-Physics", "Celestron": "https://optcorp.com/collections/telescope-mounts?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Celestron", "Hobym": "https://optcorp.com/collections/telescope-mounts?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:HOBYM", "iOptron": "https://optcorp.com/collections/telescope-mounts?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:iOptron", "Meade": "https://optcorp.com/collections/telescope-mounts?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Meade", "Orion": "https://optcorp.com/collections/telescope-mounts?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Orion", "Sky-Watcher": "https://optcorp.com/collections/telescope-mounts?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Sky$2520Watcher", "Software Bisque": "https://optcorp.com/collections/telescope-mounts?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Software$2520Bisque"]
 let cameraLinks = ["Atik": "https://optcorp.com/collections/telescope-cameras?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:ATIK", "Canon": "https://amzn.to/2KJYn7g", "Celestron": "https://optcorp.com/collections/telescope-cameras?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Celestron", "Meade": "https://optcorp.com/collections/telescope-cameras?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Meade", "Moravian Instruments": "https://optcorp.com/collections/telescope-cameras?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Moravian$2520Instruments", "Nikon": "https://amzn.to/3bP7jnP", "Orion": "https://optcorp.com/collections/telescope-cameras?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:Orion", "QHYCCD": "https://optcorp.com/collections/telescope-cameras?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:QHY", "QSI": "https://optcorp.com/collections/telescope-cameras?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:QSI", "SBIG": "https://optcorp.com/collections/telescope-cameras?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:SBIG", "ZWO": "https://optcorp.com/collections/telescope-cameras?rfsn=3263689.229aa2&utm_source=refersion&utm_medium=affiliate&utm_campaign=3263689.229aa2#/filter:vendor:ZWO"]
 
 let application = UIApplication.shared
@@ -75,7 +76,7 @@ let astroOrange = UIColor(red: 1, green: 0.62, blue: 0, alpha: 1).cgColor
 let packProductIDs = ["100", "101", "102", "103"]
 let cardBackProductIDs = ["205", "202", "201", "203", "208", "206", "204", "207"]
 
-func formatLoadingIcon(icon: UIActivityIndicatorView) -> UIActivityIndicatorView {
+func formatLoadingIcon(_ icon: UIActivityIndicatorView) -> UIActivityIndicatorView {
     icon.center = CGPoint(x: screenW / 2, y: screenH / 2 - 75)
     icon.color = UIColor.lightGray
     if #available(iOS 13.0, *) {
@@ -244,6 +245,97 @@ func formattedTargetToImageName(target: String) -> String {
     return imageName
 }
 
+func setUpEqDD(anchorView: UILabel, ddString: String, eqLink: String) -> DropDown {
+    let dd = DropDown()
+    dd.backgroundColor = .darkGray
+    dd.textColor = .white
+    dd.textFont = UIFont(name: "Pacifica Condensed", size: 13)!
+    dd.cellHeight = 34
+    dd.cornerRadius = 10
+    dd.anchorView = anchorView
+    dd.bottomOffset = CGPoint(x: 0, y: 35)
+    dd.dataSource = [ddString]
+    dd.selectionAction = {(index: Int, item: String) in
+        application.open(NSURL(string: eqLink)! as URL)
+    }
+    return dd
+}
+
+func checkEqToLink(eqType: String, eqFields: [UILabel], eqFieldValues: [String], iodvc: ImageOfDayViewController?, jevc: JournalEntryViewController?) -> DropDown? {
+    var field = eqFields[0]
+    var eqString = ""
+    var eqNames: [String: [String]] = [:]
+    var eqLinks: [String: String] = [:]
+    if eqType == "telescope" {
+        eqString = eqFieldValues[0]
+        eqNames = telescopeNames
+        field = eqFields[0]
+        eqLinks = telescopeLinks
+    } else if eqType == "mount" {
+        eqString = eqFieldValues[1]
+        eqNames = mountNames
+        field = eqFields[1]
+        eqLinks = mountLinks
+    } else if eqType == "camera" {
+        eqString = eqFieldValues[2]
+        eqNames = cameraNames
+        field = eqFields[2]
+        eqLinks = cameraLinks
+    }
+    if eqString == "" {return nil}
+    field.text = eqString
+    var brand = ""
+    var name = ""
+    var i = 0
+    if eqString.prefix(20) == "Moravian Instruments" {
+        i = 20
+    } else if eqString.prefix(18) == "Explore Scientific" {
+        i = 18
+    } else if eqString.prefix(24) == "Officina Stellare Veloce" {
+        i = 24
+    } else if eqString.prefix(8) == "Tele Vue" {
+        i = 8
+    } else if eqString.prefix(14) == "William Optics" {
+        i = 14
+    } else if eqString.prefix(9) == "10 Micron" {
+        i = 9
+    } else if eqString.prefix(15) == "Software Bisque" {
+        i = 15
+    } else {
+        //may be a different brand name with no space
+        for c in eqString {
+            if c == " " {
+                break
+            }
+            i += 1
+        }
+    }
+    //invalid brand
+    if i == 0 || i == eqString.count {return nil}
+    brand = String(eqString.prefix(i))
+    name = String(eqString.suffix(eqString.count - i - 1))
+    if eqNames[brand]?.contains(name) ?? false {
+        if iodvc != nil {
+            let tap = UITapGestureRecognizer(target: iodvc!, action: #selector(iodvc!.eqTapped))
+            field.addGestureRecognizer(tap)
+        } else {
+            let tap = UITapGestureRecognizer(target: jevc!, action: #selector(jevc!.eqTapped))
+            field.addGestureRecognizer(tap)
+        }
+        field.textColor = UIColor(red: 0.3, green: 0.6, blue: 0.8, alpha: 1)
+        var res: DropDown? = nil
+        if eqType == "telescope" {
+            res = setUpEqDD(anchorView: field, ddString: "shop " + brand + " telescopes", eqLink: eqLinks[String(eqString.prefix(i))]!)
+        } else if eqType == "mount" {
+            res = setUpEqDD(anchorView: field, ddString: "shop " + brand + " mounts", eqLink: eqLinks[String(eqString.prefix(i))]!)
+        } else if eqType == "camera" {
+            res = setUpEqDD(anchorView: field, ddString: "shop " + brand + " cameras", eqLink: eqLinks[String(eqString.prefix(i))]!)
+        }
+        return res
+    }
+    return nil
+}
+
 infix operator ^^
 extension Bool {
     static func ^^ (a: Bool, b: Bool) -> Bool {
@@ -300,7 +392,7 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
             border.image = UIImage(named: "border-ipad")
             welcomeLabel.font = UIFont(name: "Pacifica Condensed", size: 26)
             myAstroLabel.font = UIFont(name: "Pacifica Condensed", size: 26)
-            forgotEmailTopC.constant = 50
+            forgotEmailTopC.constant = 30
             if screenH > 1050 {//10.5, 11, 12,9
                 paragraphTopCipad.constant = screenH * 0.05
             }

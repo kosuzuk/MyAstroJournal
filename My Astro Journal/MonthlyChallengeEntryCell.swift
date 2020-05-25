@@ -10,5 +10,7 @@ import UIKit
 
 class MonthlyChallengeEntryCell: UITableViewCell {
     @IBOutlet weak var targetImageView: UIImageView!
+    @IBOutlet weak var usernameBackground: UIImageView!
     @IBOutlet weak var usernameLabel: UILabel!
+    @IBOutlet weak var usernameLabelWC: NSLayoutConstraint!
 }
