@@ -66,11 +66,13 @@ var firstTime = false
 var entryEditFirstTime = false
 var dateToday = ""
 var featuredImageDate = ""
+let adminEmail = "nevadaastrophotography@gmail.com"
+var isAdmin = false
 //max image size to push and pull from db is 3MB
 let imgMaxByte: Int64 = 1024 * 1024 * 3
 let calCellSize = 50
 let iodUserIconSize = 30
-let maxSize = 700
+let maxImageSize = 700
 let imageTooBigMessage = "The image size is too big. Please choose another image."
 let astroOrange = UIColor(red: 1, green: 0.62, blue: 0, alpha: 1).cgColor
 let packProductIDs = ["100", "101", "102", "103"]
@@ -104,8 +106,8 @@ func processImageAndResize(inpImg: UIImage, resizeTo: CGSize, clip: Bool) -> [An
 
 func processImage(inpImg: UIImage) -> [Any]? {
     var img = inpImg
-    if Int(img.size.width) > maxSize || Int(img.size.height) > maxSize {
-        let res = processImageAndResize(inpImg: img, resizeTo: CGSize(width: maxSize, height: maxSize), clip: false)
+    if Int(img.size.width) > maxImageSize || Int(img.size.height) > maxImageSize {
+        let res = processImageAndResize(inpImg: img, resizeTo: CGSize(width: maxImageSize, height: maxImageSize), clip: false)
         img = res![0] as! UIImage
     }
     var quality: CGFloat = 1

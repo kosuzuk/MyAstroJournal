@@ -269,7 +269,21 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             db.collection("userData").document(userKey).updateData(["featuredAlertDates": alertDates])
         }
         self.userAlertDates = alertDates
-        if (userData!["email"] as! String) != "nevadaastrophotography@gmail.com" {
+        if userData!["isMonthlyWinner"] as! Bool {
+            let alertController = UIAlertController(title: "Congratulations!", message: "You have been selected as the winner for the Monthly Challenge! An email will be sent to your email address with the prize.", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            let imageSize = 80
+            let imageView = UIImageView(frame: CGRect(x: Int(alertController.view.bounds.width) - imageSize / 2, y: 15, width: imageSize, height: imageSize))
+            imageView.image = UIImage(named: "MonthlyChallenge/trophy")!
+            alertController.view.addSubview(imageView)
+            self.present(alertController, animated: true, completion: nil)
+            db.collection("userData").document(userKey).updateData(["isMonthlyWinner": false])
+        }
+        if (userData!["email"] as! String) == adminEmail {
+            isAdmin = true
+        }
+        if !isAdmin {
             self.antoinePowersButton.isHidden = false
             db.collection("iodDeletedNotifications").addSnapshotListener(includeMetadataChanges: true, listener: {(snapshot, Error) in
                 if Error != nil {
