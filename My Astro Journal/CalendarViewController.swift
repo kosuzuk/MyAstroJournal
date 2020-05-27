@@ -284,7 +284,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             self.present(alertController, animated: true, completion: nil)
             db.collection("userData").document(userKey).updateData(["isMonthlyWinner": false])
         }
-        if (userData!["email"] as! String) != adminEmail {
+        if (userData!["email"] as! String) == adminEmail {
             isAdmin = true
         }
         if isAdmin {
