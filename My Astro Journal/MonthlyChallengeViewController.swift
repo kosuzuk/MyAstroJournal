@@ -203,6 +203,7 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
         cell.targetImageView.layer.borderColor = astroOrange
         cell.targetImageView.image = entryImageList[indexPath.row]
         cell.usernameLabel.text = basicEntryDataList[indexPath.row]["userName"]
+        cell.mcvc = self
         let font = UIFont(name: cell.usernameLabel.font.fontName, size: cell.usernameLabel.font.pointSize)
         let fontAttributes = [NSAttributedString.Key.font: font]
         let size = (cell.usernameLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
