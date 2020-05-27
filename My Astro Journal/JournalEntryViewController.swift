@@ -10,13 +10,16 @@ import UIKit
 import Foundation
 import SwiftKeychainWrapper
 import DropDown
+import MessageUI
 
-class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, MFMailComposeViewControllerDelegate {
     @IBOutlet weak var background: UIImageView!
     @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var editButton: UIButton!
+    @IBOutlet weak var profileButton: UIButton!
+    @IBOutlet weak var challengeWinnerButton: UIButton!
     @IBOutlet weak var targetArrow: UIImageView!
     @IBOutlet weak var targetField: UILabel!
     @IBOutlet weak var constellationField: UILabel!
@@ -55,10 +58,12 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
     var imageSelected: UIImage? = nil
     var featuredDate = ""
     var iodKeysData: [String: Any]? = nil
-    var segueFromMonthlyChallenge = false
     var telescopeDD: DropDown? = nil
     var mountDD: DropDown? = nil
     var cameraDD: DropDown? = nil
+    var segueFromMonthlyChallenge = false
+    var keyForDifferentProfile = ""
+    var entryUserName = ""
     var loaded = false
     var cvc: CalendarViewController? = nil
     var jeevc: JournalEntryEditViewController? = nil
@@ -106,6 +111,11 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
             telescopeDD = checkEqToLink(eqType: "telescope", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: nil, jevc: self)
             mountDD = checkEqToLink(eqType: "mount", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: nil, jevc: self)
             cameraDD = checkEqToLink(eqType: "camera", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: nil, jevc: self)
+        } else {
+            profileButton.isHidden = true
+        }
+        if !isAdmin {
+            challengeWinnerButton.isHidden = true
         }
         memoriesField.text = (entryData["memories"] as! String)
         telescopeField.text = eqFieldValueList[0]
@@ -168,6 +178,7 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
             }
         } else {
             extraPhotosLabel.isHidden = true
+            imageCollectionView.isHidden = true
             imagesPulled = true
             checkFinishedPullingImages()
         }
@@ -183,6 +194,13 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
                     }
                 }
             })
+        }
+        if segueFromMonthlyChallenge {
+            editButton.isHidden = true
+            memoriesLabel.isHidden = true
+            memoriesField.isHidden = true
+            extraPhotosLabel.isHidden = true
+            imageCollectionView.isHidden = true
         }
         NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
@@ -205,16 +223,6 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
             let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
             layout.itemSize = CGSize(width: imageCollectionView.bounds.height, height: imageCollectionView.bounds.height)
             imageCollectionView.collectionViewLayout = layout
-        }
-        if entryData["imageKeys"] as! [String] != [] {
-            imageCollectionView.isHidden = false
-        }
-        if segueFromMonthlyChallenge {
-            editButton.isHidden = true
-            memoriesLabel.isHidden = true
-            memoriesField.isHidden = true
-            extraPhotosLabel.isHidden = true
-            imageCollectionView.isHidden = true
         }
         if bigImageView.isHidden {
             contentViewHC.constant -= 190
@@ -247,34 +255,49 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
         contentViewHC.constant = contentViewH
         contentViewHCipad.constant = contentViewHipad
     }
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let vc = segue.destination as? JournalEntryEditViewController
-        if vc != nil {
-            vc!.entryDate = entryDate
-            vc!.entryList = entryList
-            vc!.selectedEntryInd = selectedEntryInd
-            vc!.formattedTargetsList = formattedTargetsList
-            vc!.entryData = entryData
-            vc!.featuredDate = featuredDate
-            vc!.cvc = cvc
-            jeevc = vc!
-            return
-        }
-        let vc2 = segue.destination as? ImageOfDayViewController
-        if vc2 != nil {
-            vc2!.entryKey = iodKeysData!["journalEntryListKey"] as! String
-            vc2!.entryInd = selectedEntryInd
-            vc2!.iodUserKey = iodKeysData!["userKey"] as! String
-            vc2!.imageData = bigImageView.image
-            vc2!.featuredDate = featuredDate
-            vc2!.cvc = cvc
-            //not currently featured
-            if featuredDate != featuredImageDate {
-                vc2!.notEditable = true
+    @IBAction func profileButtonTapped(_ sender: Any) {
+        performSegue(withIdentifier: "journalEntryToProfile", sender: self)
+    }
+    func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
+        controller.dismiss(animated: true, completion: nil)
+    }
+    @IBAction func challengeWinnerButtonTapped(_ sender: Any) {
+        func managePickWinner() {
+            db.collection("userData").document(keyForDifferentProfile).getDocument(completion: {(QuerySnapshot, Error) in
+                if Error != nil {
+                    print(Error!)
+                } else {
+                    let email = QuerySnapshot!.data()!["email"] as! String
+                    if MFMailComposeViewController.canSendMail() {
+                        let mailComposerVC = MFMailComposeViewController()
+                        mailComposerVC.mailComposeDelegate = (self as MFMailComposeViewControllerDelegate)
+                        mailComposerVC.setToRecipients([email])
+                        mailComposerVC.setSubject("My Astro Journal Monthly Challenge Winner")
+                        mailComposerVC.setMessageBody("Hi " + self.entryUserName + ",\n\nCongratulations! You are the winner of this month's challenge!\nYou may redeem this $50 off, one-time-use coupon code on your next purchase of $500 or more at Oceanside Photo & Telescope: \n\nZE25JCKVEWKV\n\nThank you for using the My Astro Journal app and we hope you will continue adding fantastic images!\nYou are of course encouraged to participate in other monthly challenges, although the rewards will be discounts on prints as coupons can only be used once per person 🙂\n\nClear Skies,\nAntoine & Dalia Grelin\nGalactic Hunter", isHTML: false)
+                        self.present(mailComposerVC, animated: true, completion: nil)
+                    }
+                }
+            })
+            db.collection("userData").document(keyForDifferentProfile).updateData(["isMonthlyWinner": true])
+            var nextMonth = ""
+            if dateToday.prefix(2) == "12" {
+                nextMonth = "01" + String(Int(dateToday.suffix(4))! + 1)
+            } else {
+                nextMonth = String(Int(dateToday.prefix(2))! + 1) + dateToday.suffix(4)
+                if nextMonth.count == 5 {
+                    nextMonth = "0" + nextMonth
+                }
             }
-            cvc?.iodvc = vc2
-            return
+            let entryKey = keyForDifferentProfile + entryDate
+            db.collection("monthlyChallenges").document(nextMonth).updateData(["lastMonthJournalEntryListKey": entryKey, "lastMonthWinnerName": entryUserName])
         }
+        
+        let alertController = UIAlertController(title: "Confirmation", message: "Choose this user as the monthly winner? They will get a popup message.", preferredStyle: .alert)
+        let confirmAction = UIAlertAction(title: "yes", style: .destructive, handler: {(alertAction) in managePickWinner()})
+        let cancelAction = UIAlertAction(title: "cancel", style: .cancel, handler: nil)
+        alertController.addAction(confirmAction)
+        alertController.addAction(cancelAction)
+        self.present(alertController, animated: true, completion: nil)
     }
     @IBAction func featuredButtonTapped(_ sender: Any) {
         performSegue(withIdentifier: "journalEntryToImageOfDay", sender: self)
@@ -310,6 +333,40 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
         self.view.addSubview(popOverVC.view)
         popOverVC.imageView.image = imageSelected
         popOverVC.didMove(toParent: self)
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let vc = segue.destination as? JournalEntryEditViewController
+        if vc != nil {
+            vc!.entryDate = entryDate
+            vc!.entryList = entryList
+            vc!.selectedEntryInd = selectedEntryInd
+            vc!.formattedTargetsList = formattedTargetsList
+            vc!.entryData = entryData
+            vc!.featuredDate = featuredDate
+            vc!.cvc = cvc
+            jeevc = vc!
+            return
+        }
+        let vc2 = segue.destination as? ImageOfDayViewController
+        if vc2 != nil {
+            vc2!.entryKey = iodKeysData!["journalEntryListKey"] as! String
+            vc2!.entryInd = selectedEntryInd
+            vc2!.iodUserKey = iodKeysData!["userKey"] as! String
+            vc2!.imageData = bigImageView.image
+            vc2!.featuredDate = featuredDate
+            vc2!.cvc = cvc
+            //not currently featured
+            if featuredDate != featuredImageDate {
+                vc2!.notEditable = true
+            }
+            cvc?.iodvc = vc2
+            return
+        }
+        let vc3 = segue.destination as? ProfileViewController
+        if vc3 != nil {
+            vc3!.keyForDifferentProfile = keyForDifferentProfile
+            return
+        }
     }
 }
 

@@ -9,16 +9,25 @@
 import UIKit
 import DropDown
 
-class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     @IBOutlet weak var seeChallengesButton: UIButton!
+    @IBOutlet weak var seeEntriesButton: UIButton!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var targetField: UITextField!
     @IBOutlet weak var monthYearField: UITextField!
     var challengesData: [[String: String]] = []
     var challengesDD: DropDown? = nil
-    var newImageKey = ""
+    var imageKey = ""
+    var imageData: Data? = nil
+    var activeField: UITextField? = nil
     override func viewDidLoad() {
         super.viewDidLoad()
+        imageView.layer.borderWidth = 1
+        imageView.layer.borderColor = astroOrange
+        targetField.delegate = (self as UITextFieldDelegate)
+        monthYearField.delegate = (self as UITextFieldDelegate)
+        targetField.autocorrectionType = .no
+        monthYearField.autocorrectionType = .no
         db.collection("monthlyChallenges").getDocuments(completion: {(snapshot, Error) in
             if Error != nil {
                 print(Error!)
@@ -27,6 +36,9 @@ class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate,
                 var DDList: [String] = []
                 for doc in snapshot!.documents {
                     let data = doc.data()
+                    if data["imageKey"] == nil || data["target"] == nil {
+                        continue
+                    }
                     let listItem = ["docID": doc.documentID, "imageKey": data["imageKey"] as! String, "target": data["target"] as! String]
                     if lst.isEmpty {
                         lst = [listItem]
@@ -60,7 +72,9 @@ class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate,
                             print(Error)
                             return
                         } else {
+                            self.imageKey = lst[index]["imageKey"]!
                             self.imageView.image = UIImage(data: data!)
+                            self.imageData = data
                         }
                     }
                     self.targetField.text = lst[index]["target"]!
@@ -71,10 +85,46 @@ class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate,
             }
         })
     }
-    func seeChallengesTapped(_ sender: Any) {
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        activeField = textField
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    @IBAction func seeChallengesTapped(_ sender: Any) {
+        activeField?.resignFirstResponder()
         challengesDD!.show()
     }
-    func imageViewTapped() {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let vc = segue.destination as? MonthlyChallengeViewController
+        if vc != nil {
+            vc!.challengeMonthToShow = monthYearField.text!
+            return
+        }
+    }
+    @IBAction func seeEntriesTapped(_ sender: Any) {
+        performSegue(withIdentifier: "monthlyPickerToChallenge", sender: self)
+    }
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let newImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            self.dismiss(animated: true, completion: {
+                let processRes = processImage(inpImg: newImage)
+                if processRes == nil {
+                    let alertController = UIAlertController(title: "Error", message: imageTooBigMessage, preferredStyle: .alert)
+                    let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                    alertController.addAction(defaultAction)
+                    self.present(alertController, animated: true, completion: nil)
+                } else {
+                    self.imageKey = NSUUID().uuidString
+                    self.imageView.image = (processRes![0] as! UIImage)
+                    self.imageData = (processRes![1] as! Data)
+                }
+            }
+        )}
+    }
+    @IBAction func imageViewTapped() {
+        activeField?.resignFirstResponder()
         let image = UIImagePickerController()
         image.delegate = self
         image.sourceType = UIImagePickerController.SourceType.photoLibrary
@@ -83,15 +133,32 @@ class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate,
             //after completion
         }
     }
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-        if let newImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-            self.dismiss(animated: true, completion: {
-                self.imageView.image = newImage
-                self.newImageKey = NSUUID().uuidString
-            }
-        )}
+    @IBAction func removeImageTapped(_ sender: Any) {
+        activeField?.resignFirstResponder()
+        imageView.image = nil
     }
-    func setButtonTapped() {
-        db.collection("monthlyChallenges").document(monthYearField.text!).setData(["imageKey": newImageKey, "target": formatTarget(targetField.text!)], merge: true)
+    @IBAction func setButtonTapped() {
+        if imageView.image == nil || targetField.text! == "" || monthYearField .text! == "" {
+            return
+        }
+        db.collection("monthlyChallenges").document(monthYearField.text!).setData(["imageKey": imageKey, "target": targetField.text!], merge: true)
+        storage.child(imageKey).putData(imageData!, metadata: nil) {(metadata, error) in
+            if error != nil {
+                print(error as Any)
+                return
+            } else {
+                self.navigationController!.popToRootViewController(animated: true)
+            }
+        }
+        var nextMonth = ""
+        if monthYearField.text!.prefix(2) == "12" {
+            nextMonth = "01" + String(Int(monthYearField.text!.suffix(4))! + 1)
+        } else {
+            nextMonth = String(Int(monthYearField.text!.prefix(2))! + 1) + monthYearField.text!.suffix(4)
+            if nextMonth.count == 5 {
+                nextMonth = "0" + nextMonth
+            }
+        }
+        db.collection("monthlyChallenges").document(nextMonth).setData(["lastMonthTarget": targetField.text!], merge: true)
     }
 }

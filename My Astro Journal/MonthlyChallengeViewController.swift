@@ -11,6 +11,9 @@ import UIKit
 class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     @IBOutlet weak var banner: UIImageView!
     @IBOutlet weak var border: UIImageView!
+    @IBOutlet weak var trophyLogo: UIImageView!
+    @IBOutlet weak var congratsToLabel: UILabel!
+    @IBOutlet weak var forWinningLabel: UILabel!
     @IBOutlet weak var winnerNameLabel: UILabel!
     @IBOutlet weak var seeWinningEntryButton: UIButton!
     @IBOutlet weak var timerDay1: UILabel!
@@ -31,13 +34,16 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
     @IBOutlet weak var targetLabelWC: NSLayoutConstraint!
     @IBOutlet weak var textViewWC: NSLayoutConstraint!
     @IBOutlet weak var OPTLeadingC: NSLayoutConstraint!
+    var challengeMonthToShow = ""
     var challengeData: [String: Any]? = nil
     var formattedChallengeTarget = ""
     var basicEntryDataList: [[String: String]] = []
     var entryImageList: [Int: UIImage] = [:]
+    var entryToShowKey = ""
     var entryListToShowData: [[String: Any]]? = nil
     var entryToShowInd = 0
-    var entryToShowDate = ""
+    var entryToShowUserName = ""
+    var profileToShowKey = ""
     var curMonth = 0
     var loadImageTimer: Timer = Timer.scheduledTimer(withTimeInterval: 0, repeats: false) {_ in}
     let maxNumImages = 60
@@ -62,27 +68,44 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
         challengeTargetImageView.layer.borderWidth = 1
         winnerNameLabel.isHidden = true
         targetLabel.isHidden = true
-        db.collection("monthlyChallenges").document(String(dateToday.prefix(2) + dateToday.suffix(4))).getDocument(completion: {(snapshot, Error) in
+        if challengeMonthToShow == "" {
+            challengeMonthToShow = String(dateToday.prefix(2) + dateToday.suffix(4))
+        }
+        db.collection("monthlyChallenges").document(challengeMonthToShow).getDocument(completion: {(snapshot, Error) in
             if Error != nil {
                 print(Error!)
             } else {
                 if snapshot!.data() == nil {return}
                 self.challengeData = snapshot!.data()
-                storage.child(self.challengeData!["imageKey"] as! String).getData(maxSize: imgMaxByte) {data, Error in
-                    if let Error = Error {
-                        print(Error)
-                        return
-                    } else {
-                        self.challengeTargetImageView.image = UIImage(data: data!)
+                if (self.challengeData!["lastMonthWinnerName"] as? String ?? "") == "" {
+                    self.trophyLogo.alpha = 0.6
+                    self.congratsToLabel.alpha = 0.6
+                    self.forWinningLabel.alpha = 0.6
+                    self.seeWinningEntryButton.alpha = 0.6
+                    self.winnerNameLabel.isUserInteractionEnabled = false
+                    self.seeWinningEntryButton.isUserInteractionEnabled = false
+                } else {
+                    self.winnerNameLabel.text = (self.challengeData!["lastMonthWinnerName"] as! String)
+                    self.winnerNameLabel.isHidden = false
+                }
+                if self.challengeData!["imageKey"] != nil {
+                    storage.child(self.challengeData!["imageKey"] as! String).getData(maxSize: imgMaxByte) {data, Error in
+                        if let Error = Error {
+                            print(Error)
+                            return
+                        } else {
+                            self.challengeTargetImageView.image = UIImage(data: data!)
+                        }
                     }
                 }
-                self.winnerNameLabel.text = (self.challengeData!["lastMonthWinnerName"] as! String)
+                if self.challengeData!["target"] == nil {
+                    return
+                }
                 self.targetLabel.text = (self.challengeData!["target"] as! String)
                 let font = UIFont(name: self.targetLabel.font.fontName, size: self.targetLabel.font.pointSize)
                 let fontAttributes = [NSAttributedString.Key.font: font]
                 let size = (self.targetLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
                 self.targetLabelWC.constant = size.width + 4
-                self.winnerNameLabel.isHidden = false
                 self.targetLabel.isHidden = false
                 self.formattedChallengeTarget = formatTarget(self.challengeData!["target"] as! String)
                 db.collection("journalEntries").whereField("formattedTargets", arrayContains: self.formattedChallengeTarget).getDocuments(completion: {(snapshot, Error) in
@@ -189,6 +212,7 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
         cell.targetImageView.layer.borderColor = astroOrange
         cell.targetImageView.image = entryImageList[indexPath.row]
         cell.usernameLabel.text = basicEntryDataList[indexPath.row]["userName"]
+        cell.mcvc = self
         let font = UIFont(name: cell.usernameLabel.font.fontName, size: cell.usernameLabel.font.pointSize)
         let fontAttributes = [NSAttributedString.Key.font: font]
         let size = (cell.usernameLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
@@ -248,20 +272,23 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination as? JournalEntryViewController
         if vc != nil {
-            vc!.entryDate = entryToShowDate
+            vc!.entryDate = String(entryToShowKey.suffix(8))
             vc!.entryList = entryListToShowData!
             vc!.selectedEntryInd = entryToShowInd
             vc!.segueFromMonthlyChallenge = true
+            vc!.keyForDifferentProfile = String(entryToShowKey.prefix(entryToShowKey.count - 8))
+            vc!.entryUserName = entryToShowUserName
             return
         }
         let vc2 = segue.destination as? ProfileViewController
         if vc2 != nil {
-            let winnerEntryKey = challengeData!["lastMonthJournalEntryListKey"] as! String
-            vc2!.keyForDifferentProfile = String(winnerEntryKey.prefix(winnerEntryKey.count - 8))
+            vc2!.keyForDifferentProfile = profileToShowKey
             return
         }
     }
     @IBAction func winnerLabelTapped(_ sender: Any) {
+        let winningEntryKey = (challengeData!["lastMonthJournalEntryListKey"] as! String)
+        profileToShowKey = String(winningEntryKey.prefix(winningEntryKey.count - 8))
         performSegue(withIdentifier: "monthlyChallengeToProfile", sender: self)
     }
     func manageMoveToEntry(key: String, data: [String: Any]?, targetToLookFor: String) {
@@ -269,9 +296,9 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
             let entryListData = data!["data"] as! [[String: Any]]
             for i in 0..<entryListData.endIndex {
                 if entryListData[i]["formattedTarget"] as! String == targetToLookFor && entryListData[i]["mainImageKey"] as! String != "" {
+                    self.entryToShowKey = key
                     self.entryListToShowData = (data!["data"] as! [[String : Any]])
                     self.entryToShowInd = i
-                    self.entryToShowDate = String(key.suffix(8))
                     self.performSegue(withIdentifier: "MonthlyChallengeToEntry", sender: self)
                     self.seeWinningEntryButton.isUserInteractionEnabled = true
                     self.entriesTableView.isUserInteractionEnabled = true
@@ -294,6 +321,7 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
             if Error != nil {
                 print(Error!)
             } else {
+                self.entryToShowUserName = self.winnerNameLabel.text!
                 self.manageMoveToEntry(key: key, data: snapshot!.data(), targetToLookFor: formatTarget(self.challengeData!["lastMonthTarget"] as! String))
             }
         })
@@ -307,6 +335,7 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
             if Error != nil {
                 print(Error!)
             } else {
+                self.entryToShowUserName = self.basicEntryDataList[indexPath!.row]["userName"]!
                 self.manageMoveToEntry(key: key, data: snapshot!.data(), targetToLookFor: self.formattedChallengeTarget)
             }
         })
