@@ -317,7 +317,10 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                 self.userData = docData
             }
         })
-        if keyForDifferentProfile != "" {return}
+        NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        if keyForDifferentProfile != "" {
+            return
+        }
         db.collection("userData").document(userKey).addSnapshotListener (includeMetadataChanges: true, listener: {(snapshot, Error) in
             if Error != nil {
                 print(Error!)
@@ -346,7 +349,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                 }
             }
         })
-        NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)

@@ -34,6 +34,7 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
     @IBOutlet weak var targetLabelWC: NSLayoutConstraint!
     @IBOutlet weak var textViewWC: NSLayoutConstraint!
     @IBOutlet weak var OPTLeadingC: NSLayoutConstraint!
+    var challengeMonthToShow = ""
     var challengeData: [String: Any]? = nil
     var formattedChallengeTarget = ""
     var basicEntryDataList: [[String: String]] = []
@@ -67,20 +68,15 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
         challengeTargetImageView.layer.borderWidth = 1
         winnerNameLabel.isHidden = true
         targetLabel.isHidden = true
-        db.collection("monthlyChallenges").document(String(dateToday.prefix(2) + dateToday.suffix(4))).getDocument(completion: {(snapshot, Error) in
+        if challengeMonthToShow == "" {
+            challengeMonthToShow = String(dateToday.prefix(2) + dateToday.suffix(4))
+        }
+        db.collection("monthlyChallenges").document(challengeMonthToShow).getDocument(completion: {(snapshot, Error) in
             if Error != nil {
                 print(Error!)
             } else {
                 if snapshot!.data() == nil {return}
                 self.challengeData = snapshot!.data()
-                storage.child(self.challengeData!["imageKey"] as! String).getData(maxSize: imgMaxByte) {data, Error in
-                    if let Error = Error {
-                        print(Error)
-                        return
-                    } else {
-                        self.challengeTargetImageView.image = UIImage(data: data!)
-                    }
-                }
                 if (self.challengeData!["lastMonthWinnerName"] as? String ?? "") == "" {
                     self.trophyLogo.alpha = 0.6
                     self.congratsToLabel.alpha = 0.6
@@ -90,13 +86,26 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
                     self.seeWinningEntryButton.isUserInteractionEnabled = false
                 } else {
                     self.winnerNameLabel.text = (self.challengeData!["lastMonthWinnerName"] as! String)
+                    self.winnerNameLabel.isHidden = false
+                }
+                if self.challengeData!["imageKey"] != nil {
+                    storage.child(self.challengeData!["imageKey"] as! String).getData(maxSize: imgMaxByte) {data, Error in
+                        if let Error = Error {
+                            print(Error)
+                            return
+                        } else {
+                            self.challengeTargetImageView.image = UIImage(data: data!)
+                        }
+                    }
+                }
+                if self.challengeData!["target"] == nil {
+                    return
                 }
                 self.targetLabel.text = (self.challengeData!["target"] as! String)
                 let font = UIFont(name: self.targetLabel.font.fontName, size: self.targetLabel.font.pointSize)
                 let fontAttributes = [NSAttributedString.Key.font: font]
                 let size = (self.targetLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
                 self.targetLabelWC.constant = size.width + 4
-                self.winnerNameLabel.isHidden = false
                 self.targetLabel.isHidden = false
                 self.formattedChallengeTarget = formatTarget(self.challengeData!["target"] as! String)
                 db.collection("journalEntries").whereField("formattedTargets", arrayContains: self.formattedChallengeTarget).getDocuments(completion: {(snapshot, Error) in

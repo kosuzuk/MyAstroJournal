@@ -71,6 +71,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     var imageOfDayKeysData: [String: Any]? = nil
     var imageOfDayImageData: UIImage? = nil
     var imageOfDayTarget = ""
+    var noImageOfDay = false
     var newIodUserName = "" {
         didSet {
             if newIodUserName != "" {
@@ -273,17 +274,20 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             let alertController = UIAlertController(title: "Congratulations!", message: "You have been selected as the winner for the Monthly Challenge! An email will be sent to your email address with the prize.", preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
             alertController.addAction(defaultAction)
-            let imageSize = 80
-            let imageView = UIImageView(frame: CGRect(x: Int(alertController.view.bounds.width) - imageSize / 2, y: 15, width: imageSize, height: imageSize))
+            let imageSize = 27
+            let imageView = UIImageView(frame: CGRect(x: 36, y: 13, width: imageSize, height: imageSize))
             imageView.image = UIImage(named: "MonthlyChallenge/trophy")!
+            let imageView2 = UIImageView(frame: CGRect(x: 209, y: 13, width: imageSize, height: imageSize))
+            imageView2.image = UIImage(named: "MonthlyChallenge/trophy")!
             alertController.view.addSubview(imageView)
+            alertController.view.addSubview(imageView2)
             self.present(alertController, animated: true, completion: nil)
             db.collection("userData").document(userKey).updateData(["isMonthlyWinner": false])
         }
-        if (userData!["email"] as! String) == adminEmail {
+        if (userData!["email"] as! String) != adminEmail {
             isAdmin = true
         }
-        if !isAdmin {
+        if isAdmin {
             self.antoinePowersButton.isHidden = false
             db.collection("iodDeletedNotifications").addSnapshotListener(includeMetadataChanges: true, listener: {(snapshot, Error) in
                 if Error != nil {
@@ -394,6 +398,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                     self.imageOfDayImageView.image = nil
                     self.imageOfDayLight.isHidden = true
                     self.imageOfDayListenerInitiated = true
+                    self.noImageOfDay = true
                 }
                 //udpdate or initialize iod image view and data
                 self.imageOfDayLabel.text = ""
@@ -442,14 +447,14 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                         print("no image data for featured entry", Error)
                         noIodData()
                         return
-                    } else {
+                    } else if !self.noImageOfDay {
                         self.imageOfDayImageView.image = UIImage(data: imageData!)!
                         self.imageOfDayImageData = self.imageOfDayImageView.image
                         self.imageOfDayImageView.isUserInteractionEnabled = true
                         self.imageOfDayLight.isHidden = false
                     }
                 }
-                var docRef = db.collection("journalEntries").document(iodKeysData["journalEntryListKey"] as! String)
+                let docRef = db.collection("journalEntries").document(iodKeysData["journalEntryListKey"] as! String)
                 docRef.getDocument(completion: {(QuerySnapshot, Error) in
                     if Error != nil {
                         print(Error!)
@@ -485,18 +490,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                         let size = (self.imageOfDayLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
                         self.imageOfDayLightWC.constant = size.width + 30
                         self.imageOfDayTarget = iodTarget
-                    }
-                })
-                docRef = db.collection("userData").document(iodKeysData["userKey"] as! String)
-                docRef.getDocument(completion: {(QuerySnapshot, Error) in
-                    if Error != nil {
-                        print(Error!)
-                    } else {
-                        if QuerySnapshot!.data() == nil {
-                            print("empty user data")
-                            noIodData()
-                            return
-                        }
                     }
                 })
                 featuredImageDate = iodDocToShow.documentID

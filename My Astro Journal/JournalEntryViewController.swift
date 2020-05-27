@@ -178,6 +178,7 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
             }
         } else {
             extraPhotosLabel.isHidden = true
+            imageCollectionView.isHidden = true
             imagesPulled = true
             checkFinishedPullingImages()
         }
@@ -193,6 +194,13 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
                     }
                 }
             })
+        }
+        if segueFromMonthlyChallenge {
+            editButton.isHidden = true
+            memoriesLabel.isHidden = true
+            memoriesField.isHidden = true
+            extraPhotosLabel.isHidden = true
+            imageCollectionView.isHidden = true
         }
         NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
@@ -215,16 +223,6 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
             let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
             layout.itemSize = CGSize(width: imageCollectionView.bounds.height, height: imageCollectionView.bounds.height)
             imageCollectionView.collectionViewLayout = layout
-        }
-        if entryData["imageKeys"] as! [String] != [] {
-            imageCollectionView.isHidden = false
-        }
-        if segueFromMonthlyChallenge {
-            editButton.isHidden = true
-            memoriesLabel.isHidden = true
-            memoriesField.isHidden = true
-            extraPhotosLabel.isHidden = true
-            imageCollectionView.isHidden = true
         }
         if bigImageView.isHidden {
             contentViewHC.constant -= 190
@@ -275,7 +273,7 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
                         mailComposerVC.mailComposeDelegate = (self as MFMailComposeViewControllerDelegate)
                         mailComposerVC.setToRecipients([email])
                         mailComposerVC.setSubject("My Astro Journal Monthly Challenge Winner")
-                        mailComposerVC.setMessageBody("Hi " + self.entryUserName + ",\n\nCongratulations! You are the winner of this month's challenge!\nYou may redeem this $50 off, one-time-use coupon code on your next purchase of $500 or more at Oceanside Photo & Telescope: ZE25JCKVEWKV\nThank you for using the My Astro Journal app and we hope you will continue adding fantastic images!\nYou are of course encouraged to participate in other monthly challenges, although the rewards will be discounts on prints as coupons can only be used once per person 🙂\n\nClear Skies,\nAntoine & Dalia Grelin\nGalactic Hunter", isHTML: false)
+                        mailComposerVC.setMessageBody("Hi " + self.entryUserName + ",\n\nCongratulations! You are the winner of this month's challenge!\nYou may redeem this $50 off, one-time-use coupon code on your next purchase of $500 or more at Oceanside Photo & Telescope: \n\nZE25JCKVEWKV\n\nThank you for using the My Astro Journal app and we hope you will continue adding fantastic images!\nYou are of course encouraged to participate in other monthly challenges, although the rewards will be discounts on prints as coupons can only be used once per person 🙂\n\nClear Skies,\nAntoine & Dalia Grelin\nGalactic Hunter", isHTML: false)
                         self.present(mailComposerVC, animated: true, completion: nil)
                     }
                 }

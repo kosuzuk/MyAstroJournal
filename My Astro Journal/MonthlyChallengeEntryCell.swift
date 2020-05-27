@@ -20,3 +20,4 @@ class MonthlyChallengeEntryCell: UITableViewCell {
         mcvc!.performSegue(withIdentifier: "monthlyChallengeToProfile", sender: mcvc!)
     }
 }
+

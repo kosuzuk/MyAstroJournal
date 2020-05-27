@@ -11,6 +11,7 @@ import DropDown
 
 class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
     @IBOutlet weak var seeChallengesButton: UIButton!
+    @IBOutlet weak var seeEntriesButton: UIButton!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var targetField: UITextField!
     @IBOutlet weak var monthYearField: UITextField!
@@ -35,6 +36,9 @@ class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate,
                 var DDList: [String] = []
                 for doc in snapshot!.documents {
                     let data = doc.data()
+                    if data["imageKey"] == nil || data["target"] == nil {
+                        continue
+                    }
                     let listItem = ["docID": doc.documentID, "imageKey": data["imageKey"] as! String, "target": data["target"] as! String]
                     if lst.isEmpty {
                         lst = [listItem]
@@ -91,6 +95,16 @@ class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate,
     @IBAction func seeChallengesTapped(_ sender: Any) {
         activeField?.resignFirstResponder()
         challengesDD!.show()
+    }
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let vc = segue.destination as? MonthlyChallengeViewController
+        if vc != nil {
+            vc!.challengeMonthToShow = monthYearField.text!
+            return
+        }
+    }
+    @IBAction func seeEntriesTapped(_ sender: Any) {
+        performSegue(withIdentifier: "monthlyPickerToChallenge", sender: self)
     }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let newImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
