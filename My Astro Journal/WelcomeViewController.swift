@@ -39,7 +39,7 @@ let spaceTelescopeLinkTargets = Set(["M17", "M18", "M25", "M29", "M36", "M38", "
 let adamBlockLinkTargets = ["NGC1535", "SH2-68", "SH2-136"]
 let deepSkyColorsLinkTargets = ["SH2-240", "IC4592"]
 let galacticHunterLinkTargets = Set(["M8", "M11", "M12", "M13", "M16", "M20", "M26", "M27", "M31", "M32", "M33", "M34", "M35", "M37", "M39", "M42", "M43", "M45", "M59", "M60", "M65", "M66", "M67", "M74", "M78", "M95", "M96", "M101", "M103", "M104", "M105", "M106", "NGC281", "NGC869", "NGC884", "NGC1499", "NGC1977", "NGC2024", "NGC2237", "NGC2244", "NGC2264", "NGC2359", "NGC3628", "NGC6888", "NGC6960", "NGC7000", "NGC7023", "NGC7293", "NGC7380", "NGC7635", "IC434", "IC443", "IC1805", "IC2118", "IC5146", "IC1795", "Milkyway", "JU1", "NGC5474", "IC1318", "XSS J16271-2423"])
-let profileLinkTargets = ["NGC2070": "", "NGC6992": "", "IC1396": "", "IC1848": "", "Moon": "", "SH2-129": "", "OU4": ""]
+let profileLinkTargets = ["NGC2070": "x", "NGC6992": "x", "IC1396": "x", "IC1848": "x", "Moon": "x", "SH2-129": "x", "OU4": "x"]
 
 let Pack1Targets = Set(["NGC457", "NGC1501", "NGC4567", "NGC4568", "SH2-129", "SH2-157", "NGC4676", "NGC6334", "IC417", "IC1795", "IC2177", "IC2944", "IC4592"])
 let Pack2Targets = Set(["Sun", "Milkyway", "SH2-240", "JU1", "ARP188", "NGC5474", "NGC2440", "NGC7009", "NGC7662", "IC1318", "NGC4656", "XSS J16271-2423"])
