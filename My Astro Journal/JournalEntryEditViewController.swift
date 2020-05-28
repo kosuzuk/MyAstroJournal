@@ -408,12 +408,11 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         if !photographedSelected {
             photographedCheckImage.image = UIImage(named: "ViewEntry/checkmark")
             photographedSelected = true
+            bigImageViewText.text = "Tap to add main image"
             if mainImage != nil {
                 bigImageViewText.isHidden = true
                 bigImageView.image = mainImage
                 bigImageViewRemoveButton.isHidden = false
-            } else {
-                bigImageViewText.text = "Tap to add main image"
             }
         } else {
             photographedCheckImage.image = nil

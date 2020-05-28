@@ -254,18 +254,21 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                     imageRef.getData(maxSize: imgMaxByte) {data, Error in
                         if let Error = Error {
                             print(Error)
-                            self.userImage.image = nil
-                            return
-                        } else {
-                            if data != nil {
-                                print("image set!")
-                                self.userImage.image = UIImage(data: data!)
-                                if self.keyForDifferentProfile == "" {
-                                    self.editButton.isHidden = false
-                                }
-                                loadingIcon.stopAnimating()
+                            if self.keyForDifferentProfile == "" {
+                                self.userImage.image = UIImage(named: "placeholder")
+                                let alertController = UIAlertController(title: "Error", message: "The profile image could not be loaded. It may have been deleted.", preferredStyle: .alert)
+                                let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                                alertController.addAction(defaultAction)
+                                self.present(alertController, animated: true, completion: nil)
                             }
+                        } else {
+                            print("image set!")
+                            self.userImage.image = UIImage(data: data!)
                         }
+                        if self.keyForDifferentProfile == "" {
+                            self.editButton.isHidden = false
+                        }
+                        loadingIcon.stopAnimating()
                     }
                 } else {
                     self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")

@@ -176,7 +176,11 @@ class CardViewController: UIViewController {
             }
         }
         if websiteLink != "" {
-            nasaButton.setImage(UIImage(named: "Catalog/CardBacks/nasa"), for: .normal)
+            if websiteLink == "https://www.adamblockphotos.com" || websiteLink == "http://www.deepskycolors.com" {
+                nasaButton.setImage(UIImage(named: "Info/website"), for: .normal)
+            } else {
+                nasaButton.setImage(UIImage(named: "Catalog/CardBacks/nasa"), for: .normal)
+            }
         } else if photographerUserKey != "" {
             nasaButton.setImage(UIImage(named: "Profile/placeholderProfileImage"), for: .normal)
         }

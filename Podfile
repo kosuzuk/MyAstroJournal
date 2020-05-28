@@ -14,6 +14,7 @@ target 'My Astro Journal' do
   	pod 'Firebase/Auth'
 	pod 'Firebase/Storage'
   	pod 'Firebase/Firestore'
+	pod 'Firebase/Database'
 	pod 'SwiftKeychainWrapper'
 	pod 'DropDown'
 

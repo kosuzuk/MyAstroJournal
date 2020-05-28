@@ -141,6 +141,11 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
             imageRef.getData(maxSize: imgMaxByte) {data, Error in
                 if let Error = Error {
                     print(Error)
+                    let alertController = UIAlertController(title: "Error", message: "The main image could not be loaded. It may have been deleted.", preferredStyle: .alert)
+                    let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                    alertController.addAction(defaultAction)
+                    self.present(alertController, animated: true, completion: nil)
+                    self.entryData["mainImage"] = UIImage(named: "placeholder")
                     mainImagePulled = true
                     checkFinishedPullingImages()
                 } else {
@@ -160,19 +165,20 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
             for (i, imageKey) in imageKeyList.enumerated() {
                 let imageRef = storage.child(imageKey)
                 imageRef.getData(maxSize: imgMaxByte) {data, Error in
+                    var img: UIImage? = nil
                     if let Error = Error {
                         print(Error)
-                        return
+                        img = UIImage(named: "placeholder")
                     } else {
-                        let image = UIImage(data: data!)
-                        let cell = self.imageCollectionView.cellForItem(at: NSIndexPath(row: i, section: 0) as IndexPath) as! JournalEntryImageCell
-                        cell.imageView.image = image
-                        imageList[i] = image!
-                        if imageList.count == imageKeyList.count {
-                            self.entryData["imageList"] = imageList
-                            imagesPulled = true
-                            checkFinishedPullingImages()
-                        }
+                        img = UIImage(data: data!)
+                    }
+                    let cell = self.imageCollectionView.cellForItem(at: NSIndexPath(row: i, section: 0) as IndexPath) as! JournalEntryImageCell
+                    cell.imageView.image = img!
+                    imageList[i] = img!
+                    if imageList.count == imageKeyList.count {
+                        self.entryData["imageList"] = imageList
+                        imagesPulled = true
+                        checkFinishedPullingImages()
                     }
                 }
             }

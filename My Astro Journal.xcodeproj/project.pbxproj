@@ -58,7 +58,6 @@
 		60DA3C8C22DD8DB700D10184 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DA3C8B22DD8DB700D10184 /* InfoViewController.swift */; };
 		60EB899F23540728002B0C38 /* CongratsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EB899E23540728002B0C38 /* CongratsViewController.swift */; };
 		A9D09D911D197A8DFF93BD22 /* Pods_My_Astro_Journal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53C9C33F43911B1E4700FE7D /* Pods_My_Astro_Journal.framework */; };
-		C3ED160B4A53AF07B82C8DA1 /* Pods_Star_JournalTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 876D99E4E1A07F45DB433B9E /* Pods_Star_JournalTests.framework */; };
 		D28A53C1B94408A94E391756 /* Pods_My_Astro_JournalTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9739A7624A26068E7774CDC9 /* Pods_My_Astro_JournalTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -132,7 +131,6 @@
 		60DA3C8B22DD8DB700D10184 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		60EB899E23540728002B0C38 /* CongratsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CongratsViewController.swift; sourceTree = "<group>"; };
 		66F346D7E2E61E02B047CF47 /* Pods-My Astro JournalTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-My Astro JournalTests.debug.xcconfig"; path = "Target Support Files/Pods-My Astro JournalTests/Pods-My Astro JournalTests.debug.xcconfig"; sourceTree = "<group>"; };
-		876D99E4E1A07F45DB433B9E /* Pods_Star_JournalTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Star_JournalTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9739A7624A26068E7774CDC9 /* Pods_My_Astro_JournalTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_My_Astro_JournalTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB118B8644706B66BF4DA70E /* Pods-My Astro Journal.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-My Astro Journal.debug.xcconfig"; path = "Target Support Files/Pods-My Astro Journal/Pods-My Astro Journal.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -151,7 +149,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C3ED160B4A53AF07B82C8DA1 /* Pods_Star_JournalTests.framework in Frameworks */,
 				D28A53C1B94408A94E391756 /* Pods_My_Astro_JournalTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -260,7 +257,6 @@
 			children = (
 				60386986246FA7C90042FEB0 /* StoreKit.framework */,
 				08A46B1C1A30A65391A76440 /* Pods_Star_Journal.framework */,
-				876D99E4E1A07F45DB433B9E /* Pods_Star_JournalTests.framework */,
 				53C9C33F43911B1E4700FE7D /* Pods_My_Astro_Journal.framework */,
 				9739A7624A26068E7774CDC9 /* Pods_My_Astro_JournalTests.framework */,
 			);
@@ -376,34 +372,11 @@
 			files = (
 			);
 			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-My Astro Journal/Pods-My Astro Journal-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/BoringSSL-GRPC/openssl_grpc.framework",
-				"${BUILT_PRODUCTS_DIR}/DropDown/DropDown.framework",
-				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
-				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
-				"${BUILT_PRODUCTS_DIR}/SwiftKeychainWrapper/SwiftKeychainWrapper.framework",
-				"${BUILT_PRODUCTS_DIR}/gRPC-C++/grpcpp.framework",
-				"${BUILT_PRODUCTS_DIR}/gRPC-Core/grpc.framework",
-				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
-				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-My Astro Journal/Pods-My Astro Journal-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/openssl_grpc.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DropDown.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftKeychainWrapper.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpcpp.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/grpc.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-My Astro Journal/Pods-My Astro Journal-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

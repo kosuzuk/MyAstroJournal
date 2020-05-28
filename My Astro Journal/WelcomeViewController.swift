@@ -507,7 +507,7 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if screenH < 1000 {
             if textField == signUpEmailField || textField == signUpPasswordField || textField == signUpPasswordConfirmField {
-                scrollView.setContentOffset(CGPoint(x: 0, y: textField.frame.origin.y - (screenH * 0.45)), animated: true)
+                scrollView.setContentOffset(CGPoint(x: 0, y: signUpPasswordField.frame.origin.y - (screenH * 0.45)), animated: true)
             } else {
                 let yOffset = contentView.bounds.height - scrollView.bounds.height
                 scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: true)

@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Foundation
+import FirebaseDatabase
 import SwiftKeychainWrapper
 import DropDown
 import CoreMotion
@@ -219,6 +219,13 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             self.calendarsListView.reloadData()
             loadingIcon.stopAnimating()
         } else {
+            Database.database().reference(withPath: ".info/connected").observe(.value, with: { snapshot in
+              if snapshot.value as? Bool ?? false {
+                print("Connected")
+              } else {
+                print("Not connected")
+              }
+            })
             self.firstJournalEntryDate = userData!["firstJournalEntryDate"] as! String
             self.startMonth = Int(self.firstJournalEntryDate.prefix(2))!
             self.startYear = Int(self.firstJournalEntryDate.suffix(4))!
@@ -245,7 +252,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 imageRef.getData(maxSize: imgMaxByte) {data, Error in
                     if let Error = Error {
                         print(Error)
-                        return
+                        self.imageDict[dateString] = UIImage(named: "Calendar/placeholder")!
                     } else {
                         self.imageDict[dateString] = UIImage(data: data!)!
                     }
