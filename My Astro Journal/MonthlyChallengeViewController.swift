@@ -78,12 +78,10 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
                 if snapshot!.data() == nil {return}
                 self.challengeData = snapshot!.data()
                 if (self.challengeData!["lastMonthWinnerName"] as? String ?? "") == "" {
-                    self.trophyLogo.alpha = 0.6
-                    self.congratsToLabel.alpha = 0.6
-                    self.forWinningLabel.alpha = 0.6
-                    self.seeWinningEntryButton.alpha = 0.6
-                    self.winnerNameLabel.isUserInteractionEnabled = false
-                    self.seeWinningEntryButton.isUserInteractionEnabled = false
+                    self.trophyLogo.isHidden = true
+                    self.congratsToLabel.isHidden = true
+                    self.forWinningLabel.isHidden = true
+                    self.seeWinningEntryButton.isHidden = true
                 } else {
                     self.winnerNameLabel.text = (self.challengeData!["lastMonthWinnerName"] as! String)
                     self.winnerNameLabel.isHidden = false

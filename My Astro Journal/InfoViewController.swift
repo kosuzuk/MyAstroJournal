@@ -22,7 +22,7 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     @IBOutlet weak var contentViewHC: NSLayoutConstraint!
     @IBOutlet weak var contentViewHCipad: NSLayoutConstraint!
     @IBOutlet weak var howItWorksTopCipad: NSLayoutConstraint!
-    @IBOutlet weak var bigTextHCipad: NSLayoutConstraint!
+    @IBOutlet weak var feedbackWC: NSLayoutConstraint!
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -30,16 +30,16 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         if screenH < 600 {//iphone SE, 5s
-            contentViewHC.constant = 2375
+            contentViewHC.constant = 2515
             expandLabel.text = "expand catalog"
+            feedbackWC.constant = 300
         } else if screenW < 400 {//iphone 8, 11
-            contentViewHC.constant = 2220
+            contentViewHC.constant = 2320
         } else if screenH > 1000 {//ipads
             background.image = UIImage(named: "Info/background-ipad")
             border.image = UIImage(named: "border-ipad")
             if screenH > 1300 {//ipad 12.9
                 howItWorksTopCipad.constant = 60
-                bigTextHCipad.constant = 400
             }
         }
         messageField.layer.cornerRadius = 5
