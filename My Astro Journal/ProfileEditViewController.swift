@@ -377,8 +377,8 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
                     print(Error!)
                 } else {
                     let entryList = QuerySnapshot!.documents
-                    if entryList != [] {
-                        for entry in entryList {
+                    for entry in entryList {
+                        if entry.documentID.prefix(entry.documentID.count - 8) == self.userKey {
                             db.collection("journalEntries").document(entry.documentID).setData(["userName": newUserName], merge: true)
                         }
                     }

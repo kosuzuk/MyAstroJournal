@@ -77,8 +77,9 @@ class CardViewController: UIViewController {
     var frontDisplayed = true
     var cardInfoImage: UIImage? = nil
     var backgroundImage: UIImage? = nil
+    var websiteLink = ""
+    var photographerUserKey = ""
     var items: [UIView] = []
-    var photographerProfileKeys = ["a": "a"]
     var didDismissFullImage = false {
         didSet {
             imageView.isHidden = false
@@ -132,9 +133,6 @@ class CardViewController: UIViewController {
         entryDatesDropDown.plainView.addGestureRecognizer(swipeRight)
         entryDatesDropDown.plainView.addGestureRecognizer(swipeLeft)
         nasaButton.isHidden = true
-        if photographerProfileKeys[target] != nil {
-            nasaButton.setImage(UIImage(named: "Profile/placeholderProfileImage"), for: .normal)
-        }
         nasaButton.imageView?.contentMode = .scaleAspectFill
         mapAreaImageView.isUserInteractionEnabled = false
         self.showAnimate()
@@ -159,6 +157,29 @@ class CardViewController: UIViewController {
         entryDatesButton.isHidden = journalEntryDateList == []
         unlockedDateLabel.isHidden = unlockedDate == ""
         featuredIcon.isHidden = featuredDate == ""
+        
+        if nasaMessierLinkTargets.contains(target) {
+            websiteLink = "https://www.nasa.gov/content/goddard/hubble-s-messier-catalog#images"
+        } else if spaceTelescopeLinkTargets.contains(target) {
+            websiteLink = "https://www.spacetelescope.org/images"
+        } else if catalogVC!.group == "Planets" && target != "Moon" {
+            websiteLink = "https://solarsystem.nasa.gov/planets/overview"
+        } else if adamBlockLinkTargets.contains(target) {
+            websiteLink = "https://www.adamblockphotos.com"
+        } else if deepSkyColorsLinkTargets.contains(target) {
+            websiteLink = "http://www.deepskycolors.com"
+        } else {
+            if galacticHunterLinkTargets.contains(target) {
+                photographerUserKey = "xpFKMfkORKFk67zqMeoE"
+            } else if profileLinkTargets[target] != nil {
+                photographerUserKey = profileLinkTargets[target]!
+            }
+        }
+        if websiteLink != "" {
+            nasaButton.setImage(UIImage(named: "Catalog/CardBacks/nasa"), for: .normal)
+        } else if photographerUserKey != "" {
+            nasaButton.setImage(UIImage(named: "Profile/placeholderProfileImage"), for: .normal)
+        }
     }
     
     @IBAction func showEntryDates(_ sender: Any) {
@@ -205,7 +226,9 @@ class CardViewController: UIViewController {
                     self.backgroundImageView.transform = CGAffineTransform.identity
                 }, completion: {_ in
                     self.closeButton.isHidden = false
-                    self.nasaButton.isHidden = false
+                    if self.websiteLink != "" || self.photographerUserKey != "" {
+                        self.nasaButton.isHidden = false
+                    }
                     self.mapAreaImageView.isUserInteractionEnabled = true
                     endNoInput()
                 })
@@ -234,19 +257,11 @@ class CardViewController: UIViewController {
         frontDisplayed = !frontDisplayed
     }
     @IBAction func nasaButtonTapped(_ sender: Any) {
-        if photographerProfileKeys[target] != nil {
-            performSegue(withIdentifier: "cardToProfile", sender: self)
-        } else {
-            var link = ""
-            if catalogVC!.group == "Messier" {
-                link = "https://www.nasa.gov/content/goddard/hubble-s-messier-catalog#images"
-            } else if catalogVC!.group == "Planets" {
-                link = "https://solarsystem.nasa.gov/planets/overview"
-            } else {
-                link = "https://www.spacetelescope.org/images"
-            }
-            let webURL = NSURL(string: link)!
+        if websiteLink != "" {
+            let webURL = NSURL(string: websiteLink)!
             application.open(webURL as URL)
+        } else if photographerUserKey != "" {
+            performSegue(withIdentifier: "cardToProfile", sender: self)
         }
     }
     @IBAction func mapButtonTapped(_ sender: Any) {
@@ -359,7 +374,7 @@ class CardViewController: UIViewController {
         }
         let vc3 = segue.destination as? ProfileViewController
         if vc3 != nil {
-            vc3?.keyForDifferentProfile = photographerProfileKeys[target]!
+            vc3?.keyForDifferentProfile = photographerUserKey
         }
     }
 }
