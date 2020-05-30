@@ -271,7 +271,7 @@ class ProfileCreationViewController: UIViewController, UINavigationControllerDel
             db.collection("userData").document(docKey).setData(["profileImageKey": imageKey, "compressedProfileImageKey": compressedImageKey], merge: true)
             dataRef.putData(imageData!, metadata: nil) {(metadata, error) in
                 if error != nil {
-                    print(error)
+                    print(error as Any)
                     return
                 } else {
                     print("done storing profile image")
