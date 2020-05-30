@@ -234,6 +234,8 @@ class ProfileCreationViewController: UIViewController, UINavigationControllerDel
             self.present(alertController, animated: true, completion: nil)
             return
         }
+        view.addSubview(formatLoadingIcon(loadingIcon))
+        loadingIcon.startAnimating()
         startNoInput()
         doneButton.isHidden = true
         logoutButton.isHidden = true
@@ -269,7 +271,7 @@ class ProfileCreationViewController: UIViewController, UINavigationControllerDel
             db.collection("userData").document(docKey).setData(["profileImageKey": imageKey, "compressedProfileImageKey": compressedImageKey], merge: true)
             dataRef.putData(imageData!, metadata: nil) {(metadata, error) in
                 if error != nil {
-                    print(error as Any)
+                    print(error)
                     return
                 } else {
                     print("done storing profile image")
@@ -277,14 +279,7 @@ class ProfileCreationViewController: UIViewController, UINavigationControllerDel
                 }
             }
             db.collection("basicUserData").document(docKey).setData(["compressedProfileImageKey": compressedImageKey], merge: true)
-            compressedDataRef.putData(compressedImageData!, metadata: nil) {(metadata, error) in
-                if error != nil {
-                    print(error as Any)
-                    return
-                } else {
-                    print("done storing compressed profile image")
-                }
-            }
+            compressedDataRef.putData(compressedImageData!, metadata: nil)
         } else {
             performSegue(withIdentifier: "profileCreationToCalendar", sender: self)
         }

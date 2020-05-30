@@ -192,9 +192,6 @@ class CardViewController: UIViewController {
         entryDatesDropDown.show()
     }
     @IBAction func featuredIconTapped(_ sender: Any) {
-        startNoInput()
-        view.addSubview(formatLoadingIcon(loadingIcon))
-        loadingIcon.startAnimating()
         db.collection("imageOfDayKeys").document(featuredDate).getDocument(completion: {(snapshot, Error) in
             if Error != nil {
                 print(Error!)
@@ -208,7 +205,6 @@ class CardViewController: UIViewController {
                     } else {
                         self.iodImageData = UIImage(data: data!)
                         self.performSegue(withIdentifier: "cardToImageOfDay", sender: self)
-                        loadingIcon.stopAnimating()
                     }
                 }
             }
