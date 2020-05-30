@@ -249,7 +249,8 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                         if let Error = Error {
                             print(Error)
                             if self.keyForDifferentProfile == "" {
-                                self.userImage.image = UIImage(named: "placeholder")
+                                self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")
+                                self.userImage.isUserInteractionEnabled = false
                                 let alertController = UIAlertController(title: "Error", message: "The profile image could not be loaded. It may have been deleted.", preferredStyle: .alert)
                                 let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
                                 alertController.addAction(defaultAction)
@@ -262,6 +263,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                         } else {
                             print("image set!")
                             self.userImage.image = UIImage(data: data!)
+                            self.userImage.isUserInteractionEnabled = true
                         }
                         if self.keyForDifferentProfile == "" {
                             self.editButton.isHidden = false
@@ -270,6 +272,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                     }
                 } else {
                     self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")
+                    self.userImage.isUserInteractionEnabled = false
                     if self.keyForDifferentProfile == "" {
                         self.editButton.isHidden = false
                     }
@@ -319,10 +322,11 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             }
         })
         NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
-        Timer.scheduledTimer(withTimeInterval: 3, repeats: false) {_ in
+        Timer.scheduledTimer(withTimeInterval: 2, repeats: false) {_ in
             if !isConnected && self.userData["profileImageKey"] as! String != "" {
                 if self.keyForDifferentProfile == "" {
-                    self.userImage.image = UIImage(named: "placeholder")
+                    self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")
+                    self.userImage.isUserInteractionEnabled = false
                     let alertController = UIAlertController(title: "Error", message: "Profile image cannot be loaded while offline", preferredStyle: .alert)
                     let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
                     alertController.addAction(defaultAction)
@@ -336,7 +340,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             }
         }
         if firstTime {
-            let alertController = UIAlertController(title: "Tutorial", message: "This is your profile! Add some information about yourself and save your equipment for easy access when entering new entries.\nYour bio, profile picture, social media links and stats will be visible to the public when one of your images is featured as Image of the Week!", preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Tutorial", message: "This is your profile! Add information about yourself and save your equipment for easy access when completing new entries.\nNote that your bio, profile picture, social media links and stats will be visible to the public when one of your images is featured as Image of the Week!", preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
             alertController.addAction(defaultAction)
             self.present(alertController, animated: true, completion: nil)
@@ -377,6 +381,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
         super.viewWillAppear(animated)
         if profileChanged {
             userImage.image = newImage
+            userImage.isUserInteractionEnabled = (userImage.image != nil)
             newImage = nil
             userName.text = (userData["userName"] as! String)
             userLocation.text = (userData["userLocation"] as! String)
@@ -486,7 +491,11 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             vc?.userKey = userKey
             vc?.userData = userData
             if userImage.image == UIImage(named: "Profile/placeholderProfileImage") {
-                vc?.image = nil
+                if userData["profileImageKey"] as! String != "" {
+                    vc?.image = UIImage(named: "placeholder")
+                } else {
+                    vc?.image = nil
+                }
             } else {
                 vc?.image = userImage.image
             }

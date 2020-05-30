@@ -12,6 +12,7 @@ import SwiftKeychainWrapper
 class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UITextFieldDelegate {
     @IBOutlet weak var background: UIImageView!
     @IBOutlet weak var bannerImage: UIImageView!
+    @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var unlockedLabel: UILabel!
     @IBOutlet weak var searchField: UITextField!
     @IBOutlet weak var resetButton: UIButton!
@@ -205,6 +206,7 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
             }
             if screenH > 1000 {//ipads
                 background.image = UIImage(named: "Catalog/background-ipad")
+                border.image = UIImage(named: "border-ipad")
                 unlockedLabel.font = unlockedLabel.font.withSize(22)
                 layout.itemSize = CGSize(width: cardCollectionView.bounds.width / 4 - 20, height: (cardCollectionView.bounds.width / 4 - 20) * 1.49)
                 layout.minimumLineSpacing = 50

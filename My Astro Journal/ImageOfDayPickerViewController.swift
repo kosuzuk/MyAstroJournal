@@ -341,7 +341,7 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
     }
     
     func checkData() {
-        if !isValidDate(date: dateToSetAsIod) {//|| !isEarlierDate(dateToday, dateToSetAsIod) {
+        if !isValidDate(date: dateToSetAsIod) || !isEarlierDate(dateToday, dateToSetAsIod) {
             let alertController = UIAlertController(title: "Error", message: "Invalid date", preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
             alertController.addAction(defaultAction)

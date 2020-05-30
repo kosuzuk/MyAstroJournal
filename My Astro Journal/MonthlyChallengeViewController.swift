@@ -27,7 +27,6 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
     @IBOutlet weak var challengeTargetImageView: UIImageView!
     @IBOutlet weak var targetLabel: UILabel!
     @IBOutlet weak var entriesTableView: UITableView!
-    @IBOutlet weak var bannerHCipad: NSLayoutConstraint!
     @IBOutlet weak var trophyWC: NSLayoutConstraint!
     @IBOutlet weak var trophyTopC: NSLayoutConstraint!
     @IBOutlet weak var targetImageViewLeadingCipad: NSLayoutConstraint!
@@ -57,11 +56,8 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
             OPTLeadingC.constant = -290
         } else if screenH > 1000 {
             border.image = UIImage(named: "border-ipad")
-            if screenH > 1120 {//ipad 11, 12.9
-                bannerHCipad.constant = 75
-                if screenH == 1366 {//ipad 12.9
-                    targetImageViewLeadingCipad.constant = 100
-                }
+            if screenH == 1366 {//ipad 12.9
+                targetImageViewLeadingCipad.constant = 100
             }
         }
         challengeTargetImageView.layer.borderColor = astroOrange
@@ -108,7 +104,7 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
                 let size = (self.targetLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
                 self.targetLabelWC.constant = size.width + 4
                 self.targetLabel.isHidden = false
-                self.formattedChallengeTarget = formatTarget(self.challengeData!["target"] as! String)
+                self.formattedChallengeTarget = self.challengeData!["formattedTarget"] as! String
                 db.collection("journalEntries").whereField("formattedTargets", arrayContains: self.formattedChallengeTarget).getDocuments(completion: {(snapshot, Error) in
                     if Error != nil {
                         print(Error!)
@@ -323,7 +319,7 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
                 print(Error!)
             } else {
                 self.entryToShowUserName = self.winnerNameLabel.text!
-                self.manageMoveToEntry(key: key, data: snapshot!.data(), targetToLookFor: formatTarget(self.challengeData!["lastMonthTarget"] as! String))
+                self.manageMoveToEntry(key: key, data: snapshot!.data(), targetToLookFor: self.challengeData!["lastMonthFormattedTarget"] as! String)
             }
         })
     }

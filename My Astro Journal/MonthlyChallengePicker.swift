@@ -13,6 +13,7 @@ class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate,
     @IBOutlet weak var seeChallengesButton: UIButton!
     @IBOutlet weak var seeEntriesButton: UIButton!
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var targetToDisplayField: UITextField!
     @IBOutlet weak var targetField: UITextField!
     @IBOutlet weak var monthYearField: UITextField!
     var challengesData: [[String: String]] = []
@@ -138,10 +139,24 @@ class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate,
         imageView.image = nil
     }
     @IBAction func setButtonTapped() {
-        if imageView.image == nil || targetField.text! == "" || monthYearField .text! == "" {
+        if imageView.image == nil || targetToDisplayField.text! == "" || targetField.text! == "" || monthYearField .text! == "" {
             return
         }
-        db.collection("monthlyChallenges").document(monthYearField.text!).setData(["imageKey": imageKey, "target": targetField.text!], merge: true)
+        let formattedTarget = formatTarget(targetField.text!)
+        var isCardTarget = false
+        for lst in [MessierTargets, NGCTargets, ICTargets, SharplessTargets, OthersTargets, PlanetTargets] {
+            if lst.contains(formattedTarget) {
+                isCardTarget = true
+            }
+        }
+        if !isCardTarget {
+            let alertController = UIAlertController(title: "Error", message: "Not a valid target (or there's no card associated with it)", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            self.present(alertController, animated: true, completion: nil)
+            return
+        }
+        db.collection("monthlyChallenges").document(monthYearField.text!).setData(["imageKey": imageKey, "target": targetToDisplayField.text!, "formattedTarget": formattedTarget], merge: true)
         storage.child(imageKey).putData(imageData!, metadata: nil) {(metadata, error) in
             if error != nil {
                 print(error as Any)
@@ -159,6 +174,6 @@ class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate,
                 nextMonth = "0" + nextMonth
             }
         }
-        db.collection("monthlyChallenges").document(nextMonth).setData(["lastMonthTarget": targetField.text!], merge: true)
+        db.collection("monthlyChallenges").document(nextMonth).setData(["lastMonthFormattedTarget": formattedTarget], merge: true)
     }
 }
