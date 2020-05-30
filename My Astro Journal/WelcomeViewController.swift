@@ -16,7 +16,7 @@ import DropDown
 
 let MessierTargets = ["M1", "M2", "M3", "M4", "M5", "M6", "M7", "M8", "M9", "M10", "M11", "M12", "M13", "M14", "M15", "M16", "M17", "M18", "M19", "M20", "M21", "M22", "M23", "M24", "M25", "M26", "M27", "M28", "M29", "M30", "M31", "M32", "M33", "M34", "M35", "M36", "M37", "M38", "M39", "M40", "M41", "M42", "M43", "M44", "M45", "M46", "M47", "M48", "M49", "M50", "M51", "M52", "M53", "M54", "M55", "M56", "M57", "M58", "M59", "M60", "M61", "M62", "M63", "M64", "M65", "M66", "M67", "M68", "M69", "M70", "M71", "M72", "M73", "M74", "M75", "M76", "M77", "M78", "M79", "M80", "M81", "M82", "M83", "M84",  "M85", "M86", "M87", "M88", "M89", "M90", "M91", "M92", "M93", "M94", "M95", "M96", "M97", "M98", "M99", "M100", "M101", "M102", "M103", "M104", "M105", "M106", "M107", "M108", "M109", "M110"]
 let NGCTargets = ["NGC104", "NGC246", "NGC281", "NGC292", "NGC457", "NGC869", "NGC884", "NGC1499", "NGC1501", "NGC1502", "NGC1535", "NGC1977", "NGC2024", "NGC2070", "NGC2080", "NGC2237", "NGC2244", "NGC2264", "NGC2359", "NGC2360", "NGC2362", "NGC2392", "NGC2440", "NGC3242", "NGC3372", "NGC3532", "NGC3628", "NGC4565", "NGC4567", "NGC4568", "NGC4631", "NGC4656", "NGC4676", "NGC4755", "NGC5128", "NGC5139", "NGC5466", "NGC5474", "NGC5907", "NGC6334", "NGC6369", "NGC6388", "NGC6541", "NGC6543", "NGC6723", "NGC6741", "NGC6752", "NGC6781", "NGC6826", "NGC6888", "NGC6946", "NGC6960", "NGC6974", "NGC6992", "NGC7000", "NGC7009", "NGC7023", "NGC7293", "NGC7380", "NGC7635", "NGC7662"]
-let ICTargets = ["IC59", "IC63", "IC405", "IC417", "IC434", "IC443", "IC1318", "IC1396", "IC1795", "IC1805", "IC1848", "IC2118", "IC2177", "IC2391", "IC2602", "IC2944", "IC4592", "IC5067", "IC5070", "IC5146"]
+let ICTargets = ["IC59", "IC63", "IC405", "IC417", "IC434", "IC443", "IC1318", "IC1396", "IC1795", "IC1805", "IC1848", "IC2118", "IC2391", "IC2602", "IC2944", "IC4592", "IC5067", "IC5070", "IC5146"]
 let SharplessTargets = ["SH2-68", "SH2-129", "SH2-136", "SH2-157", "SH2-240"]
 let OthersTargets = ["Milkyway", "JU1", "ARP188", "OU4", "XSS J16271-2423"]
 let GalaxyTargets = ["M31", "M32", "M33", "M49", "M51", "M58", "M59", "M60", "M61", "M63", "M64", "M65", "M66", "M74", "M77", "M81", "M82", "M83", "M84", "M85", "M86", "M87", "M88", "M89", "M90", "M91", "M94", "M95", "M96", "M98", "M99", "M100", "M101", "M102", "M104", "M105", "M106", "M108", "M109", "M110", "NGC292", "NGC3628", "NGC4565", "NGC4567", "NGC4568", "NGC4631", "NGC4656", "NGC4676", "NGC5128", "NGC5474", "NGC5907", "NGC6946", "Milkyway", "ARP188"]
@@ -39,7 +39,7 @@ let spaceTelescopeLinkTargets = Set(["M17", "M18", "M25", "M29", "M36", "M38", "
 let adamBlockLinkTargets = ["NGC1535", "SH2-68", "SH2-136"]
 let deepSkyColorsLinkTargets = ["SH2-240", "IC4592"]
 let galacticHunterLinkTargets = Set(["M8", "M11", "M12", "M13", "M16", "M20", "M26", "M27", "M31", "M32", "M33", "M34", "M35", "M37", "M39", "M42", "M43", "M45", "M59", "M60", "M65", "M66", "M67", "M74", "M78", "M95", "M96", "M101", "M103", "M104", "M105", "M106", "NGC281", "NGC869", "NGC884", "NGC1499", "NGC1977", "NGC2024", "NGC2237", "NGC2244", "NGC2264", "NGC2359", "NGC3628", "NGC6888", "NGC6960", "NGC7000", "NGC7023", "NGC7293", "NGC7380", "NGC7635", "IC434", "IC443", "IC1805", "IC2118", "IC5146", "IC1795", "Milkyway", "JU1", "NGC5474", "IC1318", "XSS J16271-2423"])
-let profileLinkTargets = ["NGC2070": "x", "NGC6992": "x", "IC1396": "x", "IC1848": "x", "Moon": "x", "SH2-129": "x", "OU4": "x"]
+let profileLinkTargets = ["NGC2070": "x", "NGC6992": "x", "IC1396": "x", "IC1848": "x", "IC2177": "x", "Moon": "x", "SH2-129": "x", "OU4": "x"]
 
 let Pack1Targets = Set(["NGC457", "NGC1501", "NGC4567", "NGC4568", "SH2-129", "SH2-157", "NGC4676", "NGC6334", "IC417", "IC1795", "IC2177", "IC2944", "IC4592"])
 let Pack2Targets = Set(["Sun", "Milkyway", "SH2-240", "JU1", "ARP188", "NGC5474", "NGC2440", "NGC7009", "NGC7662", "IC1318", "NGC4656", "XSS J16271-2423"])
@@ -71,6 +71,7 @@ let screenH = UIScreen.main.bounds.height
 let monthNames = ["January", "Feburary", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 var firstTime = false
 var entryEditFirstTime = false
+var isConnected = false
 var dateToday = ""
 var featuredImageDate = ""
 let adminEmail = "nevadaastrophotography@gmail.com"

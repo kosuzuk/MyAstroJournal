@@ -478,7 +478,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
                 loadingIcon.stopAnimating()
                 self.navigationController?.popToRootViewController(animated: true)
             }
-            compressedDataRef.delete {error in}
+            compressedDataRef.delete()
         }
     }
 }

@@ -147,17 +147,7 @@ class CardViewController: UIViewController {
         unlockedDateLabelTrailingCipad.constant = -(imageViewH * 0.14) + size.width / 2
         unlockedDateLabelBottomCipad.constant = -(imageViewH * 0.13) + size.height / 2
     }
-    override func viewDidAppear(_ animated: Bool) {
-        adjustUnlockedDateLabelPos()
-        nasaButtonTopC.constant = imageView.bounds.height * 0.465
-        if screenH < 670 {
-            nasaButtonTopC.constant -= 10
-        }
-        nasaButtonTrailingC.constant = -imageView.bounds.width * 0.06
-        entryDatesButton.isHidden = journalEntryDateList == []
-        unlockedDateLabel.isHidden = unlockedDate == ""
-        featuredIcon.isHidden = featuredDate == ""
-        
+    func checkPhotographLogo() {
         if nasaMessierLinkTargets.contains(target) {
             websiteLink = "https://www.nasa.gov/content/goddard/hubble-s-messier-catalog#images"
         } else if spaceTelescopeLinkTargets.contains(target) {
@@ -184,6 +174,18 @@ class CardViewController: UIViewController {
         } else if photographerUserKey != "" {
             nasaButton.setImage(UIImage(named: "Profile/placeholderProfileImage"), for: .normal)
         }
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        adjustUnlockedDateLabelPos()
+        nasaButtonTopC.constant = imageView.bounds.height * 0.465
+        if screenH < 670 {
+            nasaButtonTopC.constant -= 10
+        }
+        nasaButtonTrailingC.constant = -imageView.bounds.width * 0.06
+        entryDatesButton.isHidden = journalEntryDateList == []
+        unlockedDateLabel.isHidden = unlockedDate == ""
+        featuredIcon.isHidden = featuredDate == ""
+        checkPhotographLogo()
     }
     
     @IBAction func showEntryDates(_ sender: Any) {
@@ -290,25 +292,31 @@ class CardViewController: UIViewController {
     func moveL(_: Bool) {
         for item in items {item.frame.origin.x -= screenW * 2}
         nasaButton.isHidden = true
+        websiteLink = ""
+        photographerUserKey = ""
         mapAreaImageView.isUserInteractionEnabled = false
         catalogVC!.swipeDir = "right"
         UIView.animate(withDuration: 0.2, animations: {
             for item in self.items {item.frame.origin.x += screenW}
         }, completion: {_ in
-            self.frontDisplayed = true
             self.adjustUnlockedDateLabelPos()
+            self.checkPhotographLogo()
+            self.frontDisplayed = true
         })
     }
     func moveR(_: Bool) {
         for item in items {item.frame.origin.x += screenW * 2}
         nasaButton.isHidden = true
+        websiteLink = ""
+        photographerUserKey = ""
         mapAreaImageView.isUserInteractionEnabled = false
         catalogVC!.swipeDir = "left"
         UIView.animate(withDuration: 0.2, animations: {
             for item in self.items {item.frame.origin.x -= screenW}
         }, completion: {_ in
-            self.frontDisplayed = true
             self.adjustUnlockedDateLabelPos()
+            self.checkPhotographLogo()
+            self.frontDisplayed = true
         })
     }
     @IBAction func cardSwiped(_ gesture: UIGestureRecognizer) {

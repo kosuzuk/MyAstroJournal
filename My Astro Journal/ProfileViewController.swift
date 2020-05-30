@@ -260,6 +260,9 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                                 let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
                                 alertController.addAction(defaultAction)
                                 self.present(alertController, animated: true, completion: nil)
+                            } else {
+                                self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")
+                                self.userImage.isUserInteractionEnabled = false
                             }
                         } else {
                             print("image set!")

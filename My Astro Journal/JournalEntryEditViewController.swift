@@ -81,6 +81,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
     var selectedEntryInd = 0
     var formattedTargetsList: [String]? = nil
     var entryData: Dictionary<String, Any> = [:]
+    var overwriteEntry = false
     let userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
     var userData: Dictionary<String, Any> = [:]
     var firstJournalEntry = false
@@ -159,6 +160,10 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
                 deleteEntryLeadingCipad.constant = 40
             }
         }
+        acquisitionField.autocapitalizationType = .none
+        acquisitionField.autocorrectionType = .yes
+        memoriesField.autocapitalizationType = .none
+        memoriesField.autocorrectionType = .yes
         let monthInt = Int(entryDate.prefix(2))!
         let monthStr = monthNames[monthInt - 1]
         dateField.text = monthStr + " " + String(Int(entryDate.prefix(4).suffix(2))!) + " " + String(entryDate.suffix(4))
@@ -283,10 +288,12 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
             }
             deleteButton.isHidden = false
         }
-        acquisitionField.autocapitalizationType = .none
-        acquisitionField.autocorrectionType = .yes
-        memoriesField.autocapitalizationType = .none
-        memoriesField.autocorrectionType = .yes
+        if overwriteEntry {
+            let alertController = UIAlertController(title: "Warning!", message: "Could not get other journal entry data. Entering this journal will overwrite the other entries for this day.", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
         if entryEditFirstTime {
             let alertController = UIAlertController(title: "Tutorial", message: "First, add the object's name on the top left, the constellation should be recognized automatically! Then, input the time, location, equipment used, and write down your memories from the night. Check Observed if you have seen the object through an eyepiece, and Photographed if you have captured the target and are proud of the result! Besides your final image, you can also add 3 extra photographs from the night. ", preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
@@ -322,6 +329,12 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         setAutoComp(telescopeField, eqData["telescopes"]!, 2)
         setAutoComp(mountField, eqData["mounts"]!, 2)
         setAutoComp(cameraField, eqData["cameras"]!, 2)
+        if !isConnected {
+            let alertController = UIAlertController(title: "Warning", message: "Image data cannot be updated while offline", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         activeField?.resignFirstResponder()
@@ -685,18 +698,6 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         }
     }
     func processDone() {
-        attachImageButton.isHidden = true
-        doneButton.isHidden = true
-        deleteButton.isHidden = true
-        view.addSubview(formatLoadingIcon(loadingIcon))
-        loadingIcon.startAnimating()
-        let constellation = constellationField.text!
-        let locations = processInput(inp: locationField.text!)
-        for location in locations {
-            if !locationsVisited.contains(location) {
-                locationsVisited.append(location)
-            }
-        }
         if !photographedSelected {
             mainImageKey = ""
             mainImage = nil
@@ -704,6 +705,60 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
             calImageKey = ""
             calImage = nil
             calImageData = nil
+        }
+        var addedMainImageKey = ""
+        var removedMainImageKey = ""
+        let originalMainImageKey = entryData["mainImageKey"] as? String ?? ""
+        if mainImageKey != "" {
+            if originalMainImageKey == "" || mainImageUpdated {
+                addedMainImageKey = mainImageKey
+            }
+        } else if originalMainImageKey != "" {
+            removedMainImageKey = originalMainImageKey
+        }
+        var addedImageKeyList: [String] = []
+        var removedImageKeyList: [String] = []
+        var originalImageKeys = entryData["imageKeys"] as? [String] ?? []
+        let originalImageKeyNum = originalImageKeys.count
+        if originalImageKeyNum != 0 {
+            for imageKey in imageKeyList {
+                for i in 0...originalImageKeyNum - 1 {
+                    if imageKey == originalImageKeys[i] {
+                        originalImageKeys[i] = ""
+                        break
+                    }
+                    if i == originalImageKeyNum - 1 {
+                        addedImageKeyList.append(imageKey)
+                    }
+                }
+            }
+            for imageKey in originalImageKeys {
+                if imageKey != "" {
+                    removedImageKeyList.append(imageKey)
+                }
+            }
+        } else {
+            addedImageKeyList = imageKeyList
+        }
+        if !isConnected && (addedMainImageKey != "" || removedMainImageKey != "" || addedImageKeyList != [] || removedImageKeyList != []) {
+            let alertController = UIAlertController(title: "Error", message: "Image data cannot be updated while offline", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            self.present(alertController, animated: true, completion: nil)
+            return
+        }
+        attachImageButton.isHidden = true
+        doneButton.isHidden = true
+        deleteButton.isHidden = true
+        view.addSubview(formatLoadingIcon(loadingIcon))
+        loadingIcon.startAnimating()
+        
+        let constellation = constellationField.text!
+        let locations = processInput(inp: locationField.text!)
+        for location in locations {
+            if !locationsVisited.contains(location) {
+                locationsVisited.append(location)
+            }
         }
         let tel = telescopeField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
         let cam = cameraField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -728,12 +783,88 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         }
         db.collection("journalEntries").document(userKey + entryDate).setData(dataToPut, merge: false)
         
+        var calendarImageKeyDict: Dictionary<String, String> = userData["calendarImages"] as! Dictionary<String, String>
         var cardTargetDatesDict: Dictionary<String, Any> = userData["cardTargetDates"] as! Dictionary<String, [String]>
         var photoCardTargetDatesDict: Dictionary<String, Any> = userData["photoCardTargetDates"] as! Dictionary<String, [String]>
         var photoTargetNumDict: Dictionary<String, Any> = userData["photoTargetNum"] as! Dictionary<String, Int>
         var obsTargetNumDict: Dictionary<String, Any> = userData["obsTargetNum"] as! Dictionary<String, Int>
         let totalHours = userData["totalHours"] as! Int
 
+        func manageCalendarImages() {
+            var existingCalImageKey = calImageKey
+            if existingCalImageKey == "" {
+                existingCalImageKey = ((userData["calendarImages"] as! [String: String])[entryDate] ?? "")
+            }
+            let calImageDataRef: StorageReference = storage.child(existingCalImageKey)
+            //check previous entries in the same day for main image
+            if selectedEntryInd != 0 {
+                for i in 0...selectedEntryInd - 1 {
+                    if (entryList[i]["mainImageKey"] as! String) != "" {
+                        return
+                    }
+                }
+            }
+            cvc?.imageChangedDate = entryDate
+            func setCalendarImageKeyData() {
+                //store image key as calendar image key and return to previous page
+                calendarImageKeyDict[entryDate] = calImageKey
+            }
+            //use current main image
+            if mainImageKey != "" {
+                cvc?.newImage = calImage
+                calImageDataRef.putData(calImageData!, metadata: nil)
+                setCalendarImageKeyData()
+                return
+            }
+            //check later entries in the same day for main image
+            if entryList.count > selectedEntryInd + 1 {
+                var imageKey = ""
+                for i in selectedEntryInd + 1..<entryList.count {
+                    //main image found
+                    if (entryList[i]["mainImageKey"] as! String) != "" {
+                        imageKey = entryList[i]["mainImageKey"] as! String
+                        break
+                    }
+                }
+                if imageKey != "" {
+                    //get image data from db
+                    let imageRef = storage.child(imageKey)
+                    imageRef.getData(maxSize: imgMaxByte) {data, Error in
+                        if let Error = Error {
+                            print(Error)
+                            return
+                        } else {
+                            let processResCompressed = processImageAndResize(inpImg: (UIImage(data: data!)!), resizeTo: CGSize(width: calCellSize, height: calCellSize), clip: true)
+                            calImageDataRef.putData(processResCompressed![1] as! Data, metadata: nil)
+                            self.cvc?.newImage = (processResCompressed![0] as! UIImage)
+                            self.calImageKey = calendarImageKeyDict[self.entryDate]!
+                            setCalendarImageKeyData()
+                            return
+                        }
+                    }
+                //no main image in later entries
+                } else {
+                    calImageDataRef.delete()
+                    cvc?.newImage = UIImage(named: "Calendar/placeholder")
+                    setCalendarImageKeyData()
+                    return
+                }
+            //there are no later entries
+            } else {
+                calImageDataRef.delete()
+                cvc?.newImage = UIImage(named: "Calendar/placeholder")
+                setCalendarImageKeyData()
+                return
+            }
+        }
+        if addedMainImageKey != "" || removedMainImageKey != "" {
+            manageCalendarImages()
+        //first entry for this day
+        } else if entryData.count == 0 && entryList.count == 0 {
+            calendarImageKeyDict[entryDate] = ""
+            cvc?.imageChangedDate = entryDate
+            cvc?.newImage = UIImage(named: "Calendar/placeholder")
+        }
         func cardListContainsTarget(_ target: String) -> Bool {
             for lst in [MessierTargets, NGCTargets, ICTargets, SharplessTargets, OthersTargets, PlanetTargets] {
                 if lst.contains(target) {return true}
@@ -815,6 +946,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         } else {
             newTotalHours += numHours - (entryData["numHours"] as! Int)
         }
+        userData["calendarImages"] = calendarImageKeyDict
         userData["numEntriesInDate"] = numEntriesInDate
         userData["locationsVisited"] = locationsVisited
         userData["cardTargetDates"] = cardTargetDatesDict
@@ -836,127 +968,14 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
             }
         }
         
-        var addedMainImageKey = ""
-        var removedMainImageKey = ""
-        let originalMainImageKey = entryData["mainImageKey"] as? String ?? ""
-        if mainImageKey != "" {
-            if originalMainImageKey == "" || mainImageUpdated {
-                addedMainImageKey = mainImageKey
-            }
-        } else if originalMainImageKey != "" {
-            removedMainImageKey = originalMainImageKey
-        }
-        var addedImageKeyList: [String] = []
-        var removedImageKeyList: [String] = []
-        var originalImageKeys = entryData["imageKeys"] as? [String] ?? []
-        let originalImageKeyNum = originalImageKeys.count
-        if originalImageKeyNum != 0 {
-            for imageKey in imageKeyList {
-                for i in 0...originalImageKeyNum - 1 {
-                    if imageKey == originalImageKeys[i] {
-                        originalImageKeys[i] = ""
-                        break
-                    }
-                    if i == originalImageKeyNum - 1 {
-                        addedImageKeyList.append(imageKey)
-                    }
-                }
-            }
-            for imageKey in originalImageKeys {
-                if imageKey != "" {
-                    removedImageKeyList.append(imageKey)
-                }
-            }
-        } else {
-            addedImageKeyList = imageKeyList
-        }
         //no change in image set
         if addedMainImageKey == "" && removedMainImageKey == "" && addedImageKeyList == [] && removedImageKeyList == [] {
-            //new first entry for this day
-            if entryData.count == 0 && entryList.count == 0 {
-                db.collection("userData").document(userKey).setData(["calendarImages": [entryDate: ""]], merge: true)
-                cvc?.imageChangedDate = entryDate
-                cvc?.newImage = UIImage(named: "Calendar/placeholder")
-            }
             navigationController?.popToRootViewController(animated: true)
             return
         } else {
-            var existingCalImageKey = calImageKey
-            if existingCalImageKey == "" {
-                existingCalImageKey = ((userData["calendarImages"] as! [String: String])[entryDate] ?? "")
-            }
-            let calImageDataRef: StorageReference = storage.child(existingCalImageKey)
-            func manageCalendarImages() {
-                //check previous entries in the same day for main image
-                if selectedEntryInd != 0 {
-                    for i in 0...selectedEntryInd - 1 {
-                        if (entryList[i]["mainImageKey"] as! String) != "" {
-                            self.navigationController?.popToRootViewController(animated: true)
-                            return
-                        }
-                    }
-                }
-                //no change in current entry's main image
-                if (entryData.count != 0 && originalMainImageKey == "" && mainImageKey == "") || (originalMainImageKey != "" && removedMainImageKey == "" && !mainImageUpdated) {
-                    self.navigationController?.popToRootViewController(animated: true)
-                    return
-                }
-                cvc?.imageChangedDate = entryDate
-                func finishManageCalendarImages() {
-                    //store image key as calendar image key and return to previous page
-                    db.collection("userData").document(userKey).setData(["calendarImages": [entryDate: calImageKey]], merge: true)
-                    self.navigationController?.popToRootViewController(animated: true)
-                }
-                //use current main image
-                if mainImageKey != "" {
-                    cvc?.newImage = calImage
-                    calImageDataRef.putData(calImageData!, metadata: nil)
-                    finishManageCalendarImages()
-                    return
-                }
-                //check later entries in the same day for main image
-                if entryList.count > selectedEntryInd + 1 {
-                    var imageKey = ""
-                    for i in selectedEntryInd + 1...entryList.count - 1 {
-                        //main image found
-                        if (entryList[i]["mainImageKey"] as! String) != "" {
-                            imageKey = entryList[i]["mainImageKey"] as! String
-                            break
-                        }
-                    }
-                    if imageKey != "" {
-                        //get image data from db
-                        let imageRef = storage.child(imageKey)
-                        imageRef.getData(maxSize: imgMaxByte) {data, Error in
-                            if let Error = Error {
-                                print(Error)
-                                return
-                            } else {
-                                let processResCompressed = processImageAndResize(inpImg: (UIImage(data: data!)!), resizeTo: CGSize(width: calCellSize, height: calCellSize), clip: true)
-                                calImageDataRef.putData(processResCompressed![1] as! Data, metadata: nil)
-                                self.cvc?.newImage = (processResCompressed![0] as! UIImage)
-                                self.calImageKey = ((self.userData["calendarImages"] as! [String: String])[self.entryDate]!)
-                                finishManageCalendarImages()
-                                return
-                            }
-                        }
-                        //no main image in later entries
-                    } else {
-                        calImageDataRef.delete {error in}
-                        cvc?.newImage = UIImage(named: "Calendar/placeholder")
-                        finishManageCalendarImages()
-                        return
-                    }
-                    //there are no later entries
-                } else {
-                    calImageDataRef.delete {error in}
-                    cvc?.newImage = UIImage(named: "Calendar/placeholder")
-                    finishManageCalendarImages()
-                    return
-                }
-            }
-            func storeImages(imagesRemoved: Bool) {
-                for i in 0...addedImageKeyList.count - 1 {
+            func storeImages() {
+                var numImagesPut = 0
+                for i in 0..<addedImageKeyList.count {
                     let imageKey = addedImageKeyList[i]
                     var imageData: Data? = nil
                     if imageKeyList.index(of: imageKey) == nil {
@@ -969,30 +988,9 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
                             print(error as Any)
                             return
                         } else {
-                            print("done storing new journal entry image #" + String(i))
-                            if i == addedImageKeyList.count - 1 {
-                                if imagesRemoved {
-                                    deleteImages()
-                                } else {
-                                    manageCalendarImages()
-                                }
-                                return
-                            }
-                        }
-                    }
-                }
-            }
-            func deleteImages() {
-                for i in 0...removedImageKeyList.count - 1 {
-                    let imageKey = removedImageKeyList[i]
-                    storage.child(imageKey).delete {error in
-                        if error != nil {
-                            print(error as Any)
-                            return
-                        } else {
-                            print("done deleting journal entry image #" + String(i))
-                            if i == removedImageKeyList.count - 1 {
-                                manageCalendarImages()
+                            numImagesPut += 1
+                            if numImagesPut == addedImageKeyList.count {
+                                self.navigationController?.popToRootViewController(animated: true)
                                 return
                             }
                         }
@@ -1007,15 +1005,22 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
                 }
             }
             if addedImageKeyList != [] {
-                storeImages(imagesRemoved: removedImageKeyList != [])
+                storeImages()
+                if removedImageKeyList != [] {
+                    for i in 0...removedImageKeyList.count - 1 {
+                        let imageKey = removedImageKeyList[i]
+                        storage.child(imageKey).delete()
+                    }
+                }
             } else {
                 //no extra images added, images removed
                 if removedImageKeyList != [] {
-                    deleteImages()
-                    //no extra images added, no images removed
-                } else {
-                    manageCalendarImages()
+                    for i in 0...removedImageKeyList.count - 1 {
+                        let imageKey = removedImageKeyList[i]
+                        storage.child(imageKey).delete()
+                    }
                 }
+                self.navigationController?.popToRootViewController(animated: true)
             }
         }
     }
@@ -1119,28 +1124,14 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         } else {
             //delete journal entry list document
             entryList = []
-            entryDoc.delete(completion: {error in
-                if error != nil {
-                    print(error as Any)
-                    return
-                } else {
-                    print("entry deleted")
-                }
-            })
+            entryDoc.delete()
         }
         var imageKeys = (entryData["imageKeys"] as! [String])
         let mainImageKey = (entryData["mainImageKey"] as! String)
         if mainImageKey != "" {imageKeys.append(mainImageKey)}
         //delete image data
         for imageKey in imageKeys {
-            storage.child(imageKey).delete {error in
-                if error != nil {
-                    print(error as Any)
-                    return
-                } else {
-                    print("image deleted")
-                }
-            }
+            storage.child(imageKey).delete()
         }
         //update user data
         var firstEntryDate = userData["firstJournalEntryDate"] as! String
@@ -1174,7 +1165,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         func finishUserDataUpdate() {
             if noCalImage {
                 calImageKeys[entryDate] = ""
-                calImageDataRef.delete() {error in}
+                calImageDataRef.delete()
                 cvc?.newImage = UIImage(named: "Calendar/placeholder")
             }
             if entryList.count == 0 {
@@ -1216,14 +1207,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
             userData["photoTargetNum"] = photoTargetNumDict
             userData["obsTargetNum"] = obsTargetNumDict
             userData["totalHours"] = newTotalHours
-            db.collection("userData").document(userKey).setData(userData, merge: false) {err in
-                if let err = err {
-                    print("Error updating user Data: \(err)")
-                } else {
-                    print("updated user data")
-                    self.navigationController?.popToRootViewController(animated: true)
-                }
-            }
+            db.collection("userData").document(userKey).setData(userData, merge: false)
             if featuredDate != "" {
                 deleteIodData()
             }
@@ -1233,11 +1217,14 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
                     db.collection("imageOfDayKeys").document(entryList[i]["featuredDate"] as! String).setData(["journalEntryInd": i], merge: true)
                 }
             }
+            Timer.scheduledTimer(withTimeInterval: 0.8, repeats: false) {_ in
+                self.navigationController?.popToRootViewController(animated: true)
+            }
         }
         var changeCalendarImage = true
         if entryList.count == 0 {
             calImageKeys[entryDate] = nil
-            calImageDataRef.delete {error in}
+            calImageDataRef.delete()
             cvc?.imageChangedDate = entryDate
             cvc?.newImage = nil
             changeCalendarImage = false

@@ -84,7 +84,6 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
         bigImageView.layer.borderWidth = 2
         bigImageView.layer.borderColor = astroOrange
         editButton.isHidden = true
-        imageCollectionView.isHidden = true
         featuredButton.isHidden = true
         
         entryData = entryList[selectedEntryInd]
@@ -137,22 +136,32 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
         }
         let mainImageKey = entryData["mainImageKey"] as! String
         if mainImageKey != "" {
-            let imageRef = storage.child(mainImageKey)
-            imageRef.getData(maxSize: imgMaxByte) {data, Error in
-                if let Error = Error {
-                    print(Error)
-                    let alertController = UIAlertController(title: "Error", message: "The main image could not be loaded. It may have been deleted.", preferredStyle: .alert)
-                    let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-                    alertController.addAction(defaultAction)
-                    self.present(alertController, animated: true, completion: nil)
-                    self.entryData["mainImage"] = UIImage(named: "placeholder")
-                    mainImagePulled = true
-                    checkFinishedPullingImages()
-                } else {
-                    self.bigImageView.image = UIImage(data: data!)
-                    self.entryData["mainImage"] = UIImage(data: data!)
-                    mainImagePulled = true
-                    checkFinishedPullingImages()
+            if !isConnected {
+                let alertController = UIAlertController(title: "Error", message: "Images cannot be loaded while offline", preferredStyle: .alert)
+                let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                alertController.addAction(defaultAction)
+                self.present(alertController, animated: true, completion: nil)
+                self.entryData["mainImage"] = UIImage(named: "placeholder")
+                mainImagePulled = true
+                checkFinishedPullingImages()
+            } else {
+                let imageRef = storage.child(mainImageKey)
+                imageRef.getData(maxSize: imgMaxByte) {data, Error in
+                    if let Error = Error {
+                        print(Error)
+                        let alertController = UIAlertController(title: "Error", message: "The main image could not be loaded. It may have been deleted.", preferredStyle: .alert)
+                        let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                        alertController.addAction(defaultAction)
+                        self.present(alertController, animated: true, completion: nil)
+                        self.entryData["mainImage"] = UIImage(named: "placeholder")
+                        mainImagePulled = true
+                        checkFinishedPullingImages()
+                    } else {
+                        self.bigImageView.image = UIImage(data: data!)
+                        self.entryData["mainImage"] = UIImage(data: data!)
+                        mainImagePulled = true
+                        checkFinishedPullingImages()
+                    }
                 }
             }
         } else {
@@ -161,24 +170,34 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
         }
         let imageKeyList = entryData["imageKeys"] as! [String]
         var imageList = Dictionary<Int, UIImage>()
-        if imageKeyList != [] {
-            for (i, imageKey) in imageKeyList.enumerated() {
-                let imageRef = storage.child(imageKey)
-                imageRef.getData(maxSize: imgMaxByte) {data, Error in
-                    var img: UIImage? = nil
-                    if let Error = Error {
-                        print(Error)
-                        img = UIImage(named: "placeholder")
-                    } else {
-                        img = UIImage(data: data!)
-                    }
-                    let cell = self.imageCollectionView.cellForItem(at: NSIndexPath(row: i, section: 0) as IndexPath) as! JournalEntryImageCell
-                    cell.imageView.image = img!
+        if imageKeyList != [] && !segueFromMonthlyChallenge {
+            if !isConnected {
+                let img = UIImage(named: "placeholder")
+                for i in 0..<imageKeyList.count {
                     imageList[i] = img!
-                    if imageList.count == imageKeyList.count {
-                        self.entryData["imageList"] = imageList
-                        imagesPulled = true
-                        checkFinishedPullingImages()
+                }
+                self.entryData["imageList"] = imageList
+                imagesPulled = true
+                checkFinishedPullingImages()
+            } else {
+                for (i, imageKey) in imageKeyList.enumerated() {
+                    let imageRef = storage.child(imageKey)
+                    imageRef.getData(maxSize: imgMaxByte) {data, Error in
+                        var img: UIImage? = nil
+                        if let Error = Error {
+                            print(Error)
+                            img = UIImage(named: "placeholder")
+                        } else {
+                            img = UIImage(data: data!)
+                        }
+                        let cell = self.imageCollectionView.cellForItem(at: NSIndexPath(row: i, section: 0) as IndexPath) as! JournalEntryImageCell
+                        cell.imageView.image = img!
+                        imageList[i] = img!
+                        if imageList.count == imageKeyList.count {
+                            self.entryData["imageList"] = imageList
+                            imagesPulled = true
+                            checkFinishedPullingImages()
+                        }
                     }
                 }
             }

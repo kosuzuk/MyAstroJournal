@@ -145,25 +145,30 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
             cvc?.newEntryIndexPathRow = curRow
             let docRef = db.collection("journalEntries").document(userKey + cell.entryDate)
             docRef.getDocument(completion: {(QuerySnapshot, Error) in
-                if Error != nil {
-                    print(Error!)
+                var data: [String: Any]?
+                if Error == nil {
+                    data = QuerySnapshot!.data()
                 } else {
-                    let data = QuerySnapshot!.data()
-                    var entryList: [[String: Any]]
-                    var formattedTargetsList: [String]
-                    if data == nil {
-                        entryList = []
-                        formattedTargetsList = []
-                    } else {
-                        entryList = data!["data"] as! [[String: Any]]
-                        formattedTargetsList = data!["formattedTargets"] as! [String]
+                    data = nil
+                    //show overwrite warning in entry edit bc could not get other entry data
+                    if cell.imageView.image != nil {
+                        self.cvc?.overwriteEntry = true
                     }
-                    self.cvc?.selectedEntryList = entryList
-                    self.cvc?.formattedTargetsList = formattedTargetsList
-                    self.cvc?.performSegue(withIdentifier: "calendarToEdit", sender: self)
-                    self.calendarView.isUserInteractionEnabled = true
-                    return
                 }
+                var entryList: [[String: Any]]
+                var formattedTargetsList: [String]
+                if data == nil {
+                    entryList = []
+                    formattedTargetsList = []
+                } else {
+                    entryList = data!["data"] as! [[String: Any]]
+                    formattedTargetsList = data!["formattedTargets"] as! [String]
+                }
+                self.cvc?.selectedEntryList = entryList
+                self.cvc?.formattedTargetsList = formattedTargetsList
+                self.cvc?.performSegue(withIdentifier: "calendarToEdit", sender: self)
+                self.calendarView.isUserInteractionEnabled = true
+                return
             })
         } else if cell.entryDate != "" {
             calendarView.isUserInteractionEnabled = false
@@ -171,6 +176,7 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
             docRef.getDocument(completion: {(QuerySnapshot, Error) in
                 if Error != nil {
                     print(Error!)
+                    self.calendarView.isUserInteractionEnabled = true
                 } else {
                     let entryList = QuerySnapshot!.data()!["data"] as! [Dictionary<String, Any>]
                     self.cvc?.selectedEntryList = entryList
