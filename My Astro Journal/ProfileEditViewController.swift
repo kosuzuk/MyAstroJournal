@@ -208,6 +208,12 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
             removeImageButton.isHidden = false
             imageWasPresent = true
         }
+        if !isConnected {
+            let alertController = UIAlertController(title: "Warning", message: "Image data cannot be changed while offline", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
     }
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         activeField?.resignFirstResponder()
@@ -317,6 +323,27 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
             self.present(alertController, animated: true, completion: nil)
             return
         }
+        var imageState : String
+        if ((!imageWasPresent && !imageAdded) || (imageWasPresent && !imageAdded && imageView.image != nil)) {
+            imageState = "no change"
+        } else if (!imageWasPresent && imageAdded) {
+            imageState = "image added"
+        } else if (imageWasPresent && imageView.image == nil) {
+            imageState = "image removed"
+        } else if (imageWasPresent && imageAdded) {
+            imageState = "image updated"
+        } else {
+            print("Error! should not reach this clause!")
+            return
+        }
+        if !isConnected && imageState != "no change" {
+            let alertController = UIAlertController(title: "Error", message: "Image data cannot be changed while offline", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            self.present(alertController, animated: true, completion: nil)
+            return
+        }
+        startNoInput()
         view.addSubview(formatLoadingIcon(loadingIcon))
         loadingIcon.startAnimating()
         doneButton.isHidden = true
@@ -355,19 +382,6 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
         let eqDict = ["telescopes": telescopes, "mounts": mounts, "cameras": cameras]
         let newKeyValues = ["profileImageKey": userData["profileImageKey"]!, "compressedProfileImageKey": userData["compressedProfileImageKey"]!, "userName": newUserName, "userLocation": locationField.text!, "favoriteObject": favObjField.text!, "websiteName": websiteField.text!, "instaUsername": instaField.text!, "youtubeChannel": youtubeField.text!, "fbPage": fbField.text!, "userBio": bioField.text!, "locationsVisited": locationsVisited, "userEquipment": eqDict] as [String : Any]
         var newUserData = userData.merging(newKeyValues) { (_, new) in new }
-        var imageState : String
-        if ((!imageWasPresent && !imageAdded) || (imageWasPresent && !imageAdded && imageView.image != nil)) {
-            imageState = "no change"
-        } else if (!imageWasPresent && imageAdded) {
-            imageState = "image added"
-        } else if (imageWasPresent && imageView.image == nil) {
-            imageState = "image removed"
-        } else if (imageWasPresent && imageAdded) {
-            imageState = "image updated"
-        } else {
-            print("Error! should not reach this clause!")
-            return
-        }
         if (userData["userName"] as! String) != newUserName {
             KeychainWrapper.standard.set(newUserName, forKey: "userName")
             db.collection("basicUserData").document(userKey).setData(["userName": newUserName], merge: true)
@@ -394,27 +408,21 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
                 db.collection("userData").document(key).setData(["userName": newUserName, "websiteName": websiteField.text!, "instaUsername": instaField.text!, "youtubeChannel": youtubeField.text!, "fbPage": fbField.text!, "userBio": bioField.text!], merge: true)
             }
         }
-        db.collection("userData").document(userKey).setData(newUserData, merge: true) {err in
-            if let err = err {
-                print("Error updating user Data: \(err)")
-            } else {
-                if imageState == "no change" {
-                    self.pvc!.userData = newUserData
-                    if self.imageView.image == nil {
-                        self.pvc!.newImage = UIImage(named: "Profile/placeholderProfileImage")
-                    } else {
-                        self.pvc!.newImage = self.imageView.image
-                    }
-                    self.pvc!.pevc = nil
-                    loadingIcon.stopAnimating()
-                    self.navigationController?.popToRootViewController(animated: true)
-                }
-            }
-        }
+        db.collection("userData").document(userKey).setData(newUserData, merge: true)
         if imageState == "no change" {
+            pvc!.userData = newUserData
+            if imageView.image == nil {
+                pvc!.newImage = UIImage(named: "Profile/placeholderProfileImage")
+            } else {
+                pvc!.newImage = imageView.image
+            }
+            pvc!.pevc = nil
+            Timer.scheduledTimer(withTimeInterval: 0.8, repeats: false) {_ in
+                loadingIcon.stopAnimating()
+                self.navigationController?.popToRootViewController(animated: true)
+            }
             return
         }
-        
         //continue on if change in image view
         var imageKey = userData["profileImageKey"] as! String
         if imageKey == "" {
@@ -472,13 +480,11 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
                     db.collection("userData").document(key).setData(["profileImageKey": ""], merge: true)
                 }
             }
-            dataRef.delete { (error) in
-                print("done deleting image")
-                self.pvc!.pevc = nil
-                loadingIcon.stopAnimating()
-                self.navigationController?.popToRootViewController(animated: true)
-            }
+            dataRef.delete()
             compressedDataRef.delete()
+            self.pvc!.pevc = nil
+            loadingIcon.stopAnimating()
+            self.navigationController?.popToRootViewController(animated: true)
         }
     }
 }

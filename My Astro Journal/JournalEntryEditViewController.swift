@@ -81,7 +81,6 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
     var selectedEntryInd = 0
     var formattedTargetsList: [String]? = nil
     var entryData: Dictionary<String, Any> = [:]
-    var overwriteEntry = false
     let userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
     var userData: Dictionary<String, Any> = [:]
     var firstJournalEntry = false
@@ -288,8 +287,8 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
             }
             deleteButton.isHidden = false
         }
-        if overwriteEntry {
-            let alertController = UIAlertController(title: "Warning!", message: "Could not get other journal entry data. Entering this journal will overwrite the other entries for this day.", preferredStyle: .alert)
+        if !isConnected {
+            let alertController = UIAlertController(title: "Warning", message: "Image data cannot be changed while offline", preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
             alertController.addAction(defaultAction)
             self.present(alertController, animated: true, completion: nil)
@@ -329,12 +328,6 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         setAutoComp(telescopeField, eqData["telescopes"]!, 2)
         setAutoComp(mountField, eqData["mounts"]!, 2)
         setAutoComp(cameraField, eqData["cameras"]!, 2)
-        if !isConnected {
-            let alertController = UIAlertController(title: "Warning", message: "Image data cannot be updated while offline", preferredStyle: .alert)
-            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-            alertController.addAction(defaultAction)
-            self.present(alertController, animated: true, completion: nil)
-        }
     }
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         activeField?.resignFirstResponder()
@@ -741,7 +734,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
             addedImageKeyList = imageKeyList
         }
         if !isConnected && (addedMainImageKey != "" || removedMainImageKey != "" || addedImageKeyList != [] || removedImageKeyList != []) {
-            let alertController = UIAlertController(title: "Error", message: "Image data cannot be updated while offline", preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Error", message: "Image data cannot be changed while offline", preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
             alertController.addAction(defaultAction)
             self.present(alertController, animated: true, completion: nil)
@@ -750,6 +743,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         attachImageButton.isHidden = true
         doneButton.isHidden = true
         deleteButton.isHidden = true
+        startNoInput()
         view.addSubview(formatLoadingIcon(loadingIcon))
         loadingIcon.startAnimating()
         
@@ -970,7 +964,9 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         
         //no change in image set
         if addedMainImageKey == "" && removedMainImageKey == "" && addedImageKeyList == [] && removedImageKeyList == [] {
-            navigationController?.popToRootViewController(animated: true)
+            Timer.scheduledTimer(withTimeInterval: 0.8, repeats: false) {_ in
+                self.navigationController?.popToRootViewController(animated: true)
+            }
             return
         } else {
             func storeImages() {
@@ -1110,6 +1106,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         processDone()
     }
     func processDelete(_ alertAction: UIAlertAction) {
+        startNoInput()
         view.addSubview(formatLoadingIcon(loadingIcon))
         loadingIcon.startAnimating()
         formattedTarget = formatTarget(targetField.text!)

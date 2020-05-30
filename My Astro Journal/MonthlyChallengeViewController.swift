@@ -66,7 +66,11 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
         }
         challengeTargetImageView.layer.borderColor = astroOrange
         challengeTargetImageView.layer.borderWidth = 1
+        trophyLogo.isHidden = true
+        congratsToLabel.isHidden = true
         winnerNameLabel.isHidden = true
+        forWinningLabel.isHidden = true
+        seeWinningEntryButton.isHidden = true
         targetLabel.isHidden = true
         if challengeMonthToShow == "" {
             challengeMonthToShow = String(dateToday.prefix(2) + dateToday.suffix(4))
@@ -77,14 +81,13 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
             } else {
                 if snapshot!.data() == nil {return}
                 self.challengeData = snapshot!.data()
-                if (self.challengeData!["lastMonthWinnerName"] as? String ?? "") == "" {
-                    self.trophyLogo.isHidden = true
-                    self.congratsToLabel.isHidden = true
-                    self.forWinningLabel.isHidden = true
-                    self.seeWinningEntryButton.isHidden = true
-                } else {
+                if (self.challengeData!["lastMonthWinnerName"] as? String ?? "") != "" {
+                    self.trophyLogo.isHidden = false
+                    self.congratsToLabel.isHidden = false
                     self.winnerNameLabel.text = (self.challengeData!["lastMonthWinnerName"] as! String)
                     self.winnerNameLabel.isHidden = false
+                    self.forWinningLabel.isHidden = false
+                    self.seeWinningEntryButton.isHidden = false
                 }
                 if self.challengeData!["imageKey"] != nil {
                     storage.child(self.challengeData!["imageKey"] as! String).getData(maxSize: imgMaxByte) {data, Error in

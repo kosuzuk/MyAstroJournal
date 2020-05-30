@@ -102,14 +102,14 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             if field != "" {numIconsPresent += 1}
         }
         if numIconsPresent == 1 {
-            websiteLeadingC.constant = websiteLeadingCDefault + iconW + iconGap + iconW / 2
-            websiteLeadingCipad.constant = websiteLeadingCipadDefault + iconW + iconGap + iconW / 2
+            websiteLeadingC.constant = websiteLeadingCDefault + iconW * 1.5 + iconGap * 1.5
+            websiteLeadingCipad.constant = websiteLeadingCDefault + iconW * 1.5 + iconGap * 1.5
         } else if numIconsPresent == 2 {
             websiteLeadingC.constant = websiteLeadingCDefault + iconW + iconGap
             websiteLeadingCipad.constant = websiteLeadingCipadDefault + iconW + iconGap
         } else if numIconsPresent == 3 {
-            websiteLeadingC.constant = websiteLeadingCDefault + iconW / 2
-            websiteLeadingCipad.constant = websiteLeadingCipadDefault + iconW / 2
+            websiteLeadingC.constant = websiteLeadingCDefault + iconW / 2 + iconGap / 2
+            websiteLeadingCipad.constant = websiteLeadingCipadDefault + iconW / 2 + iconGap / 2
         } else if numIconsPresent == 4 {
             websiteLeadingC.constant = websiteLeadingCDefault
             websiteLeadingCipad.constant = websiteLeadingCipadDefault
@@ -230,12 +230,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
         fbButton.isHidden = true
         userName.adjustsFontSizeToFitWidth = true
         userName.minimumScaleFactor = 0.6
-        if firstTime {
-            let alertController = UIAlertController(title: "Tutorial", message: "This is your profile! Add some information about yourself and save your equipment for easy access when entering new entries.\nYour bio, profile picture, social media links and stats will be visible to the public when one of your images is featured as Image of the Week!", preferredStyle: .alert)
-            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-            alertController.addAction(defaultAction)
-            self.present(alertController, animated: true, completion: nil)
-        }
         let docRef = db.collection("userData").document(userKey)
         docRef.getDocument(completion: {(QuerySnapshot, Error) in
             if Error != nil {
@@ -260,6 +254,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                                 let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
                                 alertController.addAction(defaultAction)
                                 self.present(alertController, animated: true, completion: nil)
+                                self.editButton.isHidden = false
                             } else {
                                 self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")
                                 self.userImage.isUserInteractionEnabled = false
@@ -324,6 +319,28 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             }
         })
         NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        Timer.scheduledTimer(withTimeInterval: 3, repeats: false) {_ in
+            if !isConnected && self.userData["profileImageKey"] as! String != "" {
+                if self.keyForDifferentProfile == "" {
+                    self.userImage.image = UIImage(named: "placeholder")
+                    let alertController = UIAlertController(title: "Error", message: "Profile image cannot be loaded while offline", preferredStyle: .alert)
+                    let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                    alertController.addAction(defaultAction)
+                    self.present(alertController, animated: true, completion: nil)
+                    self.editButton.isHidden = false
+                } else {
+                    self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")
+                    self.userImage.isUserInteractionEnabled = false
+                }
+                loadingIcon.stopAnimating()
+            }
+        }
+        if firstTime {
+            let alertController = UIAlertController(title: "Tutorial", message: "This is your profile! Add some information about yourself and save your equipment for easy access when entering new entries.\nYour bio, profile picture, social media links and stats will be visible to the public when one of your images is featured as Image of the Week!", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
         if keyForDifferentProfile != "" {
             return
         }
@@ -403,6 +420,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             circleTopCipad.constant = 60
             circleBottomCipad.constant = 60
         }
+        endNoInput()
     }
     @objc func willEnterForeground() {
         layOutSMIcons()

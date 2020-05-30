@@ -141,6 +141,7 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
                 let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
                 alertController.addAction(defaultAction)
                 self.present(alertController, animated: true, completion: nil)
+                self.bigImageView.image = UIImage(named: "placeholder")
                 self.entryData["mainImage"] = UIImage(named: "placeholder")
                 mainImagePulled = true
                 checkFinishedPullingImages()

@@ -35,11 +35,11 @@ let SharplessConst = [68: "Serpens", 129: "Cepheus", 136: "Cepheus", 157: "Cassi
 let OthersConst = ["JU1": "Cygnus", "ARP188": "Draco", "XSS J16271-2423": "Ophiuchus", "OU4": "Cepheus"]
 
 let nasaMessierLinkTargets = Set(["M1", "M2", "M3", "M4", "M5", "M7", "M9", "M10", "M15", "M19", "M22", "M28", "M30", "M46", "M49", "M51", "M53", "M54", "M56", "M57", "M61", "M62", "M63", "M64", "M68", "M69", "M70", "M71", "M72", "M75", "M76", "M77", "M79", "M80", "M81", "M82", "M83", "M84", "M85", "M86", "M87", "M89", "M90", "M91", "M92", "M94", "M99", "M100", "M102", "M107", "M110"])
-let spaceTelescopeLinkTargets = Set(["M17", "M18", "M25", "M29", "M36", "M38", "M41", "M47", "M48", "M50", "M52", "M55", "M58", "M73", "M88", "M93", "M98", "M108", "M109", "NGC104", "NGC292", "NGC2392", "NGC3372", "NGC4565", "NGC4631", "NGC5128", "NGC5139", "NGC6543", "NGC6946", "IC59", "IC63", "IC405", "IC5067", "IC5070", "NGC1501", "NGC4567", "NGC4568", "NGC4676", "NGC6334", "IC417", "IC2177", "IC2944", "Sun", "ARP 188", "NGC2440", "NGC7009", "NGC7662", "NGC4656", "NGC3532", "NGC4755", "NGC5466", "NGC6388", "NGC6541", "NGC6723", "NGC6752", "NGC2360", "NGC2362", "NGC246", "NGC6369", "NGC6741", "NGC6781", "NGC6826", "NGC2080", "NGC3242"])
+let spaceTelescopeLinkTargets = Set(["M17", "M18", "M25", "M29", "M36", "M38", "M41", "M47", "M48", "M50", "M52", "M55", "M58", "M73", "M88", "M93", "M98", "M108", "M109", "NGC104", "NGC292", "NGC2392", "NGC3372", "NGC4565", "NGC4631", "NGC5128", "NGC5139", "NGC6543", "NGC6946", "IC59", "IC63", "IC405", "IC5067", "IC5070", "NGC1501", "NGC4567", "NGC4568", "NGC4676", "NGC6334", "IC417", "IC2177", "IC2944", "Sun", "ARP 188", "NGC2440", "NGC7009", "NGC7662", "NGC4656", "NGC3532", "NGC4755", "NGC5466", "NGC6388", "NGC6541", "NGC6723", "NGC6752", "NGC2360", "NGC2362", "NGC246", "NGC6369", "NGC6741", "NGC6781", "NGC6826", "NGC2080", "NGC3242", "ARP188"])
 let adamBlockLinkTargets = ["NGC1535", "SH2-68", "SH2-136"]
 let deepSkyColorsLinkTargets = ["SH2-240", "IC4592"]
 let galacticHunterLinkTargets = Set(["M8", "M11", "M12", "M13", "M16", "M20", "M26", "M27", "M31", "M32", "M33", "M34", "M35", "M37", "M39", "M42", "M43", "M45", "M59", "M60", "M65", "M66", "M67", "M74", "M78", "M95", "M96", "M101", "M103", "M104", "M105", "M106", "NGC281", "NGC869", "NGC884", "NGC1499", "NGC1977", "NGC2024", "NGC2237", "NGC2244", "NGC2264", "NGC2359", "NGC3628", "NGC6888", "NGC6960", "NGC7000", "NGC7023", "NGC7293", "NGC7380", "NGC7635", "IC434", "IC443", "IC1805", "IC2118", "IC5146", "IC1795", "Milkyway", "JU1", "NGC5474", "IC1318", "XSS J16271-2423"])
-let profileLinkTargets = ["NGC2070": "x", "NGC6992": "x", "IC1396": "x", "IC1848": "x", "IC2177": "x", "Moon": "x", "SH2-129": "x", "OU4": "x"]
+let profileLinkTargets = ["M97": "x", "NGC2070": "x", "NGC6992": "x", "IC1396": "x", "IC1848": "x", "IC2177": "x", "Moon": "x", "SH2-129": "x", "OU4": "x"]
 
 let Pack1Targets = Set(["NGC457", "NGC1501", "NGC4567", "NGC4568", "SH2-129", "SH2-157", "NGC4676", "NGC6334", "IC417", "IC1795", "IC2177", "IC2944", "IC4592"])
 let Pack2Targets = Set(["Sun", "Milkyway", "SH2-240", "JU1", "ARP188", "NGC5474", "NGC2440", "NGC7009", "NGC7662", "IC1318", "NGC4656", "XSS J16271-2423"])
@@ -373,6 +373,7 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
     @IBOutlet weak var signUpPasswordField: UITextField!
     @IBOutlet weak var signUpPasswordConfirmField: UITextField!
     @IBOutlet weak var signUpButton: UIButton!
+    @IBOutlet weak var logInLabel: UILabel!
     @IBOutlet weak var logInEmailField: UITextField!
     @IBOutlet weak var logInPasswordField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
@@ -382,6 +383,7 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
     @IBOutlet weak var signUpButtonTrailingC: NSLayoutConstraint!
     @IBOutlet weak var loginButtonTrailingC: NSLayoutConstraint!
     @IBOutlet weak var forgotEmailTopC: NSLayoutConstraint!
+    @IBOutlet weak var scrollArrowLeadingC: NSLayoutConstraint!
     var activeField: UIView? = nil
     var userData: [String: Any]? = nil
     var email = ""
@@ -394,7 +396,9 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
         if screenH < 600 {//iphone SE, 5s
             welcomeLabelLeadingC.constant = 15
             signUpButtonTrailingC.constant = 4
+            logInLabel.font = UIFont(name: logInLabel.font.fontName, size: 14)
             loginButtonTrailingC.constant = 4
+            scrollArrowLeadingC.constant = 0
         } else if screenW < 400 {//iphone 8, 11
             welcomeLabelLeadingC.constant = 43
         } else if screenH > 1000 {//ipads

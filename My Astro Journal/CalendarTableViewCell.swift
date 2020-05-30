@@ -150,9 +150,10 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
                     data = QuerySnapshot!.data()
                 } else {
                     data = nil
-                    //show overwrite warning in entry edit bc could not get other entry data
                     if cell.imageView.image != nil {
-                        self.cvc?.overwriteEntry = true
+                        self.cvc?.preventOfflineOverwrite = true
+                        self.calendarView.isUserInteractionEnabled = true
+                        return
                     }
                 }
                 var entryList: [[String: Any]]
