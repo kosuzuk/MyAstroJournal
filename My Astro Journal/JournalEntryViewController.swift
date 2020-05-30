@@ -113,7 +113,7 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
         } else {
             profileButton.isHidden = true
         }
-        if !isAdmin {
+        if !isAdmin || !segueFromMonthlyChallenge {
             challengeWinnerButton.isHidden = true
         }
         memoriesField.text = (entryData["memories"] as! String)
