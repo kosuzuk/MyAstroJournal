@@ -294,7 +294,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
             self.present(alertController, animated: true, completion: nil)
         }
         if entryEditFirstTime {
-            let alertController = UIAlertController(title: "Tutorial", message: "First, add the object's name on the top left, the constellation should be recognized automatically! Then, input the time, location, equipment used, and write down your memories from the night. Check Observed if you have seen the object through an eyepiece, and Photographed if you have captured the target and are proud of the result! Besides your final image, you can also add 3 extra photographs from the night. ", preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Tutorial", message: "First, add the object's name on the top left, the constellation will be recognized automatically! Then, input the time, location, equipment used, and write down your memories from the night. Check the “Observed”box  if you have seen the object through an eyepiece, or the ”Photographed” box if you have captured the target and are proud of the result! You can add up to 3 extra photographs to your entry.", preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
             alertController.addAction(defaultAction)
             self.present(alertController, animated: true, completion: nil)

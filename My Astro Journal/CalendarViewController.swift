@@ -699,6 +699,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             let calendarCell = cell as! CalendarTableViewCell
             calendarCell.sunLabelLeadingC.constant = floor(calendarCell.bounds.width / 7) / 2 - calendarCell.sunLabelW / 2
         }
+        calendarsListView.reloadData()
     }
     @IBAction func pickerButtonTapped(_ sender: Any) {
         performSegue(withIdentifier: "calendarToPicker", sender: self)

@@ -185,7 +185,7 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
             }
         })
         if firstTime {
-            let alertController = UIAlertController(title: "Tutorial", message: "This is where you will find your collection of cards. Cards unlock after adding new entries with images you are proud of. In the future, each unlocked card will have their own page full of information!", preferredStyle: .alert)
+            let alertController = UIAlertController(title: "Tutorial", message: "This is where you will find a collection of cards. Cards unlock after adding new entries with images you are proud of. It’s your mission to unlock all the cards - good luck!", preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
             alertController.addAction(defaultAction)
             self.present(alertController, animated: true, completion: nil)
