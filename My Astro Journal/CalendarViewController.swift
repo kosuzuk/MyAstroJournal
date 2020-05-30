@@ -88,7 +88,14 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     var numEarlierMonthsAdded = 0
     var newEntryDate = ""
     var newEntryIndexPathRow = 0
-    var overwriteEntry = false
+    var preventOfflineOverwrite = true {
+        didSet {
+            let alertController = UIAlertController(title: "Error", message: "Cannot enter journal for this date while offline.", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
     var newImage: UIImage? = nil
     var imageChangedDate = ""
     var cardUnlocked = ""
@@ -353,6 +360,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             if Error != nil {
                 print(Error!)
             } else {
+                self.noImageOfDay = false
                 if (snapshot?.metadata.isFromCache)! {
                     print("imageOfDayKeys using cached data")
                 }
@@ -738,7 +746,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             vc!.entryList = selectedEntryList
             vc!.selectedEntryInd = selectedEntryList.count
             vc!.formattedTargetsList = formattedTargetsList
-            vc!.overwriteEntry = overwriteEntry
             vc!.cvc = self
             newEntryDate = ""
             newEntryButton.isHidden = false
@@ -748,7 +755,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             showEarlierMonthButton.isHidden = true
             numMonths -= numEarlierMonthsAdded
             numEarlierMonthsAdded = 0
-            overwriteEntry = false
             calendarsListView.reloadData()
             calendarsListView.scrollToRow(at: NSIndexPath(row: 0, section: 0) as IndexPath, at: UITableView.ScrollPosition.top, animated: false)
             return
