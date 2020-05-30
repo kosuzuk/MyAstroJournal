@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0930"
+   LastUpgradeVersion = "1100"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DFF1B26D61CD2CE8F2F86C4959429A2A"
+               BlueprintIdentifier = "91BAE5669C87FA1435263F2DA213F0C2"
                BuildableName = "Pods_My_Astro_JournalTests.framework"
                BlueprintName = "Pods-My Astro JournalTests"
                ReferencedContainer = "container:Pods.xcodeproj">

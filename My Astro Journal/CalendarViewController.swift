@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Foundation
+import FirebaseDatabase
 import SwiftKeychainWrapper
 import DropDown
 import CoreMotion
@@ -48,7 +48,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var imageOfDayLightWC: NSLayoutConstraint!
     var userData: [String: Any]? = nil
     var userKey: String = ""
-    var userDataInitialized = false
     var firstJournalEntryDate = ""
     var startMonth = 0
     var startYear = 0
@@ -67,6 +66,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     var numEntriesDict: [String: Int] = [:]
     var userAlertDates: [String] = []
     var entryDropDown: DropDown? = nil
+    var userDataInitialized = false
     var imageOfDayListenerInitiated = false
     var imageOfDayKeysData: [String: Any]? = nil
     var imageOfDayImageData: UIImage? = nil
@@ -88,6 +88,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     var numEarlierMonthsAdded = 0
     var newEntryDate = ""
     var newEntryIndexPathRow = 0
+    var overwriteEntry = false
     var newImage: UIImage? = nil
     var imageChangedDate = ""
     var cardUnlocked = ""
@@ -212,6 +213,26 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         dateToday = String(format: "%02ld%02ld", monthTodayInt, dateComps.day!) + String(yearTodayInt)
         Timer.scheduledTimer(timeInterval: TimeInterval(60), target: self, selector: #selector(checkDayChange), userInfo: nil,  repeats: true)
         userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
+        
+        Database.database().reference(withPath: ".info/connected").observe(.value, with: { snapshot in
+          if snapshot.value as? Bool ?? false {
+            print("Connected")
+            isConnected = true
+          } else {
+            print("Not connected")
+            isConnected = false
+          }
+        })
+        Timer.scheduledTimer(withTimeInterval: 3, repeats: false) {_ in
+            if !isConnected && self.userData != nil {
+                for (date, _) in self.userData!["calendarImages"] as! [String: String] {
+                    if self.imageDict[date] == nil {
+                        self.imageDict[date] = UIImage(named: "Calendar/placeholder")!
+                    }
+                }
+            }
+        }
+        
         if userData!["firstJournalEntryDate"] as! String == "" {
             self.monthDropDown!.dataSource = [monthNames[self.monthTodayInt - 1]]
             self.yearDropDown!.dataSource = [String(self.yearTodayInt)]
@@ -245,13 +266,17 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 imageRef.getData(maxSize: imgMaxByte) {data, Error in
                     if let Error = Error {
                         print(Error)
-                        return
+                        self.imageDict[dateString] = UIImage(named: "Calendar/placeholder")!
                     } else {
                         self.imageDict[dateString] = UIImage(data: data!)!
                     }
                 }
             }
             self.numEntriesDict = userData!["numEntriesInDate"] as! [String : Int]
+            if imageKeyDict.count == 0 {
+                loadingIcon.stopAnimating()
+                self.numEntriesDict = [:]
+            }
         }
         var alertDates = userData!["featuredAlertDates"] as! [String]
         if alertDates != [] {
@@ -713,6 +738,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             vc!.entryList = selectedEntryList
             vc!.selectedEntryInd = selectedEntryList.count
             vc!.formattedTargetsList = formattedTargetsList
+            vc!.overwriteEntry = overwriteEntry
             vc!.cvc = self
             newEntryDate = ""
             newEntryButton.isHidden = false
@@ -722,6 +748,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             showEarlierMonthButton.isHidden = true
             numMonths -= numEarlierMonthsAdded
             numEarlierMonthsAdded = 0
+            overwriteEntry = false
             calendarsListView.reloadData()
             calendarsListView.scrollToRow(at: NSIndexPath(row: 0, section: 0) as IndexPath, at: UITableView.ScrollPosition.top, animated: false)
             return

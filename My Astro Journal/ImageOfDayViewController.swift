@@ -250,6 +250,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                         imageRef.getData(maxSize: imgMaxByte) {imageData, Error in
                             if let Error = Error {
                                 print(Error)
+                                self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")
                                 return
                             } else {
                                 self.userImage.image = UIImage(data: imageData!)!

@@ -473,17 +473,12 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
                 }
             }
             dataRef.delete { (error) in
-                if error != nil {
-                    print(error as Any)
-                    return
-                } else {
-                    print("done deleting image")
-                    self.pvc!.pevc = nil
-                    loadingIcon.stopAnimating()
-                    self.navigationController?.popToRootViewController(animated: true)
-                }
+                print("done deleting image")
+                self.pvc!.pevc = nil
+                loadingIcon.stopAnimating()
+                self.navigationController?.popToRootViewController(animated: true)
             }
-            compressedDataRef.delete {error in}
+            compressedDataRef.delete()
         }
     }
 }
