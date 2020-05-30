@@ -230,7 +230,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             isConnected = false
           }
         })
-        Timer.scheduledTimer(withTimeInterval: 3, repeats: false) {_ in
+        Timer.scheduledTimer(withTimeInterval: 2, repeats: false) {_ in
             if !isConnected && self.userData != nil {
                 for (date, _) in self.userData!["calendarImages"] as! [String: String] {
                     if self.imageDict[date] == nil {
@@ -428,7 +428,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                         self.iodvc?.navigationController?.popToRootViewController(animated: true)
                     }
                     featuredImageDate = ""
-                    self.imageOfDayImageView.image = nil
+                    self.imageOfDayImageView.image = UIImage(named: "Calendar/placeholder")
+                    self.imageOfDayImageView.contentMode = .scaleAspectFit
                     self.imageOfDayLight.isHidden = true
                     self.imageOfDayListenerInitiated = true
                     self.noImageOfDay = true
@@ -482,6 +483,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                         return
                     } else if !self.noImageOfDay {
                         self.imageOfDayImageView.image = UIImage(data: imageData!)!
+                        self.imageOfDayImageView.contentMode = .scaleAspectFill
+                        self.imageOfDayImageView.clipsToBounds = true
                         self.imageOfDayImageData = self.imageOfDayImageView.image
                         self.imageOfDayImageView.isUserInteractionEnabled = true
                         self.imageOfDayLight.isHidden = false
