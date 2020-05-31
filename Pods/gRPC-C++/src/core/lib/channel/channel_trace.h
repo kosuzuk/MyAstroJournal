@@ -62,7 +62,7 @@ class ChannelTrace {
   // TODO(ncteisen): as this call is used more and more throughout the gRPC
   // stack, determine if it makes more sense to accept a char* instead of a
   // slice.
-  void AddTraceEvent(Severity severity, grpc_slice data);
+  void AddTraceEvent(Severity severity, const grpc_slice& data);
 
   // Adds a new trace event to the tracing object. This trace event refers to a
   // an event that concerns a different channelz entity. For example, if this
@@ -72,12 +72,12 @@ class ChannelTrace {
   // NOTE: see the note in the method above.
   //
   // TODO(ncteisen): see the todo in the method above.
-  void AddTraceEventWithReference(Severity severity, grpc_slice data,
+  void AddTraceEventWithReference(Severity severity, const grpc_slice& data,
                                   RefCountedPtr<BaseNode> referenced_entity);
 
-  // Creates and returns the raw grpc_json object, so a parent channelz
+  // Creates and returns the raw Json object, so a parent channelz
   // object may incorporate the json before rendering.
-  grpc_json* RenderJson() const;
+  Json RenderJson() const;
 
  private:
   friend size_t testing::GetSizeofTraceEvent(void);
@@ -87,18 +87,18 @@ class ChannelTrace {
   class TraceEvent {
    public:
     // Constructor for a TraceEvent that references a channel.
-    TraceEvent(Severity severity, grpc_slice data,
+    TraceEvent(Severity severity, const grpc_slice& data,
                RefCountedPtr<BaseNode> referenced_entity_);
 
     // Constructor for a TraceEvent that does not reverence a different
     // channel.
-    TraceEvent(Severity severity, grpc_slice data);
+    TraceEvent(Severity severity, const grpc_slice& data);
 
     ~TraceEvent();
 
     // Renders the data inside of this TraceEvent into a json object. This is
     // used by the ChannelTrace, when it is rendering itself.
-    void RenderTraceEvent(grpc_json* json) const;
+    Json RenderTraceEvent() const;
 
     // set and get for the next_ pointer.
     TraceEvent* next() const { return next_; }

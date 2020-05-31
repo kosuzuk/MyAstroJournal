@@ -30,9 +30,13 @@
 
 #include "src/core/ext/filters/client_channel/client_channel.h"
 #include "src/core/ext/filters/client_channel/lb_policy_registry.h"
+#include "src/core/ext/filters/client_channel/server_address.h"
+#include "src/core/lib/channel/channel_args.h"
 #include "src/core/lib/channel/status_util.h"
 #include "src/core/lib/gpr/string.h"
 #include "src/core/lib/gprpp/memory.h"
+#include "src/core/lib/gprpp/optional.h"
+#include "src/core/lib/uri/uri_parser.h"
 
 // As per the retry design, we do not allow more than 5 retry attempts.
 #define MAX_MAX_RETRY_ATTEMPTS 5
@@ -41,228 +45,28 @@ namespace grpc_core {
 namespace internal {
 
 namespace {
-
-// Converts string format from JSON to proto.
-grpc_core::UniquePtr<char> ConvertCamelToSnake(const char* camel) {
-  const size_t size = strlen(camel);
-  char* snake = static_cast<char*>(gpr_malloc(size * 2));
-  size_t j = 0;
-  for (size_t i = 0; i < size; ++i) {
-    if (isupper(camel[i])) {
-      snake[j++] = '_';
-      snake[j++] = tolower(camel[i]);
-    } else {
-      snake[j++] = camel[i];
-    }
-  }
-  snake[j] = '\0';
-  return grpc_core::UniquePtr<char>(snake);
+size_t g_client_channel_service_config_parser_index;
 }
 
-}  // namespace
-
-ProcessedResolverResult::ProcessedResolverResult(
-    const grpc_channel_args* resolver_result, bool parse_retry) {
-  ProcessServiceConfig(resolver_result, parse_retry);
-  // If no LB config was found above, just find the LB policy name then.
-  if (lb_policy_config_ == nullptr) ProcessLbPolicyName(resolver_result);
+size_t ClientChannelServiceConfigParser::ParserIndex() {
+  return g_client_channel_service_config_parser_index;
 }
 
-void ProcessedResolverResult::ProcessServiceConfig(
-    const grpc_channel_args* resolver_result, bool parse_retry) {
-  const grpc_arg* channel_arg =
-      grpc_channel_args_find(resolver_result, GRPC_ARG_SERVICE_CONFIG);
-  const char* service_config_json = grpc_channel_arg_get_string(channel_arg);
-  if (service_config_json != nullptr) {
-    service_config_json_.reset(gpr_strdup(service_config_json));
-    service_config_ = grpc_core::ServiceConfig::Create(service_config_json);
-    if (service_config_ != nullptr) {
-      if (parse_retry) {
-        channel_arg =
-            grpc_channel_args_find(resolver_result, GRPC_ARG_SERVER_URI);
-        const char* server_uri = grpc_channel_arg_get_string(channel_arg);
-        GPR_ASSERT(server_uri != nullptr);
-        grpc_uri* uri = grpc_uri_parse(server_uri, true);
-        GPR_ASSERT(uri->path[0] != '\0');
-        server_name_ = uri->path[0] == '/' ? uri->path + 1 : uri->path;
-        service_config_->ParseGlobalParams(ParseServiceConfig, this);
-        grpc_uri_destroy(uri);
-      } else {
-        service_config_->ParseGlobalParams(ParseServiceConfig, this);
-      }
-      method_params_table_ = service_config_->CreateMethodConfigTable(
-          ClientChannelMethodParams::CreateFromJson);
-    }
-  }
-}
-
-void ProcessedResolverResult::ProcessLbPolicyName(
-    const grpc_channel_args* resolver_result) {
-  const char* lb_policy_name = nullptr;
-  // Prefer the LB policy name found in the service config. Note that this is
-  // checking the deprecated loadBalancingPolicy field, rather than the new
-  // loadBalancingConfig field.
-  if (service_config_ != nullptr) {
-    lb_policy_name = service_config_->GetLoadBalancingPolicyName();
-  }
-  // Otherwise, find the LB policy name set by the client API.
-  if (lb_policy_name == nullptr) {
-    const grpc_arg* channel_arg =
-        grpc_channel_args_find(resolver_result, GRPC_ARG_LB_POLICY_NAME);
-    lb_policy_name = grpc_channel_arg_get_string(channel_arg);
-  }
-  // Special case: If at least one balancer address is present, we use
-  // the grpclb policy, regardless of what the resolver has returned.
-  const grpc_arg* channel_arg =
-      grpc_channel_args_find(resolver_result, GRPC_ARG_LB_ADDRESSES);
-  if (channel_arg != nullptr && channel_arg->type == GRPC_ARG_POINTER) {
-    grpc_lb_addresses* addresses =
-        static_cast<grpc_lb_addresses*>(channel_arg->value.pointer.p);
-    if (grpc_lb_addresses_contains_balancer_address(*addresses)) {
-      if (lb_policy_name != nullptr &&
-          gpr_stricmp(lb_policy_name, "grpclb") != 0) {
-        gpr_log(GPR_INFO,
-                "resolver requested LB policy %s but provided at least one "
-                "balancer address -- forcing use of grpclb LB policy",
-                lb_policy_name);
-      }
-      lb_policy_name = "grpclb";
-    }
-  }
-  // Use pick_first if nothing was specified and we didn't select grpclb
-  // above.
-  if (lb_policy_name == nullptr) lb_policy_name = "pick_first";
-  lb_policy_name_.reset(gpr_strdup(lb_policy_name));
-}
-
-void ProcessedResolverResult::ParseServiceConfig(
-    const grpc_json* field, ProcessedResolverResult* parsing_state) {
-  parsing_state->ParseLbConfigFromServiceConfig(field);
-  if (parsing_state->server_name_ != nullptr) {
-    parsing_state->ParseRetryThrottleParamsFromServiceConfig(field);
-  }
-}
-
-void ProcessedResolverResult::ParseLbConfigFromServiceConfig(
-    const grpc_json* field) {
-  if (lb_policy_config_ != nullptr) return;  // Already found.
-  // Find the LB config global parameter.
-  if (field->key == nullptr || strcmp(field->key, "loadBalancingConfig") != 0 ||
-      field->type != GRPC_JSON_ARRAY) {
-    return;  // Not valid lb config array.
-  }
-  // Find the first LB policy that this client supports.
-  for (grpc_json* lb_config = field->child; lb_config != nullptr;
-       lb_config = lb_config->next) {
-    if (lb_config->type != GRPC_JSON_OBJECT) return;
-    // Find the policy object.
-    grpc_json* policy = nullptr;
-    for (grpc_json* field = lb_config->child; field != nullptr;
-         field = field->next) {
-      if (field->key == nullptr || strcmp(field->key, "policy") != 0 ||
-          field->type != GRPC_JSON_OBJECT) {
-        return;
-      }
-      if (policy != nullptr) return;  // Duplicate.
-      policy = field;
-    }
-    // Find the specific policy content since the policy object is of type
-    // "oneof".
-    grpc_json* policy_content = nullptr;
-    for (grpc_json* field = policy->child; field != nullptr;
-         field = field->next) {
-      if (field->key == nullptr || field->type != GRPC_JSON_OBJECT) return;
-      if (policy_content != nullptr) return;  // Violate "oneof" type.
-      policy_content = field;
-    }
-    grpc_core::UniquePtr<char> lb_policy_name =
-        ConvertCamelToSnake(policy_content->key);
-    if (!grpc_core::LoadBalancingPolicyRegistry::LoadBalancingPolicyExists(
-            lb_policy_name.get())) {
-      continue;
-    }
-    lb_policy_name_ = std::move(lb_policy_name);
-    lb_policy_config_ = policy_content->child;
-    return;
-  }
-}
-
-void ProcessedResolverResult::ParseRetryThrottleParamsFromServiceConfig(
-    const grpc_json* field) {
-  if (strcmp(field->key, "retryThrottling") == 0) {
-    if (retry_throttle_data_ != nullptr) return;  // Duplicate.
-    if (field->type != GRPC_JSON_OBJECT) return;
-    int max_milli_tokens = 0;
-    int milli_token_ratio = 0;
-    for (grpc_json* sub_field = field->child; sub_field != nullptr;
-         sub_field = sub_field->next) {
-      if (sub_field->key == nullptr) return;
-      if (strcmp(sub_field->key, "maxTokens") == 0) {
-        if (max_milli_tokens != 0) return;  // Duplicate.
-        if (sub_field->type != GRPC_JSON_NUMBER) return;
-        max_milli_tokens = gpr_parse_nonnegative_int(sub_field->value);
-        if (max_milli_tokens == -1) return;
-        max_milli_tokens *= 1000;
-      } else if (strcmp(sub_field->key, "tokenRatio") == 0) {
-        if (milli_token_ratio != 0) return;  // Duplicate.
-        if (sub_field->type != GRPC_JSON_NUMBER) return;
-        // We support up to 3 decimal digits.
-        size_t whole_len = strlen(sub_field->value);
-        uint32_t multiplier = 1;
-        uint32_t decimal_value = 0;
-        const char* decimal_point = strchr(sub_field->value, '.');
-        if (decimal_point != nullptr) {
-          whole_len = static_cast<size_t>(decimal_point - sub_field->value);
-          multiplier = 1000;
-          size_t decimal_len = strlen(decimal_point + 1);
-          if (decimal_len > 3) decimal_len = 3;
-          if (!gpr_parse_bytes_to_uint32(decimal_point + 1, decimal_len,
-                                         &decimal_value)) {
-            return;
-          }
-          uint32_t decimal_multiplier = 1;
-          for (size_t i = 0; i < (3 - decimal_len); ++i) {
-            decimal_multiplier *= 10;
-          }
-          decimal_value *= decimal_multiplier;
-        }
-        uint32_t whole_value;
-        if (!gpr_parse_bytes_to_uint32(sub_field->value, whole_len,
-                                       &whole_value)) {
-          return;
-        }
-        milli_token_ratio =
-            static_cast<int>((whole_value * multiplier) + decimal_value);
-        if (milli_token_ratio <= 0) return;
-      }
-    }
-    retry_throttle_data_ =
-        grpc_core::internal::ServerRetryThrottleMap::GetDataForServer(
-            server_name_, max_milli_tokens, milli_token_ratio);
-  }
+void ClientChannelServiceConfigParser::Register() {
+  g_client_channel_service_config_parser_index = ServiceConfig::RegisterParser(
+      absl::make_unique<ClientChannelServiceConfigParser>());
 }
 
 namespace {
 
-bool ParseWaitForReady(
-    grpc_json* field, ClientChannelMethodParams::WaitForReady* wait_for_ready) {
-  if (field->type != GRPC_JSON_TRUE && field->type != GRPC_JSON_FALSE) {
-    return false;
-  }
-  *wait_for_ready = field->type == GRPC_JSON_TRUE
-                        ? ClientChannelMethodParams::WAIT_FOR_READY_TRUE
-                        : ClientChannelMethodParams::WAIT_FOR_READY_FALSE;
-  return true;
-}
-
 // Parses a JSON field of the form generated for a google.proto.Duration
 // proto message, as per:
 //   https://developers.google.com/protocol-buffers/docs/proto3#json
-bool ParseDuration(grpc_json* field, grpc_millis* duration) {
-  if (field->type != GRPC_JSON_STRING) return false;
-  size_t len = strlen(field->value);
-  if (field->value[len - 1] != 's') return false;
-  UniquePtr<char> buf(gpr_strdup(field->value));
+bool ParseDuration(const Json& field, grpc_millis* duration) {
+  if (field.type() != Json::Type::STRING) return false;
+  size_t len = field.string_value().size();
+  if (field.string_value()[len - 1] != 's') return false;
+  grpc_core::UniquePtr<char> buf(gpr_strdup(field.string_value().c_str()));
   *(buf.get() + len - 1) = '\0';  // Remove trailing 's'.
   char* decimal_point = strchr(buf.get(), '.');
   int nanos = 0;
@@ -287,97 +91,352 @@ bool ParseDuration(grpc_json* field, grpc_millis* duration) {
   return true;
 }
 
-UniquePtr<ClientChannelMethodParams::RetryPolicy> ParseRetryPolicy(
-    grpc_json* field) {
-  auto retry_policy = MakeUnique<ClientChannelMethodParams::RetryPolicy>();
-  if (field->type != GRPC_JSON_OBJECT) return nullptr;
-  for (grpc_json* sub_field = field->child; sub_field != nullptr;
-       sub_field = sub_field->next) {
-    if (sub_field->key == nullptr) return nullptr;
-    if (strcmp(sub_field->key, "maxAttempts") == 0) {
-      if (retry_policy->max_attempts != 0) return nullptr;  // Duplicate.
-      if (sub_field->type != GRPC_JSON_NUMBER) return nullptr;
-      retry_policy->max_attempts = gpr_parse_nonnegative_int(sub_field->value);
-      if (retry_policy->max_attempts <= 1) return nullptr;
-      if (retry_policy->max_attempts > MAX_MAX_RETRY_ATTEMPTS) {
+std::unique_ptr<ClientChannelMethodParsedConfig::RetryPolicy> ParseRetryPolicy(
+    const Json& json, grpc_error** error) {
+  GPR_DEBUG_ASSERT(error != nullptr && *error == GRPC_ERROR_NONE);
+  auto retry_policy =
+      absl::make_unique<ClientChannelMethodParsedConfig::RetryPolicy>();
+  if (json.type() != Json::Type::OBJECT) {
+    *error = GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+        "field:retryPolicy error:should be of type object");
+    return nullptr;
+  }
+  std::vector<grpc_error*> error_list;
+  // Parse maxAttempts.
+  auto it = json.object_value().find("maxAttempts");
+  if (it != json.object_value().end()) {
+    if (it->second.type() != Json::Type::NUMBER) {
+      error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+          "field:maxAttempts error:should be of type number"));
+    } else {
+      retry_policy->max_attempts =
+          gpr_parse_nonnegative_int(it->second.string_value().c_str());
+      if (retry_policy->max_attempts <= 1) {
+        error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+            "field:maxAttempts error:should be at least 2"));
+      } else if (retry_policy->max_attempts > MAX_MAX_RETRY_ATTEMPTS) {
         gpr_log(GPR_ERROR,
                 "service config: clamped retryPolicy.maxAttempts at %d",
                 MAX_MAX_RETRY_ATTEMPTS);
         retry_policy->max_attempts = MAX_MAX_RETRY_ATTEMPTS;
       }
-    } else if (strcmp(sub_field->key, "initialBackoff") == 0) {
-      if (retry_policy->initial_backoff > 0) return nullptr;  // Duplicate.
-      if (!ParseDuration(sub_field, &retry_policy->initial_backoff)) {
-        return nullptr;
+    }
+  }
+  // Parse initialBackoff.
+  it = json.object_value().find("initialBackoff");
+  if (it != json.object_value().end()) {
+    if (!ParseDuration(it->second, &retry_policy->initial_backoff)) {
+      error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+          "field:initialBackoff error:Failed to parse"));
+    } else if (retry_policy->initial_backoff == 0) {
+      error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+          "field:initialBackoff error:must be greater than 0"));
+    }
+  }
+  // Parse maxBackoff.
+  it = json.object_value().find("maxBackoff");
+  if (it != json.object_value().end()) {
+    if (!ParseDuration(it->second, &retry_policy->max_backoff)) {
+      error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+          "field:maxBackoff error:failed to parse"));
+    } else if (retry_policy->max_backoff == 0) {
+      error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+          "field:maxBackoff error:should be greater than 0"));
+    }
+  }
+  // Parse backoffMultiplier.
+  it = json.object_value().find("backoffMultiplier");
+  if (it != json.object_value().end()) {
+    if (it->second.type() != Json::Type::NUMBER) {
+      error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+          "field:backoffMultiplier error:should be of type number"));
+    } else {
+      if (sscanf(it->second.string_value().c_str(), "%f",
+                 &retry_policy->backoff_multiplier) != 1) {
+        error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+            "field:backoffMultiplier error:failed to parse"));
+      } else if (retry_policy->backoff_multiplier <= 0) {
+        error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+            "field:backoffMultiplier error:should be greater than 0"));
       }
-      if (retry_policy->initial_backoff == 0) return nullptr;
-    } else if (strcmp(sub_field->key, "maxBackoff") == 0) {
-      if (retry_policy->max_backoff > 0) return nullptr;  // Duplicate.
-      if (!ParseDuration(sub_field, &retry_policy->max_backoff)) {
-        return nullptr;
-      }
-      if (retry_policy->max_backoff == 0) return nullptr;
-    } else if (strcmp(sub_field->key, "backoffMultiplier") == 0) {
-      if (retry_policy->backoff_multiplier != 0) return nullptr;  // Duplicate.
-      if (sub_field->type != GRPC_JSON_NUMBER) return nullptr;
-      if (sscanf(sub_field->value, "%f", &retry_policy->backoff_multiplier) !=
-          1) {
-        return nullptr;
-      }
-      if (retry_policy->backoff_multiplier <= 0) return nullptr;
-    } else if (strcmp(sub_field->key, "retryableStatusCodes") == 0) {
-      if (!retry_policy->retryable_status_codes.Empty()) {
-        return nullptr;  // Duplicate.
-      }
-      if (sub_field->type != GRPC_JSON_ARRAY) return nullptr;
-      for (grpc_json* element = sub_field->child; element != nullptr;
-           element = element->next) {
-        if (element->type != GRPC_JSON_STRING) return nullptr;
+    }
+  }
+  // Parse retryableStatusCodes.
+  it = json.object_value().find("retryableStatusCodes");
+  if (it != json.object_value().end()) {
+    if (it->second.type() != Json::Type::ARRAY) {
+      error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+          "field:retryableStatusCodes error:should be of type array"));
+    } else {
+      for (const Json& element : it->second.array_value()) {
+        if (element.type() != Json::Type::STRING) {
+          error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+              "field:retryableStatusCodes error:status codes should be of type "
+              "string"));
+          continue;
+        }
         grpc_status_code status;
-        if (!grpc_status_code_from_string(element->value, &status)) {
-          return nullptr;
+        if (!grpc_status_code_from_string(element.string_value().c_str(),
+                                          &status)) {
+          error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+              "field:retryableStatusCodes error:failed to parse status code"));
+          continue;
         }
         retry_policy->retryable_status_codes.Add(status);
       }
-      if (retry_policy->retryable_status_codes.Empty()) return nullptr;
+      if (retry_policy->retryable_status_codes.Empty()) {
+        error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+            "field:retryableStatusCodes error:should be non-empty"));
+      };
     }
   }
   // Make sure required fields are set.
-  if (retry_policy->max_attempts == 0 || retry_policy->initial_backoff == 0 ||
-      retry_policy->max_backoff == 0 || retry_policy->backoff_multiplier == 0 ||
-      retry_policy->retryable_status_codes.Empty()) {
+  if (error_list.empty()) {
+    if (retry_policy->max_attempts == 0 || retry_policy->initial_backoff == 0 ||
+        retry_policy->max_backoff == 0 ||
+        retry_policy->backoff_multiplier == 0 ||
+        retry_policy->retryable_status_codes.Empty()) {
+      *error = GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+          "field:retryPolicy error:Missing required field(s)");
+      return nullptr;
+    }
+  }
+  *error = GRPC_ERROR_CREATE_FROM_VECTOR("retryPolicy", &error_list);
+  return *error == GRPC_ERROR_NONE ? std::move(retry_policy) : nullptr;
+}
+
+grpc_error* ParseRetryThrottling(
+    const Json& json,
+    ClientChannelGlobalParsedConfig::RetryThrottling* retry_throttling) {
+  if (json.type() != Json::Type::OBJECT) {
+    return GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+        "field:retryThrottling error:Type should be object");
+  }
+  std::vector<grpc_error*> error_list;
+  // Parse maxTokens.
+  auto it = json.object_value().find("maxTokens");
+  if (it == json.object_value().end()) {
+    error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+        "field:retryThrottling field:maxTokens error:Not found"));
+  } else if (it->second.type() != Json::Type::NUMBER) {
+    error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+        "field:retryThrottling field:maxTokens error:Type should be "
+        "number"));
+  } else {
+    retry_throttling->max_milli_tokens =
+        gpr_parse_nonnegative_int(it->second.string_value().c_str()) * 1000;
+    if (retry_throttling->max_milli_tokens <= 0) {
+      error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+          "field:retryThrottling field:maxTokens error:should be "
+          "greater than zero"));
+    }
+  }
+  // Parse tokenRatio.
+  it = json.object_value().find("tokenRatio");
+  if (it == json.object_value().end()) {
+    error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+        "field:retryThrottling field:tokenRatio error:Not found"));
+  } else if (it->second.type() != Json::Type::NUMBER) {
+    error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+        "field:retryThrottling field:tokenRatio error:type should be "
+        "number"));
+  } else {
+    // We support up to 3 decimal digits.
+    size_t whole_len = it->second.string_value().size();
+    const char* value = it->second.string_value().c_str();
+    uint32_t multiplier = 1;
+    uint32_t decimal_value = 0;
+    const char* decimal_point = strchr(value, '.');
+    if (decimal_point != nullptr) {
+      whole_len = static_cast<size_t>(decimal_point - value);
+      multiplier = 1000;
+      size_t decimal_len = strlen(decimal_point + 1);
+      if (decimal_len > 3) decimal_len = 3;
+      if (!gpr_parse_bytes_to_uint32(decimal_point + 1, decimal_len,
+                                     &decimal_value)) {
+        error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+            "field:retryThrottling field:tokenRatio error:Failed "
+            "parsing"));
+        return GRPC_ERROR_CREATE_FROM_VECTOR("retryPolicy", &error_list);
+      }
+      uint32_t decimal_multiplier = 1;
+      for (size_t i = 0; i < (3 - decimal_len); ++i) {
+        decimal_multiplier *= 10;
+      }
+      decimal_value *= decimal_multiplier;
+    }
+    uint32_t whole_value;
+    if (!gpr_parse_bytes_to_uint32(value, whole_len, &whole_value)) {
+      error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+          "field:retryThrottling field:tokenRatio error:Failed "
+          "parsing"));
+      return GRPC_ERROR_CREATE_FROM_VECTOR("retryPolicy", &error_list);
+    }
+    retry_throttling->milli_token_ratio =
+        static_cast<int>((whole_value * multiplier) + decimal_value);
+    if (retry_throttling->milli_token_ratio <= 0) {
+      error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+          "field:retryThrottling field:tokenRatio error:value should "
+          "be greater than 0"));
+    }
+  }
+  return GRPC_ERROR_CREATE_FROM_VECTOR("retryPolicy", &error_list);
+}
+
+const char* ParseHealthCheckConfig(const Json& field, grpc_error** error) {
+  GPR_DEBUG_ASSERT(error != nullptr && *error == GRPC_ERROR_NONE);
+  const char* service_name = nullptr;
+  if (field.type() != Json::Type::OBJECT) {
+    *error = GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+        "field:healthCheckConfig error:should be of type object");
     return nullptr;
   }
-  return retry_policy;
+  std::vector<grpc_error*> error_list;
+  auto it = field.object_value().find("serviceName");
+  if (it != field.object_value().end()) {
+    if (it->second.type() != Json::Type::STRING) {
+      error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+          "field:serviceName error:should be of type string"));
+    } else {
+      service_name = it->second.string_value().c_str();
+    }
+  }
+  if (!error_list.empty()) {
+    return nullptr;
+  }
+  *error =
+      GRPC_ERROR_CREATE_FROM_VECTOR("field:healthCheckConfig", &error_list);
+  return service_name;
 }
 
 }  // namespace
 
-RefCountedPtr<ClientChannelMethodParams>
-ClientChannelMethodParams::CreateFromJson(const grpc_json* json) {
-  RefCountedPtr<ClientChannelMethodParams> method_params =
-      MakeRefCounted<ClientChannelMethodParams>();
-  for (grpc_json* field = json->child; field != nullptr; field = field->next) {
-    if (field->key == nullptr) continue;
-    if (strcmp(field->key, "waitForReady") == 0) {
-      if (method_params->wait_for_ready_ != WAIT_FOR_READY_UNSET) {
-        return nullptr;  // Duplicate.
-      }
-      if (!ParseWaitForReady(field, &method_params->wait_for_ready_)) {
-        return nullptr;
-      }
-    } else if (strcmp(field->key, "timeout") == 0) {
-      if (method_params->timeout_ > 0) return nullptr;  // Duplicate.
-      if (!ParseDuration(field, &method_params->timeout_)) return nullptr;
-    } else if (strcmp(field->key, "retryPolicy") == 0) {
-      if (method_params->retry_policy_ != nullptr) {
-        return nullptr;  // Duplicate.
-      }
-      method_params->retry_policy_ = ParseRetryPolicy(field);
-      if (method_params->retry_policy_ == nullptr) return nullptr;
+std::unique_ptr<ServiceConfig::ParsedConfig>
+ClientChannelServiceConfigParser::ParseGlobalParams(const Json& json,
+                                                    grpc_error** error) {
+  GPR_DEBUG_ASSERT(error != nullptr && *error == GRPC_ERROR_NONE);
+  std::vector<grpc_error*> error_list;
+  RefCountedPtr<LoadBalancingPolicy::Config> parsed_lb_config;
+  grpc_core::UniquePtr<char> lb_policy_name;
+  Optional<ClientChannelGlobalParsedConfig::RetryThrottling> retry_throttling;
+  const char* health_check_service_name = nullptr;
+  // Parse LB config.
+  auto it = json.object_value().find("loadBalancingConfig");
+  if (it != json.object_value().end()) {
+    grpc_error* parse_error = GRPC_ERROR_NONE;
+    parsed_lb_config = LoadBalancingPolicyRegistry::ParseLoadBalancingConfig(
+        it->second, &parse_error);
+    if (parsed_lb_config == nullptr) {
+      std::vector<grpc_error*> lb_errors;
+      lb_errors.push_back(parse_error);
+      error_list.push_back(GRPC_ERROR_CREATE_FROM_VECTOR(
+          "field:loadBalancingConfig", &lb_errors));
     }
   }
-  return method_params;
+  // Parse deprecated LB policy.
+  it = json.object_value().find("loadBalancingPolicy");
+  if (it != json.object_value().end()) {
+    if (it->second.type() != Json::Type::STRING) {
+      error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+          "field:loadBalancingPolicy error:type should be string"));
+    } else {
+      lb_policy_name.reset(gpr_strdup(it->second.string_value().c_str()));
+      char* lb_policy = lb_policy_name.get();
+      if (lb_policy != nullptr) {
+        for (size_t i = 0; i < strlen(lb_policy); ++i) {
+          lb_policy[i] = tolower(lb_policy[i]);
+        }
+      }
+      bool requires_config = false;
+      if (!LoadBalancingPolicyRegistry::LoadBalancingPolicyExists(
+              lb_policy, &requires_config)) {
+        error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+            "field:loadBalancingPolicy error:Unknown lb policy"));
+      } else if (requires_config) {
+        char* error_msg;
+        gpr_asprintf(&error_msg,
+                     "field:loadBalancingPolicy error:%s requires a config. "
+                     "Please use loadBalancingConfig instead.",
+                     lb_policy);
+        error_list.push_back(GRPC_ERROR_CREATE_FROM_COPIED_STRING(error_msg));
+        gpr_free(error_msg);
+      }
+    }
+  }
+  // Parse retry throttling.
+  it = json.object_value().find("retryThrottling");
+  if (it != json.object_value().end()) {
+    ClientChannelGlobalParsedConfig::RetryThrottling data;
+    grpc_error* parsing_error = ParseRetryThrottling(it->second, &data);
+    if (parsing_error != GRPC_ERROR_NONE) {
+      error_list.push_back(parsing_error);
+    } else {
+      retry_throttling.emplace(data);
+    }
+  }
+  // Parse health check config.
+  it = json.object_value().find("healthCheckConfig");
+  if (it != json.object_value().end()) {
+    grpc_error* parsing_error = GRPC_ERROR_NONE;
+    health_check_service_name =
+        ParseHealthCheckConfig(it->second, &parsing_error);
+    if (parsing_error != GRPC_ERROR_NONE) {
+      error_list.push_back(parsing_error);
+    }
+  }
+  *error = GRPC_ERROR_CREATE_FROM_VECTOR("Client channel global parser",
+                                         &error_list);
+  if (*error == GRPC_ERROR_NONE) {
+    return absl::make_unique<ClientChannelGlobalParsedConfig>(
+        std::move(parsed_lb_config), std::move(lb_policy_name),
+        retry_throttling, health_check_service_name);
+  }
+  return nullptr;
+}
+
+std::unique_ptr<ServiceConfig::ParsedConfig>
+ClientChannelServiceConfigParser::ParsePerMethodParams(const Json& json,
+                                                       grpc_error** error) {
+  GPR_DEBUG_ASSERT(error != nullptr && *error == GRPC_ERROR_NONE);
+  std::vector<grpc_error*> error_list;
+  Optional<bool> wait_for_ready;
+  grpc_millis timeout = 0;
+  std::unique_ptr<ClientChannelMethodParsedConfig::RetryPolicy> retry_policy;
+  // Parse waitForReady.
+  auto it = json.object_value().find("waitForReady");
+  if (it != json.object_value().end()) {
+    if (it->second.type() == Json::Type::JSON_TRUE) {
+      wait_for_ready.emplace(true);
+    } else if (it->second.type() == Json::Type::JSON_FALSE) {
+      wait_for_ready.emplace(false);
+    } else {
+      error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+          "field:waitForReady error:Type should be true/false"));
+    }
+  }
+  // Parse timeout.
+  it = json.object_value().find("timeout");
+  if (it != json.object_value().end()) {
+    if (!ParseDuration(it->second, &timeout)) {
+      error_list.push_back(GRPC_ERROR_CREATE_FROM_STATIC_STRING(
+          "field:timeout error:Failed parsing"));
+    };
+  }
+  // Parse retry policy.
+  it = json.object_value().find("retryPolicy");
+  if (it != json.object_value().end()) {
+    grpc_error* error = GRPC_ERROR_NONE;
+    retry_policy = ParseRetryPolicy(it->second, &error);
+    if (retry_policy == nullptr) {
+      error_list.push_back(error);
+    }
+  }
+  *error = GRPC_ERROR_CREATE_FROM_VECTOR("Client channel parser", &error_list);
+  if (*error == GRPC_ERROR_NONE) {
+    return absl::make_unique<ClientChannelMethodParsedConfig>(
+        timeout, wait_for_ready, std::move(retry_policy));
+  }
+  return nullptr;
 }
 
 }  // namespace internal
