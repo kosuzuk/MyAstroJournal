@@ -640,7 +640,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "My Astro Journal/My Astro Journal.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = Z9T4A9386V;
 				INFOPLIST_FILE = "$(SRCROOT)/My Astro Journal/GoogleService-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -662,7 +662,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "My Astro Journal/My Astro Journal.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = Z9T4A9386V;
 				INFOPLIST_FILE = "$(SRCROOT)/My Astro Journal/GoogleService-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
