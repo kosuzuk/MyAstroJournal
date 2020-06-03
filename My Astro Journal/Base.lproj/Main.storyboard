@@ -6459,7 +6459,7 @@
                                                     <constraint firstAttribute="width" constant="4" id="uED-mJ-ned"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="textColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                                 <variation key="default">
                                                     <mask key="constraints">
@@ -6625,7 +6625,7 @@
                                                     <action selector="numLikesTapped:" destination="fdx-PJ-ilV" eventType="touchUpInside" id="IMI-jI-BwH"/>
                                                 </connections>
                                             </button>
-                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ImageOfTheDay/comment" translatesAutoresizingMaskIntoConstraints="NO" id="AkO-eF-1AN">
+                                            <imageView clipsSubviews="YES" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ImageOfTheDay/comment" translatesAutoresizingMaskIntoConstraints="NO" id="AkO-eF-1AN">
                                                 <rect key="frame" x="435" y="408" width="50" height="40"/>
                                                 <accessibility key="accessibilityConfiguration">
                                                     <accessibilityTraits key="traits" image="YES" notEnabled="YES"/>
@@ -6660,6 +6660,9 @@
                                                         <include reference="xTJ-b5-8sE"/>
                                                     </mask>
                                                 </variation>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="QbY-0s-d54" appends="YES" id="3Zh-au-0sX"/>
+                                                </connections>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BOI-no-iVH">
                                                 <rect key="frame" x="486" y="417.66666666666669" width="45" height="21"/>
@@ -7838,7 +7841,7 @@
                                     </mask>
                                 </variation>
                             </scrollView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="border" translatesAutoresizingMaskIntoConstraints="NO" id="Cle-Cf-AJf">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="border" translatesAutoresizingMaskIntoConstraints="NO" id="QQw-Lz-jUz">
                                 <rect key="frame" x="0.0" y="0.0" width="712" height="1647"/>
                             </imageView>
                         </subviews>
@@ -7850,22 +7853,22 @@
                             <constraint firstItem="Wbc-1I-ij8" firstAttribute="top" secondItem="KKx-9M-NbC" secondAttribute="top" id="AKZ-5b-Pc0"/>
                             <constraint firstItem="Wbc-1I-ij8" firstAttribute="leading" secondItem="KKx-9M-NbC" secondAttribute="leading" id="CtK-vx-QtI"/>
                             <constraint firstItem="Wbc-1I-ij8" firstAttribute="top" secondItem="KKx-9M-NbC" secondAttribute="top" id="DIk-Eh-owo"/>
-                            <constraint firstItem="Cle-Cf-AJf" firstAttribute="leading" secondItem="KKx-9M-NbC" secondAttribute="leading" id="GHM-MJ-hiI"/>
+                            <constraint firstItem="QQw-Lz-jUz" firstAttribute="top" secondItem="KKx-9M-NbC" secondAttribute="top" id="HHu-Ec-Kae"/>
                             <constraint firstItem="KKx-9M-NbC" firstAttribute="trailing" secondItem="dha-2o-QLi" secondAttribute="trailing" constant="172" id="KmO-vM-tjX">
                                 <variation key="heightClass=regular-widthClass=regular" constant="0.0"/>
                             </constraint>
                             <constraint firstItem="dha-2o-QLi" firstAttribute="top" secondItem="KKx-9M-NbC" secondAttribute="top" id="NEt-hG-TfA"/>
-                            <constraint firstItem="Cle-Cf-AJf" firstAttribute="bottom" secondItem="KKx-9M-NbC" secondAttribute="bottom" id="NKK-OV-nbP"/>
+                            <constraint firstItem="QQw-Lz-jUz" firstAttribute="leading" secondItem="KKx-9M-NbC" secondAttribute="leading" id="RHT-VA-pwm"/>
                             <constraint firstItem="Wbc-1I-ij8" firstAttribute="trailing" secondItem="KKx-9M-NbC" secondAttribute="trailing" id="S2C-bD-I89"/>
-                            <constraint firstItem="Cle-Cf-AJf" firstAttribute="trailing" secondItem="KKx-9M-NbC" secondAttribute="trailing" id="TTM-8v-L2T"/>
                             <constraint firstItem="Wbc-1I-ij8" firstAttribute="bottom" secondItem="KKx-9M-NbC" secondAttribute="bottom" id="Wjj-JZ-vt5"/>
                             <constraint firstItem="dha-2o-QLi" firstAttribute="top" secondItem="KKx-9M-NbC" secondAttribute="top" id="czE-jY-NSI"/>
                             <constraint firstItem="KKx-9M-NbC" firstAttribute="trailing" secondItem="Wbc-1I-ij8" secondAttribute="trailing" id="dGd-Gd-AfL"/>
+                            <constraint firstItem="KKx-9M-NbC" firstAttribute="bottom" secondItem="QQw-Lz-jUz" secondAttribute="bottom" id="jT2-FS-1ft"/>
                             <constraint firstItem="KKx-9M-NbC" firstAttribute="bottom" secondItem="Wbc-1I-ij8" secondAttribute="bottom" id="lWF-bE-PdS"/>
                             <constraint firstItem="KKx-9M-NbC" firstAttribute="bottom" secondItem="dha-2o-QLi" secondAttribute="bottom" constant="372.5" id="mXW-yg-i8r">
                                 <variation key="heightClass=regular-widthClass=regular" constant="0.0"/>
                             </constraint>
-                            <constraint firstItem="Cle-Cf-AJf" firstAttribute="top" secondItem="KKx-9M-NbC" secondAttribute="top" id="tdD-EF-jNw"/>
+                            <constraint firstItem="KKx-9M-NbC" firstAttribute="trailing" secondItem="QQw-Lz-jUz" secondAttribute="trailing" id="ttS-wH-NGa"/>
                             <constraint firstItem="dha-2o-QLi" firstAttribute="bottom" secondItem="Wbc-1I-ij8" secondAttribute="bottom" id="vor-dT-Zpy"/>
                             <constraint firstItem="dha-2o-QLi" firstAttribute="trailing" secondItem="KKx-9M-NbC" secondAttribute="trailing" id="wNG-Ha-Zqh"/>
                         </constraints>
@@ -7909,7 +7912,7 @@
                         <outlet property="background" destination="dha-2o-QLi" id="THG-qS-hmf"/>
                         <outlet property="bioField" destination="QUN-CJ-piX" id="hzW-YH-STT"/>
                         <outlet property="bioTrailingCipad" destination="dZi-xS-fcI" id="GiM-2L-MiE"/>
-                        <outlet property="border" destination="Cle-Cf-AJf" id="j0K-TG-heQ"/>
+                        <outlet property="border" destination="QQw-Lz-jUz" id="Goe-I4-6L0"/>
                         <outlet property="cameraField" destination="6aK-rK-jcT" id="u1J-uD-klc"/>
                         <outlet property="circle1TrailingC" destination="ygr-1F-Idp" id="gMb-Hz-C5F"/>
                         <outlet property="circle2LeadingC" destination="2E1-eV-Dsi" id="YQb-iR-sOo"/>
@@ -7921,14 +7924,14 @@
                         <outlet property="contentViewHCipad" destination="mHQ-o1-dWf" id="HwD-B7-lXU"/>
                         <outlet property="dateField" destination="gfN-9c-rJx" id="PUE-0H-hLG"/>
                         <outlet property="dateLabelLeadingC" destination="1rC-Bk-0Jz" id="z8J-D8-hgi"/>
-                        <outlet property="fbButton" destination="Cle-Cf-AJf" id="xku-Ei-4Eb"/>
+                        <outlet property="fbButton" destination="rRb-Z3-qSZ" id="bAA-55-ZNq"/>
                         <outlet property="fbWC" destination="fbf-aO-lXF" id="aIH-9U-giC"/>
                         <outlet property="fbWCipad" destination="dGK-iP-psu" id="bHK-kV-XYd"/>
                         <outlet property="hoursLabelTopC" destination="obG-mR-rn4" id="neP-Rh-byU"/>
                         <outlet property="imageView" destination="Nl1-HT-9Ta" id="wv4-15-o9b"/>
                         <outlet property="imageViewHCipad" destination="Cl7-QC-stZ" id="jXM-9h-qjQ"/>
                         <outlet property="imageViewWC" destination="Og7-lK-mFe" id="9U9-fn-HgM"/>
-                        <outlet property="instaButton" destination="Cle-Cf-AJf" id="B7N-ZV-aBo"/>
+                        <outlet property="instaButton" destination="Sya-wE-8S7" id="2o4-7L-1fp"/>
                         <outlet property="instaWC" destination="6dz-zd-ehR" id="NG4-MF-f0t"/>
                         <outlet property="instaWCipad" destination="YzI-5n-0vX" id="cGL-q1-iOb"/>
                         <outlet property="likeButton" destination="EN2-cm-JHf" id="0IY-px-HxJ"/>
@@ -7958,12 +7961,12 @@
                         <outlet property="toolbar" destination="Iux-TE-D4l" id="QQs-ie-WPm"/>
                         <outlet property="userImage" destination="ydY-lY-KRA" id="FYR-DP-OU9"/>
                         <outlet property="userImageLeadingCipad" destination="GAh-D2-ftQ" id="PMn-lB-umf"/>
-                        <outlet property="websiteButton" destination="Cle-Cf-AJf" id="4mw-mZ-S4J"/>
+                        <outlet property="websiteButton" destination="WAw-SK-AHt" id="hS0-ye-myX"/>
                         <outlet property="websiteLeadingC" destination="bn9-FN-3nx" id="DXQ-Of-NZK"/>
                         <outlet property="websiteLeadingCipad" destination="ZDG-q7-FZ0" id="hRa-yR-Iey"/>
                         <outlet property="websiteWC" destination="ba0-at-CYb" id="iIU-7O-lFp"/>
                         <outlet property="websiteWCipad" destination="mnA-X7-G7o" id="hJm-BW-zm5"/>
-                        <outlet property="youtubeButton" destination="Cle-Cf-AJf" id="iuv-VW-F5E"/>
+                        <outlet property="youtubeButton" destination="FEz-yf-FlI" id="zQ5-Y4-osR"/>
                         <outlet property="youtubeWC" destination="mLt-1j-NeA" id="ksq-XM-q9c"/>
                         <outlet property="youtubeWCipad" destination="e9c-sY-Se5" id="wBK-6i-IgR"/>
                         <segue destination="O06-fc-MiL" kind="show" identifier="imageOfDayToProfile" id="xF0-Pu-Yyn"/>
@@ -7986,6 +7989,11 @@
                 <tapGestureRecognizer id="yuv-HW-mrU">
                     <connections>
                         <action selector="imageTapped:" destination="fdx-PJ-ilV" id="va9-Rh-LdY"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="QbY-0s-d54">
+                    <connections>
+                        <action selector="commentsIconTapped:" destination="fdx-PJ-ilV" id="kY5-8T-pRL"/>
                     </connections>
                 </tapGestureRecognizer>
                 <tapGestureRecognizer id="Vhd-hC-zZC">
@@ -10226,7 +10234,7 @@
                                     <constraint firstAttribute="width" constant="4" id="oWJ-nR-ODj"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="textColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -11049,6 +11057,7 @@
                     <navigationItem key="navigationItem" id="MTv-2S-L1L"/>
                     <connections>
                         <outlet property="background" destination="sp1-dF-Grj" id="7gO-Pe-lIP"/>
+                        <outlet property="bioLabel" destination="qFg-W0-elA" id="9ym-rk-meT"/>
                         <outlet property="border" destination="UmX-nD-gi5" id="gbr-zK-yxQ"/>
                         <outlet property="cameraIcon" destination="27p-et-2oB" id="gsQ-q3-lhh"/>
                         <outlet property="circleBottomC" destination="7RH-eN-SmJ" id="dab-9A-ao9"/>
@@ -15991,7 +16000,7 @@ If you find bugs or have questions, let us know:</string>
     <inferredMetricsTieBreakers>
         <segue reference="iIs-P8-hk1"/>
         <segue reference="xF0-Pu-Yyn"/>
-        <segue reference="bTb-Yw-2PJ"/>
+        <segue reference="6FZ-0t-X91"/>
         <segue reference="PsS-JI-zqd"/>
         <segue reference="gzg-YT-mnC"/>
         <segue reference="HSM-sd-pUn"/>

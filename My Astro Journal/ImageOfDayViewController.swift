@@ -65,10 +65,10 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
     @IBOutlet weak var userImage: UIImageView!
     @IBOutlet weak var nameField: UILabel!
     @IBOutlet weak var bioField: UITextView!
-    @IBOutlet weak var websiteButton: UIImageView!
-    @IBOutlet weak var instaButton: UIImageView!
-    @IBOutlet weak var youtubeButton: UIImageView!
-    @IBOutlet weak var fbButton: UIImageView!
+    @IBOutlet weak var websiteButton: UIButton!
+    @IBOutlet weak var instaButton: UIButton!
+    @IBOutlet weak var youtubeButton: UIButton!
+    @IBOutlet weak var fbButton: UIButton!
     @IBOutlet weak var statsHoursLabel: UITextView!
     @IBOutlet weak var statsFeaturedLabel: UITextView!
     @IBOutlet weak var statsSeenLabel: UITextView!
@@ -584,11 +584,9 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
     @IBAction func numLikesTapped(_ sender: Any) {
         
     }
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        let vc = segue.destination as? ProfileViewController
-        if vc != nil {
-            vc!.keyForDifferentProfile = keyForDifferentProfile
-        }
+    @IBAction func commentsIconTapped(_ sender: Any) {
+        scrollView.setContentOffset(CGPoint(x: 0, y: commentInputTextView.frame.origin.y - scrollView.bounds.height + keyBoardH + commentInputHeightMax - 30), animated: true)
+        commentInputTextView.becomeFirstResponder()
     }
     @IBAction func commentsTableViewUserProfileTapped(_ sender: UITapGestureRecognizer) {
         let indexPath = commentsTableView.indexPathForRow(at: sender.location(in: commentsTableView))
@@ -708,7 +706,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
     }
     @IBAction func instaButtonTapped(_ sender: Any) {
         let instaUsername = userData!["instaUsername"] as! String
-        let appURL = NSURL(string: "instagram://www.instagram.com/" + instaUsername +  "/?hl=en")!
+        let appURL = NSURL(string: "instagram://user?username=" + instaUsername)!
         let webURL = NSURL(string: "https://www.instagram.com/" + instaUsername + "?hl=en")!
         if application.canOpenURL(appURL as URL) {
             application.open(appURL as URL)
@@ -736,13 +734,17 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
             application.open(webURL as URL)
         }
     }
-    override func willMove(toParent parent: UIViewController?) {
-        if likesListenerInitiated {
-            likesListener!.remove()
-            commentsListener!.remove()
-            iodUserListener!.remove()
-            iodEntryListener!.remove()
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let vc = segue.destination as? ProfileViewController
+        if vc != nil {
+            vc!.keyForDifferentProfile = keyForDifferentProfile
         }
+    }
+    override func willMove(toParent parent: UIViewController?) {
+        likesListener?.remove()
+        commentsListener?.remove()
+        iodUserListener?.remove()
+        iodEntryListener?.remove()
     }
 }
 

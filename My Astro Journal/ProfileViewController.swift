@@ -20,6 +20,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
     @IBOutlet weak var userLocation: UILabel!
     @IBOutlet weak var favObjField: UILabel!
     @IBOutlet weak var favObjFieldLabel: UILabel!
+    @IBOutlet weak var bioLabel: UILabel!
     @IBOutlet weak var userBio: UITextView!
     @IBOutlet weak var websiteButton: UIButton!
     @IBOutlet weak var instaButton: UIButton!
