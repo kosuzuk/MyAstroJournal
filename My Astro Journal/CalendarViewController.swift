@@ -724,6 +724,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         selectDateText.isHidden = false
         cancelButton.isHidden = false
         showEarlierMonthButton.isHidden = false
+        calendarsListView.reloadData()
     }
     @IBAction func cancelTapped(_ sender: Any) {
         newEntryButton.isHidden = false

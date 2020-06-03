@@ -151,12 +151,6 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillShow),
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil
-        )
         likeButton.isUserInteractionEnabled = false
         commentSendButton.isUserInteractionEnabled = false
         imageView.layer.borderColor = astroOrange
@@ -449,6 +443,12 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                 }
             }
         })
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
         NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     override func viewDidLayoutSubviews() {

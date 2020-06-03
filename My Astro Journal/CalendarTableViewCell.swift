@@ -52,6 +52,10 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
             }
         }
     }
+    var todayCellBackgroundColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)
+    var todayCellDateTextColor = UIColor(red: 0.74, green: 0.74, blue: 0.74, alpha: 1)
+    var newEntryGreenColor = UIColor(red: 0.7, green: 0.2, blue: 0.2, alpha: 0.3)
+    var newEntryRedColor = UIColor(red: 0.2, green: 0.6, blue: 0.2, alpha: 0.3)
     var cvc: CalendarViewController? = nil
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -91,12 +95,18 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
         if curRow == -1 {
             return cell
         }
-        cell.backgroundColor = .black
         cell.layer.borderWidth = 0.5
         cell.layer.borderColor = UIColor.lightGray.cgColor
         let i = indexPath.row
         if ((i > 6 && i < 28) || (i <= 6 && i + 1 > firstDayOffset) || (i >= 28 && i < numDays + firstDayOffset)) {
             var cellDate = String(i - firstDayOffset + 1)
+            if curRow == 0 && cellDate == String(Int(dateToday.prefix(4).suffix(2))!) {
+                cell.backgroundColor = todayCellBackgroundColor
+                cell.cellLabel.textColor = todayCellDateTextColor
+            } else {
+                cell.backgroundColor = .black
+                cell.cellLabel.textColor = .gray
+            }
             cell.cellLabel.text = cellDate
             if cellDate.count == 1 {
                 cellDate = "0" + cellDate
@@ -115,11 +125,22 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
                 cell.entryDate = ""
                 cell.imageView.image = nil
             }
+            if cvc?.newEntryMode ?? false {
+                if curRow == 0 && Int(cellDate)! > Int(dateToday.prefix(4).suffix(2))! {
+                    cell.newEntryColorView.backgroundColor = newEntryGreenColor
+                } else {
+                    cell.newEntryColorView.backgroundColor = newEntryRedColor
+                }
+            } else {
+                cell.newEntryColorView.backgroundColor = .clear
+            }
         } else {
+            cell.backgroundColor = .black
             cell.cellLabel.text = ""
             cell.numEntries.text = ""
             cell.entryDate = ""
             cell.imageView.image = nil
+            cell.newEntryColorView.backgroundColor = .clear
         }
         return cell
     }

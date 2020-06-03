@@ -10,6 +10,7 @@ import UIKit
 
 class CardBackDescriptionPopOverViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var previewLabel: UILabel!
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var closeButton: UIButton!
     @IBOutlet weak var imageViewHC: NSLayoutConstraint!
@@ -19,6 +20,7 @@ class CardBackDescriptionPopOverViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         if screenH < 600 {//iphone SE, 5s
+            previewLabel.isHidden = true
             imageViewHC.constant = 350
             imageViewYCenterC.constant = -20
         } else if screenH > 1000 {//ipads

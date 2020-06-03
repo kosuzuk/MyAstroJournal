@@ -54,6 +54,7 @@ class EquipmentPopOverViewController: UIViewController, UITableViewDelegate, UIT
             displayingBrands = false
             for view in self.view.subviews {view.frame.origin.x += self.viewW}
             self.eqTableView.reloadData()
+            self.eqTableView.scrollToRow(at: IndexPath(row: 0, section: 0), at: UITableView.ScrollPosition.top, animated: false)
             UIView.animate(withDuration: 0.4, animations: {
                 for view in self.view.subviews {view.frame.origin.x -= self.viewW}
             }, completion: nil)
