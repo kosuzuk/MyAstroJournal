@@ -27,6 +27,7 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
     var sunLabelW = CGFloat(0)
     var firstDayOffset = 0
     var numDays = 0
+    var userKey = ""
     var curRow = -1 {
         didSet {
             if curRow != -1 {
@@ -64,6 +65,7 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
         let font = UIFont(name: sunLabel.font.fontName, size: sunLabel.font.pointSize)
         let fontAttributes = [NSAttributedString.Key.font: font]
         sunLabelW = (sunLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any]).width
+        userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
     {
@@ -121,6 +123,21 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
         }
         return cell
     }
+    func moveToEntryEdit(_ data: [String: Any]?) {
+        var entryList: [[String: Any]]
+        var formattedTargetsList: [String]
+        if data == nil {
+            entryList = []
+            formattedTargetsList = []
+        } else {
+            entryList = data!["data"] as! [[String: Any]]
+            formattedTargetsList = data!["formattedTargets"] as! [String]
+        }
+        self.cvc?.selectedEntryList = entryList
+        self.cvc?.formattedTargetsList = formattedTargetsList
+        self.cvc?.performSegue(withIdentifier: "calendarToEdit", sender: self)
+        self.calendarView.isUserInteractionEnabled = true
+    }
     @objc func calendarTapped(sender: UIGestureRecognizer) {
         let touch = sender.location(in: calendarView)
         let indexPath = calendarView.indexPathForItem(at: touch)
@@ -128,9 +145,7 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
             return
         }
         let cell = calendarView.cellForItem(at: indexPath!) as! CalendarCell
-        let userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
         if cvc!.newEntryMode && cell.cellLabel.text != "" {
-            calendarView.isUserInteractionEnabled = false
             var cellDate = String(indexPath!.row - firstDayOffset + 1)
             if cellDate.count == 1 {
                 cellDate = "0" + cellDate
@@ -143,76 +158,69 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
             }
             cvc?.newEntryDate = calendarMonthString + cellDate + calendarYearString
             cvc?.newEntryIndexPathRow = curRow
-            let docRef = db.collection("journalEntries").document(userKey + cell.entryDate)
-            docRef.getDocument(completion: {(QuerySnapshot, Error) in
-                var data: [String: Any]?
-                if Error == nil {
-                    data = QuerySnapshot!.data()
-                } else {
-                    data = nil
-                    if cell.imageView.image != nil {
-                        self.cvc?.preventOfflineOverwrite = true
-                        self.calendarView.isUserInteractionEnabled = true
-                        return
-                    }
-                }
-                var entryList: [[String: Any]]
-                var formattedTargetsList: [String]
-                if data == nil {
-                    entryList = []
-                    formattedTargetsList = []
-                } else {
-                    entryList = data!["data"] as! [[String: Any]]
-                    formattedTargetsList = data!["formattedTargets"] as! [String]
-                }
-                self.cvc?.selectedEntryList = entryList
-                self.cvc?.formattedTargetsList = formattedTargetsList
-                self.cvc?.performSegue(withIdentifier: "calendarToEdit", sender: self)
-                self.calendarView.isUserInteractionEnabled = true
+            if cell.imageView.image == nil {
+                moveToEntryEdit(nil)
                 return
-            })
-        } else if cell.entryDate != "" {
+            }
             calendarView.isUserInteractionEnabled = false
+            cvc!.view.addSubview(formatLoadingIcon(loadingIcon))
+            loadingIcon.startAnimating()
             let docRef = db.collection("journalEntries").document(userKey + cell.entryDate)
             docRef.getDocument(completion: {(QuerySnapshot, Error) in
                 if Error != nil {
-                    print(Error!)
-                    self.calendarView.isUserInteractionEnabled = true
+                    //offline and entry not in cache
+                    self.cvc?.preventOfflineOverwrite = true
+                    self.cvc?.newEntryDate = ""
+                    self.cvc?.newEntryIndexPathRow = 0
                 } else {
-                    let entryList = QuerySnapshot!.data()!["data"] as! [Dictionary<String, Any>]
-                    self.cvc?.selectedEntryList = entryList
-                    self.cvc?.formattedTargetsList = QuerySnapshot!.data()!["formattedTargets"] as! [String]
-                    self.cvc?.entryToShowDate = cell.entryDate
-                    if entryList.count > 1 {
-                        let dd = DropDown()
-                        self.cvc!.entryDropDown = dd
-                        dd.backgroundColor = .darkGray
-                        dd.textColor = .white
-                        dd.textFont = UIFont(name: "Pacifica Condensed", size: 14)!
-                        dd.cellHeight = 34
-                        dd.cornerRadius = 10
-                        dd.cornerRadius = 10
-                        dd.anchorView = cell
-                        let cellH = floor(self.calendarView.bounds.height / 6)
-                        dd.bottomOffset = CGPoint(x: 1, y: cellH)
-                        dd.dataSource = []
-                        for entry in entryList {
-                            dd.dataSource.append((entry["target"] as! String).uppercased())
-                        }
-                        dd.selectionAction = {(index: Int, item: String) in
-                            self.cvc?.selectedEntryInd = dd.dataSource.firstIndex(of: dd.selectedItem!)!
-                            self.cvc?.performSegue(withIdentifier: "calendarToEntry", sender: self)
-                        }
-                        dd.show()
-                        self.calendarView.isUserInteractionEnabled = true
-                        return
-                    } else {
-                        self.cvc?.selectedEntryInd = 0
-                        self.cvc?.performSegue(withIdentifier: "calendarToEntry", sender: self)
-                        self.calendarView.isUserInteractionEnabled = true
-                        return
-                    }
+                    self.moveToEntryEdit(QuerySnapshot!.data())
                 }
+                loadingIcon.stopAnimating()
+                self.calendarView.isUserInteractionEnabled = true
+            })
+        } else if !cvc!.newEntryMode && cell.entryDate != "" && cell.imageView.image != nil {
+            calendarView.isUserInteractionEnabled = false
+            cvc!.view.addSubview(formatLoadingIcon(loadingIcon))
+            loadingIcon.startAnimating()
+            let docRef = db.collection("journalEntries").document(userKey + cell.entryDate)
+            docRef.getDocument(completion: {(QuerySnapshot, Error) in
+                if Error != nil {
+                    //offline and entry not in cache
+                    self.cvc?.cannotPullEntry = true
+                    self.calendarView.isUserInteractionEnabled = true
+                    return
+                }
+                let entryList = QuerySnapshot!.data()!["data"] as! [Dictionary<String, Any>]
+                self.cvc?.selectedEntryList = entryList
+                self.cvc?.formattedTargetsList = QuerySnapshot!.data()!["formattedTargets"] as! [String]
+                self.cvc?.entryToShowDate = cell.entryDate
+                if entryList.count > 1 {
+                    let dd = DropDown()
+                    self.cvc!.entryDropDown = dd
+                    dd.backgroundColor = .darkGray
+                    dd.textColor = .white
+                    dd.textFont = UIFont(name: "Pacifica Condensed", size: 14)!
+                    dd.cellHeight = 34
+                    dd.cornerRadius = 10
+                    dd.cornerRadius = 10
+                    dd.anchorView = cell
+                    let cellH = floor(self.calendarView.bounds.height / 6)
+                    dd.bottomOffset = CGPoint(x: 1, y: cellH)
+                    dd.dataSource = []
+                    for entry in entryList {
+                        dd.dataSource.append((entry["target"] as! String).uppercased())
+                    }
+                    dd.selectionAction = {(index: Int, item: String) in
+                        self.cvc?.selectedEntryInd = dd.dataSource.firstIndex(of: dd.selectedItem!)!
+                        self.cvc?.performSegue(withIdentifier: "calendarToEntry", sender: self)
+                    }
+                    dd.show()
+                } else {
+                    self.cvc?.selectedEntryInd = 0
+                    self.cvc?.performSegue(withIdentifier: "calendarToEntry", sender: self)
+                }
+                loadingIcon.stopAnimating()
+                self.calendarView.isUserInteractionEnabled = true
             })
         }
     }

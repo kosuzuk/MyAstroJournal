@@ -65,6 +65,10 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
     @IBOutlet weak var userImage: UIImageView!
     @IBOutlet weak var nameField: UILabel!
     @IBOutlet weak var bioField: UITextView!
+    @IBOutlet weak var websiteButton: UIImageView!
+    @IBOutlet weak var instaButton: UIImageView!
+    @IBOutlet weak var youtubeButton: UIImageView!
+    @IBOutlet weak var fbButton: UIImageView!
     @IBOutlet weak var statsHoursLabel: UITextView!
     @IBOutlet weak var statsFeaturedLabel: UITextView!
     @IBOutlet weak var statsSeenLabel: UITextView!
@@ -219,9 +223,9 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                 
                 let eqFieldList = [self.telescopeField!, self.mountField!, self.cameraField!]
                 let eqFieldValueList = [(data["telescope"] as! String), (data["mount"] as! String), (data["camera"] as! String)]
-                self.telescopeDD = checkEqToLink(eqType: "telescope", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: self, jevc: nil)
-                self.mountDD = checkEqToLink(eqType: "mount", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: self, jevc: nil)
-                self.cameraDD = checkEqToLink(eqType: "camera", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: self, jevc: nil)
+                self.telescopeDD = checkEqToLink(eqType: "telescope", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: self, jevc: nil, pvc: nil)
+                self.mountDD = checkEqToLink(eqType: "mount", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: self, jevc: nil, pvc: nil)
+                self.cameraDD = checkEqToLink(eqType: "camera", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: self, jevc: nil, pvc: nil)
             }
         })
         
@@ -259,34 +263,42 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                     }
                 }
                 if data["websiteName"] as! String == "" {
+                    self.websiteButton.isHidden = true
                     self.websiteWC.constant = 0
                     self.websiteWCipad.constant = 0
                     self.websiteLeadingC.constant = -10
                     self.websiteLeadingCipad.constant = -15
                 } else {
+                    self.websiteButton.isHidden = false
                     self.websiteWC.constant = 21
                     self.websiteWCipad.constant = 31
                     self.websiteLeadingC.constant = 0
                     self.websiteLeadingCipad.constant = 0
                 }
                 if data["instaUsername"] as! String == "" {
+                    self.instaButton.isHidden = true
                     self.instaWC.constant = 0
                     self.instaWCipad.constant = 0
                 } else {
+                    self.instaButton.isHidden = false
                     self.instaWC.constant = 21
                     self.instaWCipad.constant = 31
                 }
                 if data["youtubeChannel"] as! String == "" {
+                    self.youtubeButton.isHidden = true
                     self.youtubeWC.constant = 0
                     self.youtubeWCipad.constant = 0
                 } else {
+                    self.youtubeButton.isHidden = false
                     self.youtubeWC.constant = 21
                     self.youtubeWCipad.constant = 31
                 }
                 if data["fbPage"] as! String == "" {
+                    self.fbButton.isHidden = true
                     self.fbWC.constant = 0
                     self.fbWCipad.constant = 0
                 } else {
+                    self.fbButton.isHidden = false
                     self.fbWC.constant = 21
                     self.fbWCipad.constant = 31
                 }
@@ -437,11 +449,10 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                 }
             }
         })
-        imageView.isHidden = true
         NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
     }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         if screenH < 600 {//iphone SE, 5s
             dateLabelLeadingC.constant = 7
             imageViewWC.constant = 300
@@ -469,7 +480,9 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
             imageViewHCipad.constant = scale
             contentViewHCipad.constant = 1480 + scale
         }
-        imageView.isHidden = false
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
         keyForDifferentProfile = ""
     }
     @objc func willEnterForeground() {
@@ -634,7 +647,32 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
         }
         sentEvenNumComments = !sentEvenNumComments
         commentInputTextView.text = ""
-        let timeStamp = format.string(from: Date())
+        var timeStamp = format.string(from: Date())
+        if timeStamp.suffix(1).lowercased() == "m" {
+            let AMorPM = timeStamp.suffix(2).lowercased()
+            var h = timeStamp.prefix(2)
+            if h.suffix(1) == ":" {
+                h = h.prefix(1)
+            }
+            if h == "12" {
+                if AMorPM == "am" {
+                    h = "00"
+                }
+            } else {
+                if AMorPM == "pm" {
+                    h = String.SubSequence(String(Int(h)! + 12))
+                }
+            }
+            if h.count == 1 {
+                h = "0" + h
+            }
+            var colonPos = 1
+            if timeStamp.prefix(3).suffix(1) == ":" {
+                colonPos = 2
+            }
+            timeStamp = String(String(h) + timeStamp.suffix(timeStamp.count - colonPos))
+            timeStamp = String(timeStamp.prefix(timeStamp.count - 3))
+        }
         commentsList.append(["userKey": currentUserKey, "comment": inp, "timeStamp": timeStamp])
         let listCount = commentsList.count
         commentsTableView.insertRows(at: [IndexPath.init(row: listCount - 1, section: 0)], with: .automatic)

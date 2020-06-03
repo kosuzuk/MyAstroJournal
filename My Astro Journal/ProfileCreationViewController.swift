@@ -110,7 +110,8 @@ class ProfileCreationViewController: UIViewController, UINavigationControllerDel
         eqFields = [telescopeField, telescopeField2, telescopeField3, mountField, mountField2, mountField3, cameraField, cameraField2, cameraField3]
         endNoInput()
     }
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         if screenH < 600 {//iphone SE, 5s
             userImageLeadingC.constant = 20
             userNameWC.constant = 110
@@ -118,7 +119,6 @@ class ProfileCreationViewController: UIViewController, UINavigationControllerDel
             mountFieldWC.constant = 98
         }
     }
-    
     override func present(_ viewControllerToPresent: UIViewController,
                           animated flag: Bool,
                           completion: (() -> Void)? = nil) {

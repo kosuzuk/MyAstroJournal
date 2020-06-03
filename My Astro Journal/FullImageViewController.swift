@@ -25,9 +25,8 @@ class FullImageViewController: UIViewController {
             self.view.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
         })
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         if cardVC == nil {
             let imageW = imageView.image!.size.width
             let imageH = imageView.image!.size.height

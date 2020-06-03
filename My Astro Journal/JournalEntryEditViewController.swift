@@ -49,6 +49,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var targetArrow: UIImageView!
     @IBOutlet weak var targetField: UITextField!
+    @IBOutlet weak var targetPlusSign: UILabel!
     @IBOutlet weak var multTargetWarning: UILabel!
     @IBOutlet weak var constellationField: UILabel!
     @IBOutlet weak var dateField: UILabel!
@@ -110,6 +111,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
     //for targets that appear together
     var otherTarget = ""
     var featuredDate = ""
+    var loaded = false
     var cvc: CalendarViewController? = nil
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -317,6 +319,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
+        if loaded {return}
         if screenH < 600 {//iphone SE, 5s
             targetFieldWC.constant = 140
             arrowWC.constant = 130
@@ -328,6 +331,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         setAutoComp(telescopeField, eqData["telescopes"]!, 2)
         setAutoComp(mountField, eqData["mounts"]!, 2)
         setAutoComp(cameraField, eqData["cameras"]!, 2)
+        loaded = true
     }
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         activeField?.resignFirstResponder()
@@ -335,6 +339,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if textField == targetField || textField == locationField {
             scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+            targetPlusSign.isHidden = true
         } else {
             if screenH < 1000 {//iphones
                 scrollView.setContentOffset(CGPoint(x: 0, y: acquisitionField.frame.origin.y - (screenH * 0.25)), animated: true)
@@ -349,20 +354,24 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         return true
     }
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
-        if textField == targetField && targetField.text != "" {
-            let inp = formatTarget(targetField.text!)
-            if  inp.prefix(1) == "M" && MessierConst[Int(String(inp.suffix(inp.count - 1))) ?? -1] != nil {
-                constellationField.text = MessierConst[Int(String(inp.suffix(inp.count - 1)))!]
-            } else if inp.prefix(3) == "NGC" && NGCConst[Int(String(inp.suffix(inp.count - 3))) ?? -1] != nil {
-                constellationField.text = NGCConst[Int(String(inp.suffix(inp.count - 3)))!]
-            } else if inp.prefix(2) == "IC" && ICConst[Int(String(inp.suffix(inp.count - 2))) ?? -1] != nil {
-                constellationField.text = ICConst[Int(String(inp.suffix(inp.count - 2)))!]
-            } else if inp.prefix(4) == "SH2-" && SharplessConst[Int(String(inp.suffix(inp.count - 4))) ?? -1] != nil {
-                constellationField.text = SharplessConst[Int(String(inp.suffix(inp.count - 4)))!]
-            } else if OthersConst[inp] != nil {
-                constellationField.text = OthersConst[inp]
+        if textField == targetField {
+            if targetField.text != "" {
+                let inp = formatTarget(targetField.text!)
+                if  inp.prefix(1) == "M" && MessierConst[Int(String(inp.suffix(inp.count - 1))) ?? -1] != nil {
+                    constellationField.text = MessierConst[Int(String(inp.suffix(inp.count - 1)))!]
+                } else if inp.prefix(3) == "NGC" && NGCConst[Int(String(inp.suffix(inp.count - 3))) ?? -1] != nil {
+                    constellationField.text = NGCConst[Int(String(inp.suffix(inp.count - 3)))!]
+                } else if inp.prefix(2) == "IC" && ICConst[Int(String(inp.suffix(inp.count - 2))) ?? -1] != nil {
+                    constellationField.text = ICConst[Int(String(inp.suffix(inp.count - 2)))!]
+                } else if inp.prefix(4) == "SH2-" && SharplessConst[Int(String(inp.suffix(inp.count - 4))) ?? -1] != nil {
+                    constellationField.text = SharplessConst[Int(String(inp.suffix(inp.count - 4)))!]
+                } else if OthersConst[inp] != nil {
+                    constellationField.text = OthersConst[inp]
+                } else {
+                    constellationField.text = ""
+                }
             } else {
-                constellationField.text = ""
+                targetPlusSign.isHidden = false
             }
         }
     }
@@ -1024,8 +1033,8 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
     
     @IBAction func done(_ sender: Any) {
         //if target or constellation was left blank, show alert
-        if targetField.text == "" || locationField.text == "" || (!observedSelected && !photographedSelected) {
-            let alertController = UIAlertController(title: "Error", message: "Target, time, location, oberved or photographed must not be left blank.", preferredStyle: .alert)
+        if targetField.text == "" || locationField.text == "" || timeStartField.text == "" || timeEndField.text == "" || (!observedSelected && !photographedSelected) {
+            let alertController = UIAlertController(title: "Error", message: "Target, time, location, and observed or photographed must not be left blank.", preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
             alertController.addAction(defaultAction)
             self.present(alertController, animated: true, completion: nil)

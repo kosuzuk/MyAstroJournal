@@ -191,8 +191,8 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
             self.present(alertController, animated: true, completion: nil)
         }
     }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         if screenH < 600 {//iphone SE, 5s
             catalogsLabelTopC.constant = 5
             categoriesLabelTopC.constant = 5

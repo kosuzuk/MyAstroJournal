@@ -9,6 +9,7 @@
 import UIKit
 import FirebaseAuth
 import SwiftKeychainWrapper
+import DropDown
 
 class ProfileViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
     @IBOutlet weak var background: UIImageView!
@@ -80,11 +81,12 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
     @IBOutlet weak var circleBottomCipad: NSLayoutConstraint!
     var userKey = ""
     var userData: Dictionary<String, Any>! = nil
-    var eqFields: [UILabel] = []
     var websiteLeadingCDefault = CGFloat(0.0)
     var websiteLeadingCipadDefault = CGFloat(0.0)
     var iconW = CGFloat(0.0)
     var iconGap = CGFloat(0.0)
+    var eqFields: [UILabel] = []
+    var eqDDs: [DropDown?] = []
     var profileChanged = false
     var newImage: UIImage? = nil
     var keyForDifferentProfile = ""
@@ -115,49 +117,57 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             websiteLeadingCipad.constant = websiteLeadingCipadDefault
         }
         if websiteName == "" {
+            websiteButton.isHidden = true
             websiteWC.constant = 0
             websiteTrailingC.constant = 0
             websiteWCipad.constant = 0
             websiteTrailingCipad.constant = 0
         } else {
+            websiteButton.isHidden = false
             websiteWC.constant = 21
             websiteTrailingC.constant = 10
             websiteWCipad.constant = 31
             websiteTrailingCipad.constant = 15
         }
         if instaUsername == "" {
+            instaButton.isHidden = true
             instaWC.constant = 0
             instaTrailingC.constant = 0
             instaWCipad.constant = 0
             instaTrailingCipad.constant = 0
         } else {
+            instaButton.isHidden = false
             instaWC.constant = 21
             instaTrailingC.constant = 10
             instaWCipad.constant = 31
             instaTrailingCipad.constant = 15
         }
         if youtubeChannel == "" {
+            youtubeButton.isHidden = true
             youtubeWC.constant = 0
             youtubeTrailingC.constant = 0
             youtubeWCipad.constant = 0
             youtubeTrailingCipad.constant = 0
         } else {
+            youtubeButton.isHidden = false
             youtubeWC.constant = 21
             youtubeTrailingC.constant = 10
             youtubeWCipad.constant = 31
             youtubeTrailingCipad.constant = 15
         }
         if fbPage == "" {
+            fbButton.isHidden = true
             fbWC.constant = 0
             fbWCipad.constant = 0
         } else {
+            fbButton.isHidden = false
             fbWC.constant = 21
             fbWCipad.constant = 31
         }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.eqFields = [self.userTelescope, self.userTelescope2, self.userTelescope3, self.userMount, self.userMount2, self.userMount3, self.userCamera, self.userCamera2, self.userCamera3]
+        eqFields = [userTelescope, userTelescope2, userTelescope3, userMount, userMount2, userMount3, userCamera, userCamera2, userCamera3]
         if (screenH < 600) {//iphone SE, 5s
             favObjFieldLabel.text = "fav object:"
             equipmentLabel.isHidden = true
@@ -176,6 +186,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             statsPhotoLabel.font = UIFont(name: "Pacifica Condensed", size: 14)
         }
         else if (screenH < 700) {//iphone 8
+            circleBottomC.constant = 8
             statsBanner.isHidden = true
         } else if (screenH < 750) {//iphone 8 plus
             userNameTopC.constant = 6
@@ -215,6 +226,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             iconW = websiteWCipad.constant
             iconGap = websiteTrailingCipad.constant
         }
+        userImage.isUserInteractionEnabled = false
         userImage.layer.borderWidth = 2
         userImage.layer.borderColor = astroOrange
         editButton.isHidden = true
@@ -224,10 +236,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             userKey = keyForDifferentProfile
             logOutButton.isHidden = true
         }
-        websiteButton.isHidden = true
-        instaButton.isHidden = true
-        youtubeButton.isHidden = true
-        fbButton.isHidden = true
         userName.adjustsFontSizeToFitWidth = true
         userName.minimumScaleFactor = 0.6
         let docRef = db.collection("userData").document(userKey)
@@ -250,7 +258,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                             print(Error)
                             if self.keyForDifferentProfile == "" {
                                 self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")
-                                self.userImage.isUserInteractionEnabled = false
                                 let alertController = UIAlertController(title: "Error", message: "The profile image could not be loaded. It may have been deleted.", preferredStyle: .alert)
                                 let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
                                 alertController.addAction(defaultAction)
@@ -258,7 +265,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                                 self.editButton.isHidden = false
                             } else {
                                 self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")
-                                self.userImage.isUserInteractionEnabled = false
                             }
                         } else {
                             print("image set!")
@@ -272,7 +278,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                     }
                 } else {
                     self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")
-                    self.userImage.isUserInteractionEnabled = false
                     if self.keyForDifferentProfile == "" {
                         self.editButton.isHidden = false
                     }
@@ -282,29 +287,47 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                 self.favObjField.text = " " + (docData["favoriteObject"] as! String)
                 self.userBio.text = (docData["userBio"] as! String)
                 self.layOutSMIcons()
-                self.websiteButton.isHidden = false
-                self.instaButton.isHidden = false
-                self.youtubeButton.isHidden = false
-                self.fbButton.isHidden = false
                 let eqData = docData["userEquipment"] as! Dictionary<String, [String]>
+                let eqFieldsTemp = [[self.userTelescope!, self.userMount!, self.userCamera!], [self.userTelescope2!, self.userMount2!, self.userCamera2!], [self.userTelescope3!, self.userMount3!, self.userCamera3!]]
+                var curEqFields: [UILabel] = []
                 for (i, field) in self.eqFields.enumerated() {
+                    curEqFields = eqFieldsTemp[i % 3]
                     if i / 3 == 0 {
                         if i < eqData["telescopes"]!.count {
                             field.text = eqData["telescopes"]![i]
+                            if self.keyForDifferentProfile != "" {
+                                self.eqDDs.append(checkEqToLink(eqType: "telescope", eqFields: curEqFields, eqFieldValues: [eqData["telescopes"]![i]], iodvc: nil, jevc: nil, pvc: self))
+                                
+                                self.eqDDs[self.eqDDs.count - 1]?.bottomOffset = CGPoint(x: 0, y: 20)
+                            }
                         } else {
-                            field.text = ""
+                            if self.keyForDifferentProfile != "" {
+                                self.eqDDs.append(nil)
+                            }
                         }
                     } else if i / 3 == 1 {
                         if i - 3 < eqData["mounts"]!.count {
                             field.text = eqData["mounts"]![i - 3]
+                            if self.keyForDifferentProfile != "" {
+                                self.eqDDs.append(checkEqToLink(eqType: "mount", eqFields: curEqFields, eqFieldValues: ["", eqData["mounts"]![i - 3]], iodvc: nil, jevc: nil, pvc: self))
+                                self.eqDDs[self.eqDDs.count - 1]?.bottomOffset = CGPoint(x: 0, y: 20)
+                            }
                         } else {
-                           field.text = ""
+                            if self.keyForDifferentProfile != "" {
+                                self.eqDDs.append(nil)
+                            }
                        }
                     } else {
                         if i - 6 < eqData["cameras"]!.count {
                             field.text = eqData["cameras"]![i - 6]
+                            if self.keyForDifferentProfile != "" {
+                                self.eqDDs.append(checkEqToLink(eqType: "camera", eqFields: curEqFields, eqFieldValues: ["", "", eqData["cameras"]![i - 6]], iodvc: nil, jevc: nil, pvc: self))
+                                self.eqDDs[self.eqDDs.count - 1]?.bottomOffset = CGPoint(x: 0, y: 20)
+                            }
                         } else {
-                           field.text = ""
+                            if self.keyForDifferentProfile != "" {
+                                self.eqDDs.append(nil)
+                            }
                        }
                     }
                 }
@@ -326,7 +349,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             if !isConnected && self.userData["profileImageKey"] as! String != "" {
                 if self.keyForDifferentProfile == "" {
                     self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")
-                    self.userImage.isUserInteractionEnabled = false
                     let alertController = UIAlertController(title: "Error", message: "Profile image cannot be loaded while offline", preferredStyle: .alert)
                     let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
                     alertController.addAction(defaultAction)
@@ -334,7 +356,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                     self.editButton.isHidden = false
                 } else {
                     self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")
-                    self.userImage.isUserInteractionEnabled = false
                 }
                 loadingIcon.stopAnimating()
             }
@@ -402,7 +423,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                         field.text = eqData["mounts"]![i - 3]
                     } else {
                        field.text = ""
-                   }
+                    }
                 } else {
                     if i - 6 < eqData["cameras"]!.count {
                         field.text = eqData["cameras"]![i - 6]
@@ -414,8 +435,8 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             profileChanged = false
         }
     }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(false)
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         if screenH < 600 {//iphone SE, 5s
             circleTrailingC.constant = 5
             circleLeadingC.constant = 5
@@ -425,6 +446,9 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             circleTopCipad.constant = 60
             circleBottomCipad.constant = 60
         }
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
         endNoInput()
     }
     @objc func willEnterForeground() {
@@ -440,50 +464,42 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             popOverVC.didMove(toParent: self)
         }
     }
+    func openURL(_ appURL: URL?, _ webURL: URL?) {
+        if appURL != nil && application.canOpenURL(appURL! as URL) {
+            application.open(appURL! as URL)
+        } else if webURL != nil {
+            application.open(webURL! as URL)
+        } else {
+            let alertController = UIAlertController(title: "Error", message: "The provided URL is invalid", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
     @IBAction func websiteTapped(_ sender: Any) {
-        let webURL = NSURL(string: "https://www." + (userData["websiteName"] as! String))!
-        application.open(webURL as URL)
+        let webURL = NSURL(string: "https://www." + (userData["websiteName"] as! String))
+        openURL(nil, webURL as URL?)
     }
     @IBAction func instaTapped(_ sender: Any) {
         let instaUsername = userData["instaUsername"] as! String
-        let appURL = NSURL(string: "instagram://www.instagram.com/" + instaUsername +  "/?hl=en")!
-        let webURL = NSURL(string: "https://www.instagram.com/" + instaUsername + "?hl=en")!
-        if application.canOpenURL(appURL as URL) {
-            application.open(appURL as URL)
-        } else {
-            application.open(webURL as URL)
-        }
+        let appURL = NSURL(string: "instagram://user?username=" + instaUsername)
+        let webURL = NSURL(string: "https://www.instagram.com/" + instaUsername + "?hl=en")
+        openURL(appURL as URL?, webURL as URL?)
     }
     @IBAction func youtubeTapped(_ sender: Any) {
         let youtubeChannel = userData["youtubeChannel"] as! String
-        let appURL = NSURL(string: "youtube://www.youtube.com/" + youtubeChannel)!
-        let webURL = NSURL(string: "https://www.youtube.com/" + youtubeChannel)!
-        if application.canOpenURL(appURL as URL) {
-            application.open(appURL as URL)
-        } else {
-            application.open(webURL as URL)
-        }
+        let appURL = NSURL(string: "youtube://www.youtube.com/" + youtubeChannel)
+        let webURL = NSURL(string: "https://www.youtube.com/" + youtubeChannel)
+        openURL(appURL as URL?, webURL as URL?)
     }
     @IBAction func fbTapped(_ sender: Any) {
         let fbPage = userData["fbPage"] as! String
-        let appURL = NSURL(string: "facebook://www.facebook.com/" + fbPage)!
-        let webURL = NSURL(string: "https://www.facebook.com/" + fbPage)!
-        if application.canOpenURL(appURL as URL) {
-            application.open(appURL as URL)
-        } else {
-            application.open(webURL as URL)
-        }
+        let appURL = NSURL(string: "facebook://www.facebook.com/" + fbPage)
+        let webURL = NSURL(string: "https://www.facebook.com/" + fbPage)
+        openURL(appURL as URL?, webURL as URL?)
     }
-    @IBAction func logOutAction(_ sender: Any) {
-        do {
-            try Auth.auth().signOut()
-        }
-        catch let signOutError as NSError {
-            print ("Error signing out: %@", signOutError)
-        }
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let initial = storyboard.instantiateInitialViewController()
-        UIApplication.shared.keyWindow?.rootViewController = initial
+    @objc func eqTapped(sender: UIGestureRecognizer) {
+        eqDDs[eqFields.index(of: sender.view as! UILabel)!]?.show()
     }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination as? ProfileEditViewController
@@ -502,6 +518,17 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             vc?.pvc = self
             pevc = vc
         }
+    }
+    @IBAction func logOutAction(_ sender: Any) {
+        do {
+            try Auth.auth().signOut()
+        }
+        catch let signOutError as NSError {
+            print ("Error signing out: %@", signOutError)
+        }
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let initial = storyboard.instantiateInitialViewController()
+        UIApplication.shared.keyWindow?.rootViewController = initial
     }
 }
 

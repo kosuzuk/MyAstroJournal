@@ -271,7 +271,7 @@ func setUpEqDD(anchorView: UILabel, ddString: String, eqLink: String) -> DropDow
     return dd
 }
 
-func checkEqToLink(eqType: String, eqFields: [UILabel], eqFieldValues: [String], iodvc: ImageOfDayViewController?, jevc: JournalEntryViewController?) -> DropDown? {
+func checkEqToLink(eqType: String, eqFields: [UILabel], eqFieldValues: [String], iodvc: ImageOfDayViewController?, jevc: JournalEntryViewController?, pvc: ProfileViewController?) -> DropDown? {
     var field = eqFields[0]
     var eqString = ""
     var eqNames: [String: [String]] = [:]
@@ -328,8 +328,11 @@ func checkEqToLink(eqType: String, eqFields: [UILabel], eqFieldValues: [String],
         if iodvc != nil {
             let tap = UITapGestureRecognizer(target: iodvc!, action: #selector(iodvc!.eqTapped))
             field.addGestureRecognizer(tap)
-        } else {
+        } else if jevc != nil {
             let tap = UITapGestureRecognizer(target: jevc!, action: #selector(jevc!.eqTapped))
+            field.addGestureRecognizer(tap)
+        } else {
+            let tap = UITapGestureRecognizer(target: pvc!, action: #selector(pvc!.eqTapped))
             field.addGestureRecognizer(tap)
         }
         field.textColor = UIColor(red: 0.3, green: 0.6, blue: 0.8, alpha: 1)

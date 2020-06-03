@@ -107,9 +107,9 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
         let eqFieldValueList = [(entryData["telescope"] as! String), (entryData["mount"] as! String), (entryData["camera"] as! String)]
         if segueFromMonthlyChallenge {
             let eqFieldList = [self.telescopeField!, self.mountField!, self.cameraField!]
-            telescopeDD = checkEqToLink(eqType: "telescope", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: nil, jevc: self)
-            mountDD = checkEqToLink(eqType: "mount", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: nil, jevc: self)
-            cameraDD = checkEqToLink(eqType: "camera", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: nil, jevc: self)
+            telescopeDD = checkEqToLink(eqType: "telescope", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: nil, jevc: self, pvc: nil)
+            mountDD = checkEqToLink(eqType: "mount", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: nil, jevc: self, pvc: nil)
+            cameraDD = checkEqToLink(eqType: "camera", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: nil, jevc: self, pvc: nil)
         } else {
             profileButton.isHidden = true
         }

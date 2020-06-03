@@ -96,6 +96,14 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             self.present(alertController, animated: true, completion: nil)
         }
     }
+    var cannotPullEntry = true {
+        didSet {
+            let alertController = UIAlertController(title: "Error", message: "Cannot currently display this entry while offline.", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
     var newImage: UIImage? = nil
     var imageChangedDate = ""
     var cardUnlocked = ""
@@ -636,8 +644,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         popOverVC.imageView.image = UIImage(named: imagePath)
         popOverVC.didMove(toParent: self)
     }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         if (screenH < 600) {//iphone SE, 5s
             bannerHC.constant = 35
             earlierMonthButtonTopC.constant = -38
@@ -649,6 +657,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         calendarHC.constant = calendarSize
         calendarWCipad.constant = calendarSize
         calendarHCipad.constant = calendarSize * 0.83
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
         jevc = nil
         if imageChangedDate != "" {
             imageDict[imageChangedDate] = newImage

@@ -26,8 +26,8 @@ class PackDescriptionPopOverViewController: UIViewController {
             closeButton.setTitle("X", for: .normal)
             closeButton.setTitleColor(.white, for: .normal)
         }
-
         view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
+        textView.isUserInteractionEnabled = false
         showAnimate()
     }
 
@@ -38,10 +38,6 @@ class PackDescriptionPopOverViewController: UIViewController {
             self.view.alpha = 1.0
             self.view.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
         })
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
     }
     
     func removeAnimate() {
