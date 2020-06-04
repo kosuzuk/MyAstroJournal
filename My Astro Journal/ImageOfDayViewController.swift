@@ -648,7 +648,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
         var timeStamp = format.string(from: Date())
         if timeStamp.suffix(1).lowercased() == "m" {
             let AMorPM = timeStamp.suffix(2).lowercased()
-            var h = timeStamp.prefix(2)
+            var h = timeStamp.prefix(5).suffix(2)
             if h.suffix(1) == ":" {
                 h = h.prefix(1)
             }
@@ -664,11 +664,11 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
             if h.count == 1 {
                 h = "0" + h
             }
-            var colonPos = 1
-            if timeStamp.prefix(3).suffix(1) == ":" {
-                colonPos = 2
+            var colonPos = 4
+            if timeStamp.prefix(6).suffix(1) == ":" {
+                colonPos = 5
             }
-            timeStamp = String(String(h) + timeStamp.suffix(timeStamp.count - colonPos))
+            timeStamp = String(timeStamp.prefix(3) + h + timeStamp.suffix(timeStamp.count - colonPos))
             timeStamp = String(timeStamp.prefix(timeStamp.count - 3))
         }
         commentsList.append(["userKey": currentUserKey, "comment": inp, "timeStamp": timeStamp])

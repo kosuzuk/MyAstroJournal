@@ -31,6 +31,7 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
     @IBOutlet weak var bigImageView: UIImageView!
     @IBOutlet weak var featuredButton: UIButton!
     @IBOutlet weak var memoriesLabel: UILabel!
+    @IBOutlet weak var memoriesUnderline: UILabel!
     @IBOutlet weak var memoriesField: UITextView!
     @IBOutlet weak var telescopeField: UILabel!
     @IBOutlet weak var mountField: UILabel!
@@ -83,6 +84,8 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
         }
         bigImageView.layer.borderWidth = 2
         bigImageView.layer.borderColor = astroOrange
+        bigImageView.isUserInteractionEnabled = false
+        imageCollectionView.isUserInteractionEnabled = false
         editButton.isHidden = true
         featuredButton.isHidden = true
         
@@ -160,6 +163,7 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
                     } else {
                         self.bigImageView.image = UIImage(data: data!)
                         self.entryData["mainImage"] = UIImage(data: data!)
+                        self.bigImageView.isUserInteractionEnabled = true
                         mainImagePulled = true
                         checkFinishedPullingImages()
                     }
@@ -196,6 +200,7 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
                         imageList[i] = img!
                         if imageList.count == imageKeyList.count {
                             self.entryData["imageList"] = imageList
+                            self.imageCollectionView.isUserInteractionEnabled = true
                             imagesPulled = true
                             checkFinishedPullingImages()
                         }
@@ -224,6 +229,7 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
         if segueFromMonthlyChallenge {
             editButton.isHidden = true
             memoriesLabel.isHidden = true
+            memoriesUnderline.isHidden = true
             memoriesField.isHidden = true
             extraPhotosLabel.isHidden = true
             imageCollectionView.isHidden = true

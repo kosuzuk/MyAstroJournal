@@ -9,7 +9,7 @@
 import UIKit
 import FirebaseFirestore
 
-class ImageOfDayPickerViewController: UIViewController, UITextFieldDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
+class ImageOfDayPickerViewController: UIViewController, UIScrollViewDelegate, UITextFieldDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
     @IBOutlet weak var fromDateField: UITextField!
     @IBOutlet weak var entriesCollectionView: UICollectionView!
     @IBOutlet weak var pageNumLabel: UILabel!
@@ -162,7 +162,9 @@ class ImageOfDayPickerViewController: UIViewController, UITextFieldDelegate, UIC
         cell.targetNameLabel.isHidden = false
         return cell
     }
-    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        fromDateField.resignFirstResponder()
+    }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true

@@ -9369,6 +9369,7 @@
                         <outlet property="memoriesLabel" destination="arF-jS-po1" id="LOs-VM-vsl"/>
                         <outlet property="memoriesLabelTopC" destination="91c-6L-0Qh" id="gyA-TC-obQ"/>
                         <outlet property="memoriesLabelTopCipad" destination="QQ6-TD-OeR" id="7mh-ZC-xbg"/>
+                        <outlet property="memoriesUnderline" destination="yDJ-4W-aGN" id="R85-Bm-eBx"/>
                         <outlet property="mountField" destination="boj-JD-HJV" id="zRk-sh-N3U"/>
                         <outlet property="mountFieldWC" destination="QvN-N6-WA7" id="4Qb-9A-rCB"/>
                         <outlet property="observedCheckImage" destination="gaw-7g-fO3" id="N5g-ic-XWp"/>
@@ -16008,7 +16009,7 @@ If you find bugs or have questions, let us know:</string>
     <inferredMetricsTieBreakers>
         <segue reference="iIs-P8-hk1"/>
         <segue reference="Lmg-U4-pzL"/>
-        <segue reference="6FZ-0t-X91"/>
+        <segue reference="hco-en-RXI"/>
         <segue reference="PsS-JI-zqd"/>
         <segue reference="gzg-YT-mnC"/>
         <segue reference="HSM-sd-pUn"/>
