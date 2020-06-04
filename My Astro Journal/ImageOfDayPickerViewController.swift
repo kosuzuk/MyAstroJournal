@@ -9,7 +9,7 @@
 import UIKit
 import FirebaseFirestore
 
-class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class ImageOfDayPickerViewController: UIViewController, UITextFieldDelegate, UICollectionViewDelegate, UICollectionViewDataSource {
     @IBOutlet weak var fromDateField: UITextField!
     @IBOutlet weak var entriesCollectionView: UICollectionView!
     @IBOutlet weak var pageNumLabel: UILabel!
@@ -78,6 +78,7 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
             collectionViewLeadingCipad.constant = 110
             collectionViewTrailingCipad.constant = 110
         }
+        fromDateField.delegate = (self as UITextFieldDelegate)
         view.addSubview(formatLoadingIcon(loadingIcon))
         loadingIcon.startAnimating()
         
@@ -162,6 +163,10 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
         return cell
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
     func isValidDate(date: String) -> Bool {
         for c in date {
             if !c.isNumber {
@@ -173,7 +178,6 @@ class ImageOfDayPickerViewController: UIViewController, UICollectionViewDelegate
         }
         return true
     }
-    
     @IBAction func searchTapped(_ sender: Any) {
         let inputDate = fromDateField.text!
         if !isValidDate(date: inputDate) {

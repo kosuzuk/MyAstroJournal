@@ -25,6 +25,7 @@ class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate,
         super.viewDidLoad()
         imageView.layer.borderWidth = 1
         imageView.layer.borderColor = astroOrange
+        targetToDisplayField.delegate = (self as UITextFieldDelegate)
         targetField.delegate = (self as UITextFieldDelegate)
         monthYearField.delegate = (self as UITextFieldDelegate)
         targetField.autocorrectionType = .no

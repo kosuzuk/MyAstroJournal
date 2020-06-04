@@ -241,14 +241,14 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
             mountFieldWC.constant = 98
         }
         else if screenH > 1000 {//ipads
+            let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+            layout.itemSize = CGSize(width: imageCollectionView.bounds.height, height: imageCollectionView.bounds.height)
+            imageCollectionView.collectionViewLayout = layout
             imageViewHCipad.constant = bigImageView.bounds.width * 0.6
             contentViewHCipad.constant = imageCollectionView.frame.origin.y + imageViewHCipad.constant
             if entryData["mainImageKey"] as! String != "" {
                 self.bigImageView.isHidden = false
             }
-            let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-            layout.itemSize = CGSize(width: imageCollectionView.bounds.height, height: imageCollectionView.bounds.height)
-            imageCollectionView.collectionViewLayout = layout
         }
         if bigImageView.isHidden {
             contentViewHC.constant -= 190

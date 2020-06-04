@@ -20,7 +20,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
     @IBOutlet weak var userLocation: UILabel!
     @IBOutlet weak var favObjField: UILabel!
     @IBOutlet weak var favObjFieldLabel: UILabel!
-    @IBOutlet weak var bioLabel: UILabel!
     @IBOutlet weak var userBio: UITextView!
     @IBOutlet weak var websiteButton: UIButton!
     @IBOutlet weak var instaButton: UIButton!
@@ -239,6 +238,10 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
         }
         userName.adjustsFontSizeToFitWidth = true
         userName.minimumScaleFactor = 0.6
+        websiteButton.isHidden = true
+        instaButton.isHidden = true
+        youtubeButton.isHidden = true
+        fbButton.isHidden = true
         let docRef = db.collection("userData").document(userKey)
         docRef.getDocument(completion: {(QuerySnapshot, Error) in
             if Error != nil {
