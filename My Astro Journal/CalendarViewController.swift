@@ -293,6 +293,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                 self.numEntriesDict = [:]
             }
         }
+        self.yearDropDown!.selectRow(0)
         var alertDates = userData!["featuredAlertDates"] as! [String]
         if alertDates != [] {
             for alertDate in alertDates {

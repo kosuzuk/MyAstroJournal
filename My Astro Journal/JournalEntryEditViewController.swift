@@ -321,7 +321,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         super.viewDidAppear(true)
         if loaded {return}
         if screenH < 600 {//iphone SE, 5s
-            targetFieldWC.constant = 140
+            targetFieldWC.constant = 110
             arrowWC.constant = 130
             mountFieldWC.constant = 98
         }

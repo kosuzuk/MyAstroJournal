@@ -1,4 +1,8 @@
-implement photographer user keys including antoine's
+rules:
+auth !== null
+disable anonymous sign in
+write to profile if auth.uid === $uid
+write to image of day keys and monthly challenges if email is antoine
 
 iod db change when picking entry:
 -Store new keys in iod db
