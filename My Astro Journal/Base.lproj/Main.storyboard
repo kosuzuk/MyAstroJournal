@@ -1194,7 +1194,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="s18-4t-hSD">
-                                                    <rect key="frame" x="0.0" y="56" width="560" height="403"/>
+                                                    <rect key="frame" x="0.0" y="57.5" width="560" height="401.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ppw-H2-jyr">
                                                         <size key="itemSize" width="50" height="50"/>
@@ -1247,6 +1247,7 @@
                                                                     </view>
                                                                 </subviews>
                                                             </view>
+                                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
                                                                 <constraint firstItem="HTk-22-pOx" firstAttribute="leading" secondItem="qg1-Tv-eod" secondAttribute="leading" id="42F-FG-hDX"/>
                                                                 <constraint firstItem="HTk-22-pOx" firstAttribute="top" secondItem="qg1-Tv-eod" secondAttribute="top" id="5bB-d7-Sh8"/>
@@ -1336,49 +1337,49 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sun" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uom-qg-0gO">
-                                                    <rect key="frame" x="5" y="36" width="30" height="20"/>
+                                                    <rect key="frame" x="5" y="36" width="23" height="21.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="17"/>
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fri" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ehw-vH-c1X">
-                                                    <rect key="frame" x="276.5" y="36" width="19" height="20"/>
+                                                    <rect key="frame" x="237" y="36" width="19" height="21.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="17"/>
                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thu" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Deg-lU-azy">
-                                                    <rect key="frame" x="237.5" y="36" width="29" height="20"/>
+                                                    <rect key="frame" x="205.5" y="36" width="21.5" height="21.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="17"/>
                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lPz-QY-SpM">
-                                                    <rect key="frame" x="177.5" y="36" width="34" height="20"/>
+                                                    <rect key="frame" x="156" y="36" width="23.5" height="21.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="17"/>
                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tue" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hSJ-Xa-ZGv">
-                                                    <rect key="frame" x="112.5" y="36" width="27" height="20"/>
+                                                    <rect key="frame" x="96" y="36" width="22" height="21.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="17"/>
                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mon" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KB9-cI-mem">
-                                                    <rect key="frame" x="55" y="36" width="34.5" height="20"/>
+                                                    <rect key="frame" x="48" y="36" width="25" height="21.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="17"/>
                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FKt-gJ-wN6">
-                                                    <rect key="frame" x="305.5" y="36" width="26" height="20"/>
+                                                    <rect key="frame" x="266" y="36" width="24.5" height="21.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="17"/>
                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1468,7 +1469,7 @@
                                 </connections>
                             </tableView>
                             <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dGw-RI-eYG">
-                                <rect key="frame" x="80" y="763" width="552" height="100"/>
+                                <rect key="frame" x="80" y="765" width="552" height="98"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="342" id="9eV-8t-EE3"/>
@@ -1564,7 +1565,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="IMAGE OF THE WEEK" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HH0-DG-Bts">
-                                <rect key="frame" x="235.5" y="737" width="241" height="28"/>
+                                <rect key="frame" x="273.5" y="737" width="165" height="30"/>
                                 <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="24"/>
                                 <color key="textColor" white="0.85886665239726023" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -4538,40 +4539,40 @@
                                 <rect key="frame" x="0.0" y="0.0" width="712" height="878"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Catalogs" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VIR-0c-H75">
-                                <rect key="frame" x="26" y="107" width="100" height="29.5"/>
+                                <rect key="frame" x="26" y="107" width="91.5" height="31.5"/>
                                 <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="25"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Categories" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZUQ-jX-9VA">
-                                <rect key="frame" x="26" y="565" width="121.5" height="29.5"/>
+                                <rect key="frame" x="26" y="567" width="109" height="31.5"/>
                                 <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="25"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gmN-5c-X1o">
-                                <rect key="frame" x="408" y="742" width="200" height="117.5"/>
+                                <rect key="frame" x="408" y="746" width="200" height="117.5"/>
                                 <state key="normal" image="CardGroups/plantes"/>
                                 <connections>
                                     <action selector="planetsPressed:" destination="I2d-IS-cHC" eventType="touchUpInside" id="aWU-1i-4TK"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Njf-EI-VZL">
-                                <rect key="frame" x="491" y="146.5" width="140" height="184"/>
+                                <rect key="frame" x="491" y="148.5" width="140" height="184"/>
                                 <state key="normal" image="CardGroups/NGC"/>
                                 <connections>
                                     <action selector="NGCPressed:" destination="I2d-IS-cHC" eventType="touchUpInside" id="d5I-Ix-t9h"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GqQ-Sa-fF7">
-                                <rect key="frame" x="286" y="146.5" width="140" height="184"/>
+                                <rect key="frame" x="286" y="148.5" width="140" height="184"/>
                                 <state key="normal" image="CardGroups/IC"/>
                                 <connections>
                                     <action selector="ICPressed:" destination="I2d-IS-cHC" eventType="touchUpInside" id="5Vd-pi-BxG"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fPS-po-xjy">
-                                <rect key="frame" x="81" y="146.5" width="140" height="184"/>
+                                <rect key="frame" x="81" y="148.5" width="140" height="184"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="85" id="8ZZ-lA-KzC">
                                         <variation key="heightClass=regular-widthClass=regular" constant="140"/>
@@ -4601,14 +4602,14 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zgu-Qk-EfL">
-                                <rect key="frame" x="174" y="360.5" width="140" height="184.5"/>
+                                <rect key="frame" x="174" y="362.5" width="140" height="184.5"/>
                                 <state key="normal" image="CardGroups/sharplessLocked"/>
                                 <connections>
                                     <action selector="sharplessPressed:" destination="I2d-IS-cHC" eventType="touchUpInside" id="D7f-PK-nj9"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pss-Ie-fL2">
-                                <rect key="frame" x="104" y="609.5" width="200" height="117.5"/>
+                                <rect key="frame" x="104" y="613.5" width="200" height="117.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="Ba7-iS-bMt"/>
                                     <constraint firstAttribute="width" secondItem="Pss-Ie-fL2" secondAttribute="height" multiplier="143:84" id="Kiv-Ep-55L"/>
@@ -4638,14 +4639,14 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Jl-fz-Bhx">
-                                <rect key="frame" x="104" y="742" width="200" height="117.5"/>
+                                <rect key="frame" x="104" y="746" width="200" height="117.5"/>
                                 <state key="normal" image="CardGroups/clusters"/>
                                 <connections>
                                     <action selector="clustersPressed:" destination="I2d-IS-cHC" eventType="touchUpInside" id="ONf-BI-LxR"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QZG-Na-nJf">
-                                <rect key="frame" x="542" y="97" width="110" height="50"/>
+                                <rect key="frame" x="542" y="98" width="110" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="TWY-vm-cOn">
                                         <variation key="heightClass=regular-widthClass=regular" constant="50"/>
@@ -4693,14 +4694,14 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wmy-w3-IGe">
-                                <rect key="frame" x="398" y="360.5" width="140" height="184.5"/>
+                                <rect key="frame" x="398" y="362.5" width="140" height="184.5"/>
                                 <state key="normal" image="CardGroups/othersLocked"/>
                                 <connections>
                                     <action selector="othersPressed:" destination="I2d-IS-cHC" eventType="touchUpInside" id="kyW-xM-emi"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nUS-JX-Hpx">
-                                <rect key="frame" x="408" y="609.5" width="200" height="117.5"/>
+                                <rect key="frame" x="408" y="613.5" width="200" height="117.5"/>
                                 <state key="normal" image="CardGroups/nebulae"/>
                                 <connections>
                                     <action selector="nebulaePressed:" destination="I2d-IS-cHC" eventType="touchUpInside" id="imV-Yd-LKe"/>
@@ -16009,10 +16010,10 @@ If you find bugs or have questions, let us know:</string>
     <inferredMetricsTieBreakers>
         <segue reference="iIs-P8-hk1"/>
         <segue reference="Lmg-U4-pzL"/>
-        <segue reference="hco-en-RXI"/>
-        <segue reference="PsS-JI-zqd"/>
+        <segue reference="bTb-Yw-2PJ"/>
+        <segue reference="SAJ-yr-GiJ"/>
         <segue reference="gzg-YT-mnC"/>
-        <segue reference="HSM-sd-pUn"/>
+        <segue reference="Tla-zu-UTY"/>
         <segue reference="4G7-LB-6dW"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
