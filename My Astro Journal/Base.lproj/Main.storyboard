@@ -12488,7 +12488,7 @@ If you find bugs or have questions, let us know:</string>
                                                 </constraints>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no"/>
                                                 <variation key="default">
                                                     <mask key="constraints">
                                                         <exclude reference="KYV-Pc-wLl"/>
@@ -12541,7 +12541,7 @@ If you find bugs or have questions, let us know:</string>
                                                 </variation>
                                             </label>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" image="divider" translatesAutoresizingMaskIntoConstraints="NO" id="HTz-QJ-YNL">
-                                                <rect key="frame" x="93" y="313.5" width="228" height="17"/>
+                                                <rect key="frame" x="93" y="312" width="228" height="17"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="25" id="M6K-zv-XoC"/>
                                                     <constraint firstAttribute="width" constant="228" id="c3D-VW-Kh4"/>
@@ -12570,7 +12570,7 @@ If you find bugs or have questions, let us know:</string>
                                                 </variation>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EQUIPMENT" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DI7-Y4-NYq">
-                                                <rect key="frame" x="152" y="338.5" width="110" height="22"/>
+                                                <rect key="frame" x="152" y="337" width="110" height="22"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="22" id="UfD-lv-TGx"/>
                                                     <constraint firstAttribute="width" constant="110" id="j4O-lA-5C7"/>
@@ -12602,10 +12602,10 @@ If you find bugs or have questions, let us know:</string>
                                                 </variation>
                                             </label>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="Profile/camera" translatesAutoresizingMaskIntoConstraints="NO" id="enW-La-hgJ">
-                                                <rect key="frame" x="302.5" y="368.5" width="43" height="33"/>
+                                                <rect key="frame" x="302.5" y="367" width="43" height="33"/>
                                             </imageView>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="Profile/telescope" translatesAutoresizingMaskIntoConstraints="NO" id="wp7-ps-6aG">
-                                                <rect key="frame" x="68.5" y="368.5" width="43" height="33"/>
+                                                <rect key="frame" x="68.5" y="367" width="43" height="33"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="43" id="acm-cf-OXd"/>
                                                     <constraint firstAttribute="height" constant="33" id="eWv-HZ-LqR"/>
@@ -12624,7 +12624,7 @@ If you find bugs or have questions, let us know:</string>
                                                 </variation>
                                             </imageView>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xuT-Ii-OI5">
-                                                <rect key="frame" x="35" y="409.5" width="110" height="30"/>
+                                                <rect key="frame" x="35" y="408" width="110" height="30"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="telescope"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -12707,7 +12707,7 @@ If you find bugs or have questions, let us know:</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="HsV-iF-bg9">
-                                                <rect key="frame" x="35" y="444.5" width="110" height="34"/>
+                                                <rect key="frame" x="35" y="443" width="110" height="34"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="telescope"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -12715,7 +12715,7 @@ If you find bugs or have questions, let us know:</string>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="M4g-oh-PcE">
-                                                <rect key="frame" x="269" y="483.5" width="110" height="34"/>
+                                                <rect key="frame" x="269" y="482" width="110" height="34"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="camera"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -12723,7 +12723,7 @@ If you find bugs or have questions, let us know:</string>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oiB-Tj-jQ9">
-                                                <rect key="frame" x="152" y="483.5" width="110" height="34"/>
+                                                <rect key="frame" x="152" y="482" width="110" height="34"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="mount"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -12731,7 +12731,7 @@ If you find bugs or have questions, let us know:</string>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="m0e-e3-xpv">
-                                                <rect key="frame" x="269" y="444.5" width="110" height="34"/>
+                                                <rect key="frame" x="269" y="443" width="110" height="34"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="camera"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -12739,7 +12739,7 @@ If you find bugs or have questions, let us know:</string>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PKl-0h-SbT">
-                                                <rect key="frame" x="152" y="444.5" width="110" height="34"/>
+                                                <rect key="frame" x="152" y="443" width="110" height="34"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="mount"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -12747,7 +12747,7 @@ If you find bugs or have questions, let us know:</string>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fBx-Nc-H4h">
-                                                <rect key="frame" x="35" y="483.5" width="110" height="34"/>
+                                                <rect key="frame" x="35" y="482" width="110" height="34"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="telescope"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -12755,7 +12755,7 @@ If you find bugs or have questions, let us know:</string>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hoQ-34-pTU">
-                                                <rect key="frame" x="152" y="409.5" width="110" height="30"/>
+                                                <rect key="frame" x="152" y="408" width="110" height="30"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="mount"/>
                                                 <constraints>
@@ -12785,7 +12785,7 @@ If you find bugs or have questions, let us know:</string>
                                                 </variation>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="YcC-G1-FWq">
-                                                <rect key="frame" x="269" y="409.5" width="110" height="30"/>
+                                                <rect key="frame" x="269" y="408" width="110" height="30"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <accessibility key="accessibilityConfiguration" identifier="camera"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -12793,7 +12793,7 @@ If you find bugs or have questions, let us know:</string>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" image="Profile/mount" translatesAutoresizingMaskIntoConstraints="NO" id="5sA-v8-1CE">
-                                                <rect key="frame" x="185.5" y="368.5" width="43" height="33"/>
+                                                <rect key="frame" x="185.5" y="367" width="43" height="33"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="43" id="Y53-gy-gwc"/>
                                                     <constraint firstAttribute="height" constant="33" id="whE-0H-Cv6"/>
@@ -12812,7 +12812,7 @@ If you find bugs or have questions, let us know:</string>
                                                 </variation>
                                             </imageView>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GND-v9-TSI">
-                                                <rect key="frame" x="174" y="193.5" width="220" height="22"/>
+                                                <rect key="frame" x="174" y="192" width="220" height="22"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="24" id="SQa-Sk-qmp">
@@ -12841,7 +12841,7 @@ If you find bugs or have questions, let us know:</string>
                                                 </variation>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tpQ-EN-21M">
-                                                <rect key="frame" x="174" y="245.5" width="220" height="22"/>
+                                                <rect key="frame" x="174" y="244" width="220" height="22"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="24" id="O2H-c2-n7q"/>
@@ -12861,7 +12861,7 @@ If you find bugs or have questions, let us know:</string>
                                                 </variation>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="29N-5T-J8H">
-                                                <rect key="frame" x="174" y="271.5" width="220" height="22"/>
+                                                <rect key="frame" x="174" y="270" width="220" height="22"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="24" id="6pH-On-UYJ"/>
@@ -12881,7 +12881,7 @@ If you find bugs or have questions, let us know:</string>
                                                 </variation>
                                             </textField>
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9rO-9N-7WI">
-                                                <rect key="frame" x="174" y="219.5" width="220" height="22"/>
+                                                <rect key="frame" x="174" y="218" width="220" height="22"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="24" id="JJo-X8-qYg"/>
@@ -12901,7 +12901,7 @@ If you find bugs or have questions, let us know:</string>
                                                 </variation>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="www." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CUk-hd-yJQ">
-                                                <rect key="frame" x="180" y="195.5" width="24" height="18"/>
+                                                <rect key="frame" x="180" y="194" width="24" height="18"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="24" id="Loq-3P-coy"/>
                                                     <constraint firstAttribute="height" constant="18" id="cs0-Bp-Gba"/>
@@ -12911,7 +12911,7 @@ If you find bugs or have questions, let us know:</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="facebook.com/" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vls-Mv-714">
-                                                <rect key="frame" x="180" y="273.5" width="76" height="18"/>
+                                                <rect key="frame" x="180" y="272" width="76" height="18"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="76" id="JdC-C3-Ki8"/>
                                                     <constraint firstAttribute="height" constant="18" id="y88-va-wH1"/>
@@ -12921,7 +12921,7 @@ If you find bugs or have questions, let us know:</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="youtube.com/" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wg8-2Z-UrD">
-                                                <rect key="frame" x="180" y="247.5" width="69" height="18"/>
+                                                <rect key="frame" x="180" y="246" width="69" height="18"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="69" id="66f-Cw-N4a"/>
                                                     <constraint firstAttribute="height" constant="18" id="cKh-DC-0aB"/>
@@ -12931,7 +12931,7 @@ If you find bugs or have questions, let us know:</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="instagram.com/" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L63-sx-zhs">
-                                                <rect key="frame" x="180" y="221.5" width="83" height="18"/>
+                                                <rect key="frame" x="180" y="220" width="83" height="18"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="83" id="KSi-mg-Gsp"/>
                                                     <constraint firstAttribute="height" constant="18" id="NBO-7h-1FN"/>
@@ -12941,7 +12941,7 @@ If you find bugs or have questions, let us know:</string>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Social Media Links:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6sa-FD-aTu">
-                                                <rect key="frame" x="174" y="168" width="129" height="21.5"/>
+                                                <rect key="frame" x="174" y="168" width="148" height="20"/>
                                                 <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="17"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
@@ -16009,7 +16009,7 @@ If you find bugs or have questions, let us know:</string>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="DGv-rl-oxd"/>
-        <segue reference="Lmg-U4-pzL"/>
+        <segue reference="xF0-Pu-Yyn"/>
         <segue reference="bTb-Yw-2PJ"/>
         <segue reference="SAJ-yr-GiJ"/>
         <segue reference="gzg-YT-mnC"/>

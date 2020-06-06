@@ -292,7 +292,11 @@ func checkEqToLink(eqType: String, eqFields: [UILabel], eqFieldValues: [String],
         field = eqFields[2]
         eqLinks = cameraLinks
     }
-    if eqString == "" {return nil}
+    if eqString == "" {
+        field.isUserInteractionEnabled = false
+        field.textColor = .lightText
+        return nil
+    }
     field.text = eqString
     var brand = ""
     var name = ""
@@ -321,20 +325,25 @@ func checkEqToLink(eqType: String, eqFields: [UILabel], eqFieldValues: [String],
         }
     }
     //invalid brand
-    if i == 0 || i == eqString.count {return nil}
+    if i == 0 || i == eqString.count {
+        field.isUserInteractionEnabled = false
+        field.textColor = .lightText
+        return nil
+    }
     brand = String(eqString.prefix(i))
     name = String(eqString.suffix(eqString.count - i - 1))
     if eqNames[brand]?.contains(name) ?? false {
-        if iodvc != nil {
+        if iodvc != nil && field.gestureRecognizers == nil {
             let tap = UITapGestureRecognizer(target: iodvc!, action: #selector(iodvc!.eqTapped))
             field.addGestureRecognizer(tap)
-        } else if jevc != nil {
+        } else if jevc != nil && field.gestureRecognizers == nil {
             let tap = UITapGestureRecognizer(target: jevc!, action: #selector(jevc!.eqTapped))
             field.addGestureRecognizer(tap)
-        } else {
+        } else if field.gestureRecognizers == nil {
             let tap = UITapGestureRecognizer(target: pvc!, action: #selector(pvc!.eqTapped))
             field.addGestureRecognizer(tap)
         }
+        field.isUserInteractionEnabled = true
         field.textColor = UIColor(red: 0.3, green: 0.6, blue: 0.8, alpha: 1)
         var res: DropDown? = nil
         if eqType == "telescope" {
@@ -346,6 +355,8 @@ func checkEqToLink(eqType: String, eqFields: [UILabel], eqFieldValues: [String],
         }
         return res
     }
+    field.isUserInteractionEnabled = false
+    field.textColor = .lightText
     return nil
 }
 
