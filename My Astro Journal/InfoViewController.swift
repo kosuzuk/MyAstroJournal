@@ -48,7 +48,6 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         messageField.delegate = (self as UITextViewDelegate)
         scrollView.delegate = (self as UIScrollViewDelegate)
         sendMessageButton.isHidden = true
-        messageField.autocapitalizationType = .none
         messageField.autocorrectionType = .yes
     }
     override func viewDidAppear(_ animated: Bool) {

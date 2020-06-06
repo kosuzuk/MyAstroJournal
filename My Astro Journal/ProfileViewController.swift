@@ -375,30 +375,29 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
         }
         db.collection("userData").document(userKey).addSnapshotListener (includeMetadataChanges: true, listener: {(snapshot, Error) in
             if Error != nil {
-                print(Error!)
-            } else {
-                if (snapshot?.metadata.isFromCache)! {
-                    print("using cached data")
-                }
-                if self.userData != nil {
-                    let data = snapshot!.data()!
-                    self.userData = data
-                    let hours = data["totalHours"] as! Int
-                    let copyKeys = data["userDataCopyKeys"] as! [String: String]
-                    let obs = data["obsTargetNum"] as! [String: Int]
-                    let photo = data["photoTargetNum"] as! [String: Int]
-                    self.statsHours.text = String(hours)
-                    var numfeatures = 0
-                    for (date, _) in copyKeys {
-                        if isEarlierDate(date, dateToday) {
-                            numfeatures += 1
-                        }
+                return
+            }
+            if (snapshot?.metadata.isFromCache)! && isConnected {
+                return
+            }
+            if self.userData != nil {
+                let data = snapshot!.data()!
+                self.userData = data
+                let hours = data["totalHours"] as! Int
+                let copyKeys = data["userDataCopyKeys"] as! [String: String]
+                let obs = data["obsTargetNum"] as! [String: Int]
+                let photo = data["photoTargetNum"] as! [String: Int]
+                self.statsHours.text = String(hours)
+                var numfeatures = 0
+                for (date, _) in copyKeys {
+                    if isEarlierDate(date, dateToday) {
+                        numfeatures += 1
                     }
-                    self.statsFeatured.text = String(numfeatures)
-                    self.statsSeen.text = String(obs.count)
-                    self.statsPhoto.text = String(photo.count)
-                    self.pevc?.userData = data
                 }
+                self.statsFeatured.text = String(numfeatures)
+                self.statsSeen.text = String(obs.count)
+                self.statsPhoto.text = String(photo.count)
+                self.pevc?.userData = data
             }
         })
     }

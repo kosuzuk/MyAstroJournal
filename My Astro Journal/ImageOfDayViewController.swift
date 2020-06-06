@@ -22,7 +22,7 @@ func £(comment1: Dictionary<String, String>, comment2: Dictionary<String, Strin
     let d2 = Int(time2.prefix(2))!
     if d1 != d2 {
         //xor
-        return (abs(d1 - d2) > 1) ^^ (d1 < d2)
+        return (abs(d1 - d2) > 8) ^^ (d1 < d2)
     }
     let h1 = Int(time1.suffix(8).prefix(2))!
     let h2 = Int(time2.suffix(8).prefix(2))!
@@ -189,124 +189,122 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
         let iodEntryRef = db.collection("journalEntries").document(entryKey)
         iodEntryListener = iodEntryRef.addSnapshotListener(includeMetadataChanges: true, listener: {(snapshot, Error) in
             if Error != nil {
-                print(Error!)
-            } else {
-                if (snapshot?.metadata.isFromCache)! {
-                    print("using cached data")
-                }
-                if snapshot?.data() == nil {
-                    return
-                }
-                let data = (snapshot?.data()!["data"] as! [[String: Any]])[self.entryInd]
-                self.entryData = data
-                let target = formattedTargetToTargetName(target: (data["formattedTarget"] as! String))
-                self.targetField.text = target
-                let entryDate = String(self.entryKey.suffix(8))
-                self.dateField.text = monthNames[Int(entryDate.prefix(2))! - 1] + " " + String(Int(entryDate.prefix(4).suffix(2))!) + " " + String(entryDate.suffix(4))
-                self.locationField.text = (data["locations"] as! [String]).joined(separator: ", ")
-                let font = UIFont(name: self.locationField.font.fontName, size: self.locationField.font.pointSize)
-                let fontAttributes = [NSAttributedString.Key.font: font]
-                self.locationLabelW = (self.locationField.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any]).width
-                if self.locationLabelW < self.locationWidthDefault {
-                    self.locationFieldWC.constant = self.locationLabelW + 10
-                    self.locationFieldWCipad.constant = self.locationLabelW + 10
-                }
-                if self.locationField.text! == "" {
-                    self.locationIcon.isHidden = true
-                }
-                
-                let eqFieldList = [self.telescopeField!, self.mountField!, self.cameraField!]
-                let eqFieldValueList = [(data["telescope"] as! String), (data["mount"] as! String), (data["camera"] as! String)]
-                self.telescopeDD = checkEqToLink(eqType: "telescope", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: self, jevc: nil, pvc: nil)
-                self.mountDD = checkEqToLink(eqType: "mount", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: self, jevc: nil, pvc: nil)
-                self.cameraDD = checkEqToLink(eqType: "camera", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: self, jevc: nil, pvc: nil)
+                return
             }
+            if (snapshot?.metadata.isFromCache)! && isConnected {
+                return
+            }
+            if snapshot?.data() == nil {
+                return
+            }
+            let data = (snapshot?.data()!["data"] as! [[String: Any]])[self.entryInd]
+            self.entryData = data
+            let target = formattedTargetToTargetName(target: (data["formattedTarget"] as! String))
+            self.targetField.text = target
+            let entryDate = String(self.entryKey.suffix(8))
+            self.dateField.text = monthNames[Int(entryDate.prefix(2))! - 1] + " " + String(Int(entryDate.prefix(4).suffix(2))!) + " " + String(entryDate.suffix(4))
+            self.locationField.text = (data["locations"] as! [String]).joined(separator: ", ")
+            let font = UIFont(name: self.locationField.font.fontName, size: self.locationField.font.pointSize)
+            let fontAttributes = [NSAttributedString.Key.font: font]
+            self.locationLabelW = (self.locationField.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any]).width
+            if self.locationLabelW < self.locationWidthDefault {
+                self.locationFieldWC.constant = self.locationLabelW + 10
+                self.locationFieldWCipad.constant = self.locationLabelW + 10
+            }
+            if self.locationField.text! == "" {
+                self.locationIcon.isHidden = true
+            }
+            
+            let eqFieldList = [self.telescopeField!, self.mountField!, self.cameraField!]
+            let eqFieldValueList = [(data["telescope"] as! String), (data["mount"] as! String), (data["camera"] as! String)]
+            self.telescopeDD = checkEqToLink(eqType: "telescope", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: self, jevc: nil, pvc: nil)
+            self.mountDD = checkEqToLink(eqType: "mount", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: self, jevc: nil, pvc: nil)
+            self.cameraDD = checkEqToLink(eqType: "camera", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: self, jevc: nil, pvc: nil)
         })
         
         let iodUserRef = db.collection("userData").document(iodUserKey)
         iodUserListener = iodUserRef.addSnapshotListener(includeMetadataChanges: true, listener: {(snapshot, Error) in
             if Error != nil {
-                print(Error!)
-            } else {
-                if (snapshot?.metadata.isFromCache)! {
-                    print("using cached data")
-                }
-                let oldUserImageKey = self.userData?["profileImageKey"] as? String
-                if snapshot!.data() == nil {
-                    return
-                }
-                let data = snapshot!.data()!
-                self.userData = data
-                self.nameField.text = (data["userName"] as! String)
-                self.bioField.text = (data["userBio"] as! String)
-                let imageKey = (data["profileImageKey"] as! String)
-                if imageKey != oldUserImageKey {
-                    if imageKey == "" {
-                        self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")
-                    } else {
-                        let imageRef = storage.child(imageKey)
-                        imageRef.getData(maxSize: imgMaxByte) {imageData, Error in
-                            if let Error = Error {
-                                print(Error)
-                                self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")
-                                return
-                            } else {
-                                self.userImage.image = UIImage(data: imageData!)!
-                            }
+                return
+            } else
+            if (snapshot?.metadata.isFromCache)! && isConnected {
+                return
+            }
+            let oldUserImageKey = self.userData?["profileImageKey"] as? String
+            if snapshot!.data() == nil {
+                return
+            }
+            let data = snapshot!.data()!
+            self.userData = data
+            self.nameField.text = (data["userName"] as! String)
+            self.bioField.text = (data["userBio"] as! String)
+            let imageKey = (data["profileImageKey"] as! String)
+            if imageKey != oldUserImageKey {
+                if imageKey == "" {
+                    self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")
+                } else {
+                    let imageRef = storage.child(imageKey)
+                    imageRef.getData(maxSize: imgMaxByte) {imageData, Error in
+                        if let Error = Error {
+                            print(Error)
+                            self.userImage.image = UIImage(named: "Profile/placeholderProfileImage")
+                            return
+                        } else {
+                            self.userImage.image = UIImage(data: imageData!)!
                         }
                     }
                 }
-                if data["websiteName"] as! String == "" {
-                    self.websiteButton.isHidden = true
-                    self.websiteWC.constant = 0
-                    self.websiteWCipad.constant = 0
-                    self.websiteLeadingC.constant = -10
-                    self.websiteLeadingCipad.constant = -15
-                } else {
-                    self.websiteButton.isHidden = false
-                    self.websiteWC.constant = 21
-                    self.websiteWCipad.constant = 31
-                    self.websiteLeadingC.constant = 0
-                    self.websiteLeadingCipad.constant = 0
-                }
-                if data["instaUsername"] as! String == "" {
-                    self.instaButton.isHidden = true
-                    self.instaWC.constant = 0
-                    self.instaWCipad.constant = 0
-                } else {
-                    self.instaButton.isHidden = false
-                    self.instaWC.constant = 21
-                    self.instaWCipad.constant = 31
-                }
-                if data["youtubeChannel"] as! String == "" {
-                    self.youtubeButton.isHidden = true
-                    self.youtubeWC.constant = 0
-                    self.youtubeWCipad.constant = 0
-                } else {
-                    self.youtubeButton.isHidden = false
-                    self.youtubeWC.constant = 21
-                    self.youtubeWCipad.constant = 31
-                }
-                if data["fbPage"] as! String == "" {
-                    self.fbButton.isHidden = true
-                    self.fbWC.constant = 0
-                    self.fbWCipad.constant = 0
-                } else {
-                    self.fbButton.isHidden = false
-                    self.fbWC.constant = 21
-                    self.fbWCipad.constant = 31
-                }
-                self.statsHours.text = String(data["totalHours"] as! Int)
-                var numfeatures = 0
-                for (date, _) in (data["userDataCopyKeys"] as! [String: String]) {
-                    if isEarlierDate(date, dateToday) {
-                        numfeatures += 1
-                    }
-                }
-                self.statsFeatured.text = String(numfeatures)
-                self.statsSeen.text = String((data["obsTargetNum"] as! Dictionary<String, Int>).count)
-                self.statsPhoto.text = String((data["photoTargetNum"] as! Dictionary<String, Int>).count)
             }
+            if data["websiteName"] as! String == "" {
+                self.websiteButton.isHidden = true
+                self.websiteWC.constant = 0
+                self.websiteWCipad.constant = 0
+                self.websiteLeadingC.constant = -10
+                self.websiteLeadingCipad.constant = -15
+            } else {
+                self.websiteButton.isHidden = false
+                self.websiteWC.constant = 21
+                self.websiteWCipad.constant = 31
+                self.websiteLeadingC.constant = 0
+                self.websiteLeadingCipad.constant = 0
+            }
+            if data["instaUsername"] as! String == "" {
+                self.instaButton.isHidden = true
+                self.instaWC.constant = 0
+                self.instaWCipad.constant = 0
+            } else {
+                self.instaButton.isHidden = false
+                self.instaWC.constant = 21
+                self.instaWCipad.constant = 31
+            }
+            if data["youtubeChannel"] as! String == "" {
+                self.youtubeButton.isHidden = true
+                self.youtubeWC.constant = 0
+                self.youtubeWCipad.constant = 0
+            } else {
+                self.youtubeButton.isHidden = false
+                self.youtubeWC.constant = 21
+                self.youtubeWCipad.constant = 31
+            }
+            if data["fbPage"] as! String == "" {
+                self.fbButton.isHidden = true
+                self.fbWC.constant = 0
+                self.fbWCipad.constant = 0
+            } else {
+                self.fbButton.isHidden = false
+                self.fbWC.constant = 21
+                self.fbWCipad.constant = 31
+            }
+            self.statsHours.text = String(data["totalHours"] as! Int)
+            var numfeatures = 0
+            for (date, _) in (data["userDataCopyKeys"] as! [String: String]) {
+                if isEarlierDate(date, dateToday) {
+                    numfeatures += 1
+                }
+            }
+            self.statsFeatured.text = String(numfeatures)
+            self.statsSeen.text = String((data["obsTargetNum"] as! Dictionary<String, Int>).count)
+            self.statsPhoto.text = String((data["photoTargetNum"] as! Dictionary<String, Int>).count)
         })
         
         func setUserInfo(key: String, name: String, img: UIImage) {
@@ -346,30 +344,33 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
         })
         likesListener = db.collection("imageOfDayLikes").document(self.featuredDate).addSnapshotListener (includeMetadataChanges: true, listener: {(snapshot, error) in
             if error != nil {
-                print("Error fetching updated likes document: \(error!)")
                 return
+            } else
+            if (snapshot?.metadata.isFromCache)! && isConnected {
+                return
+            }
+            self.imageLiked = false
+            self.likesList = []
+            let likesData = snapshot!.data()! as! [String: String]
+            for (userKey, _) in likesData {
+                self.likesList.append(userKey)
+                if userKey == self.currentUserKey {
+                    self.imageLiked = true
+                }
+            }
+            if self.imageLiked {
+                self.likeButton.setImage(UIImage(named: "ImageOfTheDay/heartFilled"), for: .normal)
             } else {
-                if (snapshot?.metadata.isFromCache)! {
-                    print("using cached data")
-                }
-                self.likesList = []
-                let likesData = snapshot!.data()! as! [String: String]
-                for (userKey, _) in likesData {
-                    self.likesList.append(userKey)
-                    if userKey == self.currentUserKey {
-                        self.imageLiked = true
-                        self.likeButton.setImage(UIImage(named: "ImageOfTheDay/heartFilled"), for: .normal)
-                    }
-                }
-                if self.likesList.count == 0 {
-                    self.numLikes.setTitle(" ", for: .normal)
-                } else {
-                    self.numLikes.setTitle(String(self.likesList.count), for: .normal)
-                }
-                if !self.likesListenerInitiated {
-                    self.likeButton.isUserInteractionEnabled = true
-                    self.likesListenerInitiated = true
-                }
+                self.likeButton.setImage(UIImage(named: "ImageOfTheDay/heartUnfilled"), for: .normal)
+            }
+            if self.likesList.count == 0 {
+                self.numLikes.setTitle(" ", for: .normal)
+            } else {
+                self.numLikes.setTitle(String(self.likesList.count), for: .normal)
+            }
+            if !self.likesListenerInitiated {
+                self.likeButton.isUserInteractionEnabled = true
+                self.likesListenerInitiated = true
             }
         })
         let font = UIFont(name: commentFontName, size: CGFloat(commentFontSize))
@@ -424,23 +425,21 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
         }
         commentsListener = commentsRef.addSnapshotListener (includeMetadataChanges: true, listener: {(snapshot, error) in
             if error != nil {
-                print("Error fetching updated comment document: \(error!)")
                 return
+            }
+            if (snapshot?.metadata.isFromCache)! && isConnected {
+                return
+            }
+            if self.commentsListenerInitiated {
+                let oldCommentsList = self.commentsList
+                self.commentsList = []
+                processCommentsData(commentsData: snapshot!.data() as! [String: String])
+                let commentsListCount = self.commentsList.count
+                if commentsListCount > 0 && commentsListCount > oldCommentsList.count {
+                    self.commentsTableView.scrollToRow(at: IndexPath(row: commentsListCount - 1, section: 0), at: .bottom, animated: true)
+                }
             } else {
-                if (snapshot?.metadata.isFromCache)! {
-                    print("using cached data")
-                }
-                if self.commentsListenerInitiated {
-                    let oldCommentsList = self.commentsList
-                    self.commentsList = []
-                    processCommentsData(commentsData: snapshot!.data() as! [String: String])
-                    let commentsListCount = self.commentsList.count
-                    if commentsListCount > 0 && commentsListCount > oldCommentsList.count {
-                        self.commentsTableView.scrollToRow(at: IndexPath(row: commentsListCount - 1, section: 0), at: .bottom, animated: true)
-                    }
-                } else {
-                    self.commentsListenerInitiated = true
-                }
+                self.commentsListenerInitiated = true
             }
         })
         NotificationCenter.default.addObserver(
@@ -585,8 +584,10 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
         
     }
     @IBAction func commentsIconTapped(_ sender: Any) {
-        scrollView.setContentOffset(CGPoint(x: 0, y: commentInputTextView.frame.origin.y - scrollView.bounds.height + keyBoardH + commentInputHeightMax - 30), animated: true)
-        commentInputTextView.becomeFirstResponder()
+        if !commentInputTextView.isHidden {
+            scrollView.setContentOffset(CGPoint(x: 0, y: commentInputTextView.frame.origin.y - scrollView.bounds.height + keyBoardH + commentInputHeightMax - 30), animated: true)
+            commentInputTextView.becomeFirstResponder()
+        }
     }
     @IBAction func commentsTableViewUserProfileTapped(_ sender: UITapGestureRecognizer) {
         let indexPath = commentsTableView.indexPathForRow(at: sender.location(in: commentsTableView))

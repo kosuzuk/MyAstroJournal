@@ -110,7 +110,6 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
             if field == bioField {
                 (field as! UITextView).delegate = (self as UITextViewDelegate)
                 (field as! UITextView).autocorrectionType = .yes
-                bioField.autocapitalizationType = .none
                 bioField.textContainerInset.top = 2
             } else {
                 (field as! UITextField).delegate = (self as UITextFieldDelegate)
@@ -315,13 +314,18 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
     }
     @IBAction func submit(_ sender: Any) {
         //if name was left blank, show alert
-        if nameField.text! == "" {
+        let nameFieldValueFormatted = nameField.text!.trimmingCharacters(in: .whitespacesAndNewlines)
+        if nameFieldValueFormatted == "" {
             let alertController = UIAlertController(title: "Error", message: "Username must not be left blank. Please enter a username.", preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
             
             alertController.addAction(defaultAction)
             self.present(alertController, animated: true, completion: nil)
             return
+        }
+        nameField.text = nameFieldValueFormatted
+        for field in [websiteField!, instaField!, youtubeField!, fbField!] {
+            field.text = field.text!.replacingOccurrences(of: " ", with: "").replacingOccurrences(of: "\t", with: "").replacingOccurrences(of: "\n", with: "")
         }
         var imageState : String
         if ((!imageWasPresent && !imageAdded) || (imageWasPresent && !imageAdded && imageView.image != nil)) {

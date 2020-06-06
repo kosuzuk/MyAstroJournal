@@ -332,32 +332,30 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             self.antoinePowersButton.isHidden = false
             db.collection("iodDeletedNotifications").addSnapshotListener(includeMetadataChanges: true, listener: {(snapshot, Error) in
                 if Error != nil {
-                    print(Error!)
-                } else {
-                    if (snapshot?.metadata.isFromCache)! {
-                        print("iodDeletedNotifications using cached data")
-                    }
-                    var deletedStr = ""
-                    for doc in snapshot!.documents {
-                        deletedStr += doc.documentID + ": " + String(doc.data()["target"] as! String) + "\n"
-                        db.collection("iodDeletedNotifications").document(doc.documentID).delete()
-                    }
-                    if deletedStr != "" {
-                        let alertController = UIAlertController(title: "Notification", message: "These chosen entries were deleted by the user:\n\n" + deletedStr, preferredStyle: .alert)
-                        let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-                        alertController.addAction(defaultAction)
-                        self.present(alertController, animated: true, completion: nil)
-                    }
+                    return
+                }
+                if (snapshot?.metadata.isFromCache)! && isConnected {
+                    return
+                }
+                var deletedStr = ""
+                for doc in snapshot!.documents {
+                    deletedStr += doc.documentID + ": " + String(doc.data()["target"] as! String) + "\n"
+                    db.collection("iodDeletedNotifications").document(doc.documentID).delete()
+                }
+                if deletedStr != "" {
+                    let alertController = UIAlertController(title: "Notification", message: "These chosen entries were deleted by the user:\n\n" + deletedStr, preferredStyle: .alert)
+                    let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                    alertController.addAction(defaultAction)
+                    self.present(alertController, animated: true, completion: nil)
                 }
             })
         }
         db.collection("userData").document(userKey).addSnapshotListener (includeMetadataChanges: true, listener: {(QuerySnapshot, error) in
             if error != nil {
-                print("Error fetching user document: \(error!)")
                 return
             }
-            if (QuerySnapshot?.metadata.isFromCache)! {
-                print("userData using cached data")
+            if (QuerySnapshot?.metadata.isFromCache)! && isConnected {
+                return
             }
             if !self.userDataInitialized {
                 self.userDataInitialized = true
@@ -367,53 +365,39 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         })
         db.collection("imageOfDayKeys").addSnapshotListener(includeMetadataChanges: true, listener: {(snapshot, Error) in
             if Error != nil {
-                print(Error!)
-            } else {
-                self.noImageOfDay = false
-                if (snapshot?.metadata.isFromCache)! {
-                    print("imageOfDayKeys using cached data")
-                }
-                self.imageOfDayImageView.isUserInteractionEnabled = false
-                let iodDocs = snapshot!.documents
-                //if dropdown is displayed for entry that was just modified in the db, hide it
-                func checkDropDown() {
-                    for i in 0..<self.selectedEntryList.count {
-                        let entryFeaturedDate = self.selectedEntryList[i]["featuredDate"] as! String
-                        //entry was just picked as iod for today or future
-                        if entryFeaturedDate == "" {
-                            for j in 0..<iodDocs.count {
-                                if iodDocs[j].data()["journalEntryListKey"] as? String == self.userKey +
-                                    self.entryToShowDate && iodDocs[j].data()["journalEntryInd"] as? Int == i {
-                                    self.entryDropDown?.hide()
-                                    let iodDate = iodDocs[j].documentID
-                                    if isEarlierDate(iodDate, dateToday) {
-                                        self.jevc?.navigationController?.popToRootViewController(animated: true)
-                                    } else {
-                                        self.jevc?.featuredDate = iodDate
-                                        self.jevc?.jeevc?.featuredDate = iodDate
-                                    }
-                                    return
+                return
+            }
+            self.noImageOfDay = false
+            if (snapshot?.metadata.isFromCache)! && isConnected {
+                return
+            }
+            self.imageOfDayImageView.isUserInteractionEnabled = false
+            let iodDocs = snapshot!.documents
+            //if dropdown is displayed for entry that was just modified in the db, hide it
+            func checkDropDown() {
+                for i in 0..<self.selectedEntryList.count {
+                    let entryFeaturedDate = self.selectedEntryList[i]["featuredDate"] as! String
+                    //entry was just picked as iod for today or future
+                    if entryFeaturedDate == "" {
+                        for j in 0..<iodDocs.count {
+                            if iodDocs[j].data()["journalEntryListKey"] as? String == self.userKey +
+                                self.entryToShowDate && iodDocs[j].data()["journalEntryInd"] as? Int == i {
+                                self.entryDropDown?.hide()
+                                let iodDate = iodDocs[j].documentID
+                                if isEarlierDate(iodDate, dateToday) {
+                                    self.jevc?.navigationController?.popToRootViewController(animated: true)
+                                } else {
+                                    self.jevc?.featuredDate = iodDate
+                                    self.jevc?.jeevc?.featuredDate = iodDate
                                 }
+                                return
                             }
-                        } else {
-                            for j in 0..<iodDocs.count {
-                                //different entry was selected
-                                if iodDocs[j].documentID == entryFeaturedDate {
-                                    if iodDocs[j].data()["journalEntryListKey"] as? String != self.userKey + self.entryToShowDate || iodDocs[j].data()["journalEntryInd"] as? Int != i {
-                                        self.entryDropDown?.hide()
-                                        if isEarlierDate(iodDocs[j].documentID, dateToday) {
-                                            self.jevc?.featuredButton.isHidden = true
-                                            self.jevc?.jeevc?.photographedCheckBox.isUserInteractionEnabled = true
-                                            self.jevc?.jeevc?.bigImageViewRemoveButton.isHidden = false
-                                        }
-                                        self.jevc?.featuredDate = ""
-                                        self.jevc?.jeevc?.featuredDate = ""
-                                        return
-                                    }
-                                    break
-                                }
-                                //iod doc for this date was deleted
-                                if j == iodDocs.count - 1 {
+                        }
+                    } else {
+                        for j in 0..<iodDocs.count {
+                            //different entry was selected
+                            if iodDocs[j].documentID == entryFeaturedDate {
+                                if iodDocs[j].data()["journalEntryListKey"] as? String != self.userKey + self.entryToShowDate || iodDocs[j].data()["journalEntryInd"] as? Int != i {
                                     self.entryDropDown?.hide()
                                     if isEarlierDate(iodDocs[j].documentID, dateToday) {
                                         self.jevc?.featuredButton.isHidden = true
@@ -424,137 +408,150 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
                                     self.jevc?.jeevc?.featuredDate = ""
                                     return
                                 }
+                                break
+                            }
+                            //iod doc for this date was deleted
+                            if j == iodDocs.count - 1 {
+                                self.entryDropDown?.hide()
+                                if isEarlierDate(iodDocs[j].documentID, dateToday) {
+                                    self.jevc?.featuredButton.isHidden = true
+                                    self.jevc?.jeevc?.photographedCheckBox.isUserInteractionEnabled = true
+                                    self.jevc?.jeevc?.bigImageViewRemoveButton.isHidden = false
+                                }
+                                self.jevc?.featuredDate = ""
+                                self.jevc?.jeevc?.featuredDate = ""
+                                return
                             }
                         }
                     }
                 }
-                checkDropDown()
-                //if no iod data, make image view blank
-                func noIodData() {
-                    //iod was deleted
-                    if featuredImageDate != "" {
-                        //kick out users from current iod view
-                        self.iodvc?.navigationController?.popToRootViewController(animated: true)
-                    }
-                    featuredImageDate = ""
-                    self.imageOfDayImageView.image = UIImage(named: "Calendar/placeholder")
-                    self.imageOfDayImageView.contentMode = .scaleAspectFit
-                    self.imageOfDayLight.isHidden = true
-                    self.imageOfDayListenerInitiated = true
-                    self.noImageOfDay = true
-                }
-                //udpdate or initialize iod image view and data
-                self.imageOfDayLabel.text = ""
-                if iodDocs == [] {
-                    print("no featured entries")
-                    noIodData()
-                    return
-                }
-                var iodDocToShow = iodDocs[0]
-                for doc in iodDocs {
-                    //the entry date is not in the future and latest entry seen so far not in the future
-                    if isEarlierDate(doc.documentID, dateToday) && (!isEarlierDate(iodDocToShow.documentID, dateToday) || isEarlierDate(iodDocToShow.documentID, doc.documentID)) {
-                        iodDocToShow = doc
-                    }
-                }
-                if !isEarlierDate(iodDocToShow.documentID, dateToday) {
-                    print("there are only featured images for the future")
-                    noIodData()
-                    return
-                }
-                if featuredImageDate != "" && !isEarlierDate(featuredImageDate, iodDocToShow.documentID) {
-                    print("Antoine has deleted today's iod data")
-                    noIodData()
-                    return
-                }
-                let iodKeysData: [String: Any] = iodDocToShow.data()
-                var oldIodImageKey = ""
-                if self.imageOfDayKeysData != nil && self.imageOfDayKeysData!.count != 0 {
-                    oldIodImageKey = String(self.imageOfDayKeysData!["imageKey"] as! String)
-                }
-                self.imageOfDayKeysData = iodKeysData
-                if iodKeysData.count == 0 {
-                    print("empty iod keys data")
-                    noIodData()
-                    return
-                }
-                let iodImageKey = iodKeysData["imageKey"] as! String
-                if iodImageKey == "" {
-                    print("no image key for featured entry")
-                    noIodData()
-                    return
-                }
-                let imageRef = storage.child(iodImageKey)
-                imageRef.getData(maxSize: imgMaxByte) {imageData, Error in
-                    if let Error = Error {
-                        print("no image data for featured entry", Error)
-                        noIodData()
-                        return
-                    } else if !self.noImageOfDay {
-                        self.imageOfDayImageView.image = UIImage(data: imageData!)!
-                        self.imageOfDayImageView.contentMode = .scaleAspectFill
-                        self.imageOfDayImageView.clipsToBounds = true
-                        self.imageOfDayImageData = self.imageOfDayImageView.image
-                        self.imageOfDayImageView.isUserInteractionEnabled = true
-                        self.imageOfDayLight.isHidden = false
-                    }
-                }
-                let docRef = db.collection("journalEntries").document(iodKeysData["journalEntryListKey"] as! String)
-                docRef.getDocument(completion: {(QuerySnapshot, Error) in
-                    if Error != nil {
-                        print(Error!)
-                    } else {
-                        let data = QuerySnapshot!.data()
-                        if data == nil {
-                            print("no iod entry doc found")
-                            noIodData()
-                            return
-                        }
-                        if data!.count == 0 {
-                            print("empty iod entry data")
-                            noIodData()
-                            return
-                        }
-                        let entryListData = data!["data"] as! [[String: Any]]
-                        if entryListData.count <= iodKeysData["journalEntryInd"] as! Int {
-                            print("entry list ind for featured entry is out of bounds")
-                            noIodData()
-                            return
-                        }
-                        let ind = iodKeysData["journalEntryInd"] as! Int
-                        if entryListData[ind]["formattedTarget"] as! String != iodKeysData["formattedTarget"] as! String {
-                            print("wrong entry is set for featured entry")
-                            noIodData()
-                            return
-                        }
-                        var iodTarget = entryListData[ind]["formattedTarget"] as! String
-                        iodTarget = formattedTargetToTargetName(target: iodTarget)
-                        self.imageOfDayLabel.text = iodTarget + " by " + (data!["userName"] as! String) + " "
-                        let font = UIFont(name: self.imageOfDayLabel.font.fontName, size: self.imageOfDayLabel.font.pointSize)
-                        let fontAttributes = [NSAttributedString.Key.font: font]
-                        let size = (self.imageOfDayLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
-                        self.imageOfDayLightWC.constant = size.width + 30
-                        self.imageOfDayTarget = iodTarget
-                    }
-                })
-                featuredImageDate = iodDocToShow.documentID
-                //iod changed
-                if self.imageOfDayListenerInitiated && iodKeysData["imageKey"] as! String != oldIodImageKey {
+            }
+            checkDropDown()
+            //if no iod data, make image view blank
+            func noIodData() {
+                //iod was deleted
+                if featuredImageDate != "" {
                     //kick out users from current iod view
                     self.iodvc?.navigationController?.popToRootViewController(animated: true)
-                    let iodEntryListKey = iodKeysData["journalEntryListKey"] as! String
-                    //check if this user was picked for iod while app was on. If so, show congrats alert
-                    if (iodEntryListKey).prefix(iodEntryListKey.count - 8) == self.userKey {
-                        self.entryDropDown?.hide()
-                        let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CongratsViewController") as! CongratsViewController
-                        popOverVC.featuredDate = iodDocToShow.documentID
-                        popOverVC.cvc = self
-                        self.addChild(popOverVC)
-                        popOverVC.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
-                        self.view.addSubview(popOverVC.view)
-                        popOverVC.didMove(toParent: self)
-                        db.collection("userData").document(self.userKey).updateData(["featuredAlertDates": self.userAlertDates])
+                }
+                featuredImageDate = ""
+                self.imageOfDayImageView.image = UIImage(named: "Calendar/placeholder")
+                self.imageOfDayImageView.contentMode = .scaleAspectFit
+                self.imageOfDayLight.isHidden = true
+                self.imageOfDayListenerInitiated = true
+                self.noImageOfDay = true
+            }
+            //udpdate or initialize iod image view and data
+            self.imageOfDayLabel.text = ""
+            if iodDocs == [] {
+                print("no featured entries")
+                noIodData()
+                return
+            }
+            var iodDocToShow = iodDocs[0]
+            for doc in iodDocs {
+                //the entry date is not in the future and latest entry seen so far not in the future
+                if isEarlierDate(doc.documentID, dateToday) && (!isEarlierDate(iodDocToShow.documentID, dateToday) || isEarlierDate(iodDocToShow.documentID, doc.documentID)) {
+                    iodDocToShow = doc
+                }
+            }
+            if !isEarlierDate(iodDocToShow.documentID, dateToday) {
+                print("there are only featured images for the future")
+                noIodData()
+                return
+            }
+            if featuredImageDate != "" && !isEarlierDate(featuredImageDate, iodDocToShow.documentID) {
+                print("Antoine has deleted today's iod data")
+                noIodData()
+                return
+            }
+            let iodKeysData: [String: Any] = iodDocToShow.data()
+            var oldIodImageKey = ""
+            if self.imageOfDayKeysData != nil && self.imageOfDayKeysData!.count != 0 {
+                oldIodImageKey = String(self.imageOfDayKeysData!["imageKey"] as! String)
+            }
+            self.imageOfDayKeysData = iodKeysData
+            if iodKeysData.count == 0 {
+                print("empty iod keys data")
+                noIodData()
+                return
+            }
+            let iodImageKey = iodKeysData["imageKey"] as! String
+            if iodImageKey == "" {
+                print("no image key for featured entry")
+                noIodData()
+                return
+            }
+            let imageRef = storage.child(iodImageKey)
+            imageRef.getData(maxSize: imgMaxByte) {imageData, Error in
+                if let Error = Error {
+                    print("no image data for featured entry", Error)
+                    noIodData()
+                    return
+                } else if !self.noImageOfDay {
+                    self.imageOfDayImageView.image = UIImage(data: imageData!)!
+                    self.imageOfDayImageView.contentMode = .scaleAspectFill
+                    self.imageOfDayImageView.clipsToBounds = true
+                    self.imageOfDayImageData = self.imageOfDayImageView.image
+                    self.imageOfDayImageView.isUserInteractionEnabled = true
+                    self.imageOfDayLight.isHidden = false
+                }
+            }
+            let docRef = db.collection("journalEntries").document(iodKeysData["journalEntryListKey"] as! String)
+            docRef.getDocument(completion: {(QuerySnapshot, Error) in
+                if Error != nil {
+                    print(Error!)
+                } else {
+                    let data = QuerySnapshot!.data()
+                    if data == nil {
+                        print("no iod entry doc found")
+                        noIodData()
+                        return
                     }
+                    if data!.count == 0 {
+                        print("empty iod entry data")
+                        noIodData()
+                        return
+                    }
+                    let entryListData = data!["data"] as! [[String: Any]]
+                    if entryListData.count <= iodKeysData["journalEntryInd"] as! Int {
+                        print("entry list ind for featured entry is out of bounds")
+                        noIodData()
+                        return
+                    }
+                    let ind = iodKeysData["journalEntryInd"] as! Int
+                    if entryListData[ind]["formattedTarget"] as! String != iodKeysData["formattedTarget"] as! String {
+                        print("wrong entry is set for featured entry")
+                        noIodData()
+                        return
+                    }
+                    var iodTarget = entryListData[ind]["formattedTarget"] as! String
+                    iodTarget = formattedTargetToTargetName(target: iodTarget)
+                    self.imageOfDayLabel.text = iodTarget + " by " + (data!["userName"] as! String) + " "
+                    let font = UIFont(name: self.imageOfDayLabel.font.fontName, size: self.imageOfDayLabel.font.pointSize)
+                    let fontAttributes = [NSAttributedString.Key.font: font]
+                    let size = (self.imageOfDayLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any])
+                    self.imageOfDayLightWC.constant = size.width + 30
+                    self.imageOfDayTarget = iodTarget
+                }
+            })
+            featuredImageDate = iodDocToShow.documentID
+            //iod changed
+            if self.imageOfDayListenerInitiated && iodKeysData["imageKey"] as! String != oldIodImageKey {
+                //kick out users from current iod view
+                self.iodvc?.navigationController?.popToRootViewController(animated: true)
+                let iodEntryListKey = iodKeysData["journalEntryListKey"] as! String
+                //check if this user was picked for iod while app was on. If so, show congrats alert
+                if (iodEntryListKey).prefix(iodEntryListKey.count - 8) == self.userKey {
+                    self.entryDropDown?.hide()
+                    let popOverVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CongratsViewController") as! CongratsViewController
+                    popOverVC.featuredDate = iodDocToShow.documentID
+                    popOverVC.cvc = self
+                    self.addChild(popOverVC)
+                    popOverVC.view.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height)
+                    self.view.addSubview(popOverVC.view)
+                    popOverVC.didMove(toParent: self)
+                    db.collection("userData").document(self.userKey).updateData(["featuredAlertDates": self.userAlertDates])
                 }
             }
             if !self.imageOfDayListenerInitiated {

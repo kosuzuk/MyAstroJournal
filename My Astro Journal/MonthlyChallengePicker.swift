@@ -14,7 +14,7 @@ class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate,
     @IBOutlet weak var seeEntriesButton: UIButton!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var targetToDisplayField: UITextField!
-    @IBOutlet weak var targetField: UITextField!
+    @IBOutlet weak var formattedTargetField: UITextField!
     @IBOutlet weak var monthYearField: UITextField!
     var challengesData: [[String: String]] = []
     var challengesDD: DropDown? = nil
@@ -26,9 +26,9 @@ class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate,
         imageView.layer.borderWidth = 1
         imageView.layer.borderColor = astroOrange
         targetToDisplayField.delegate = (self as UITextFieldDelegate)
-        targetField.delegate = (self as UITextFieldDelegate)
+        formattedTargetField.delegate = (self as UITextFieldDelegate)
         monthYearField.delegate = (self as UITextFieldDelegate)
-        targetField.autocorrectionType = .no
+        formattedTargetField.autocorrectionType = .no
         monthYearField.autocorrectionType = .no
         db.collection("monthlyChallenges").getDocuments(completion: {(snapshot, Error) in
             if Error != nil {
@@ -41,7 +41,8 @@ class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate,
                     if data["imageKey"] == nil || data["target"] == nil {
                         continue
                     }
-                    let listItem = ["docID": doc.documentID, "imageKey": data["imageKey"] as! String, "target": data["target"] as! String]
+                    var listItem = data as! [String: String]
+                    listItem["docID"] = doc.documentID
                     if lst.isEmpty {
                         lst = [listItem]
                         DDList = [monthNames[Int(listItem["docID"]!.prefix(2))! - 1]]
@@ -79,7 +80,9 @@ class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate,
                             self.imageData = data
                         }
                     }
-                    self.targetField.text = lst[index]["target"]!
+                    print(lst, index)
+                    self.targetToDisplayField.text = lst[index]["target"]!
+                    self.formattedTargetField.text = lst[index]["formattedTarget"]!
                     self.monthYearField.text = lst[index]["docID"]!
                 }
                 loadingIcon.stopAnimating()
@@ -140,10 +143,14 @@ class MonthlyChallengePicker: UIViewController, UIImagePickerControllerDelegate,
         imageView.image = nil
     }
     @IBAction func setButtonTapped() {
-        if imageView.image == nil || targetToDisplayField.text! == "" || targetField.text! == "" || monthYearField .text! == "" {
+        if imageView.image == nil || targetToDisplayField.text! == "" || formattedTargetField.text! == "" || monthYearField .text! == "" {
+            let alertController = UIAlertController(title: "Error", message: "Please fill out all of the text fields.", preferredStyle: .alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(defaultAction)
+            self.present(alertController, animated: true, completion: nil)
             return
         }
-        let formattedTarget = formatTarget(targetField.text!)
+        let formattedTarget = formatTarget(formattedTargetField.text!)
         var isCardTarget = false
         for lst in [MessierTargets, NGCTargets, ICTargets, SharplessTargets, OthersTargets, PlanetTargets] {
             if lst.contains(formattedTarget) {

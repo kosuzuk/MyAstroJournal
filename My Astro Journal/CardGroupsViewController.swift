@@ -121,66 +121,65 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
         userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
         db.collection("userData").document(userKey).addSnapshotListener (includeMetadataChanges: true, listener: {(snapshot, Error) in
             if Error != nil {
-                print(Error!)
-            } else {
-                if (snapshot?.metadata.isFromCache)! {
-                    print("using cached data")
+                return
+            }
+            if (snapshot?.metadata.isFromCache)! && isConnected {
+                return
+            }
+            let data = snapshot!.data()!
+            //initial pull
+            if self.cardTargetDatesDict == nil {
+                self.photoCardTargetDatesDict = (data["photoCardTargetDates"]! as! [String: [String]])
+                self.cardTargetDatesDict = (data["cardTargetDates"]! as! [String: [String]])
+                let featureDates = (data["userDataCopyKeys"]! as! [String: String]).keys
+                if featureDates.count == 0 {
+                    for item in self.view.subviews {
+                        if item is UIButton {
+                            item.isHidden = false
+                        }
+                    }
+                    loadingIcon.stopAnimating()
+                    endNoInput()
+                    self.doneLoading = true
                 }
-                let data = snapshot!.data()!
-                //initial pull
-                if self.cardTargetDatesDict == nil {
-                    self.photoCardTargetDatesDict = (data["photoCardTargetDates"]! as! [String: [String]])
-                    self.cardTargetDatesDict = (data["cardTargetDates"]! as! [String: [String]])
-                    let featureDates = (data["userDataCopyKeys"]! as! [String: String]).keys
-                    if featureDates.count == 0 {
-                        for item in self.view.subviews {
-                            if item is UIButton {
-                                item.isHidden = false
+                for date in featureDates {
+                    if isEarlierDate(date, dateToday) {
+                        self.numFeaturedDates += 1
+                        db.collection("imageOfDayKeys").document(date).getDocument(completion: {(snapshot, Error) in
+                            if Error != nil {
+                                print(Error!)
+                            } else {
+                                self.featuredTargets[snapshot!.data()!["formattedTarget"] as! String] = date
+                                self.numFeaturedDatesLoaded += 1
                             }
-                        }
-                        loadingIcon.stopAnimating()
-                        endNoInput()
-                        self.doneLoading = true
+                        })
                     }
-                    for date in featureDates {
-                        if isEarlierDate(date, dateToday) {
-                            self.numFeaturedDates += 1
-                            db.collection("imageOfDayKeys").document(date).getDocument(completion: {(snapshot, Error) in
-                                if Error != nil {
-                                    print(Error!)
-                                } else {
-                                    self.featuredTargets[snapshot!.data()!["formattedTarget"] as! String] = date
-                                    self.numFeaturedDatesLoaded += 1
-                                }
-                            })
-                        }
-                    }
-                    self.cardBackSelected = (data["cardBackSelected"] as! String)
-                    self.packsUnlocked = (Array((data["packsUnlocked"] as! [String: Bool]).keys).map {Int($0)!}.sorted()).map{String($0)}
+                }
+                self.cardBackSelected = (data["cardBackSelected"] as! String)
+                self.packsUnlocked = (Array((data["packsUnlocked"] as! [String: Bool]).keys).map {Int($0)!}.sorted()).map{String($0)}
+                checkCardGroupsUnlocked()
+                self.cardBacksUnlocked = (Array((data["cardBacksUnlocked"] as! [String: Bool]).keys).map {Int($0)!}.sorted()).map{String($0)}
+            } else {
+                //check if user entered or deleted entries
+                let newPhotoCardTargetDates = data["photoCardTargetDates"]! as! [String: [String]]
+                let newCardTargetDates = data["cardTargetDates"]! as! [String: [String]]
+                if self.photoCardTargetDatesDict != newPhotoCardTargetDates || self.cardTargetDatesDict != newCardTargetDates {
+                    self.photoCardTargetDatesDict = newPhotoCardTargetDates
+                    self.cardTargetDatesDict = newCardTargetDates
+                    self.catalogVC?.photoCardTargetDatesDict = newPhotoCardTargetDates
+                    self.catalogVC?.cardTargetDatesDict = newCardTargetDates
+                    self.catalogVC?.dictChanged = true
+                }
+                let packsUnlockedData = (Array((data["packsUnlocked"] as! [String: Bool]).keys).map {Int($0)!}.sorted()).map{String($0)}
+                if packsUnlockedData != self.packsUnlocked {
+                    self.catalogVC?.navigationController?.popToRootViewController(animated: true)
+                    self.packsUnlocked = packsUnlockedData
                     checkCardGroupsUnlocked()
-                    self.cardBacksUnlocked = (Array((data["cardBacksUnlocked"] as! [String: Bool]).keys).map {Int($0)!}.sorted()).map{String($0)}
-                } else {
-                    //check if user entered or deleted entries
-                    let newPhotoCardTargetDates = data["photoCardTargetDates"]! as! [String: [String]]
-                    let newCardTargetDates = data["cardTargetDates"]! as! [String: [String]]
-                    if self.photoCardTargetDatesDict != newPhotoCardTargetDates || self.cardTargetDatesDict != newCardTargetDates {
-                        self.photoCardTargetDatesDict = newPhotoCardTargetDates
-                        self.cardTargetDatesDict = newCardTargetDates
-                        self.catalogVC?.photoCardTargetDatesDict = newPhotoCardTargetDates
-                        self.catalogVC?.cardTargetDatesDict = newCardTargetDates
-                        self.catalogVC?.dictChanged = true
-                    }
-                    let packsUnlockedData = (Array((data["packsUnlocked"] as! [String: Bool]).keys).map {Int($0)!}.sorted()).map{String($0)}
-                    if packsUnlockedData != self.packsUnlocked {
-                        self.catalogVC?.navigationController?.popToRootViewController(animated: true)
-                        self.packsUnlocked = packsUnlockedData
-                        checkCardGroupsUnlocked()
-                    }
-                    let cardBacksUnlockedData = (Array((data["cardBacksUnlocked"] as! [String: Bool]).keys).map {Int($0)!}.sorted()).map{String($0)}
-                    if cardBacksUnlockedData != self.cardBacksUnlocked {
-                        self.cardBackPopOverController?.dismiss(animated: true)
-                        self.cardBacksUnlocked = cardBacksUnlockedData
-                    }
+                }
+                let cardBacksUnlockedData = (Array((data["cardBacksUnlocked"] as! [String: Bool]).keys).map {Int($0)!}.sorted()).map{String($0)}
+                if cardBacksUnlockedData != self.cardBacksUnlocked {
+                    self.cardBackPopOverController?.dismiss(animated: true)
+                    self.cardBacksUnlocked = cardBacksUnlockedData
                 }
             }
         })

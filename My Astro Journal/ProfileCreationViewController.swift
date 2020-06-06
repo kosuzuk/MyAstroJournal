@@ -89,7 +89,6 @@ class ProfileCreationViewController: UIViewController, UINavigationControllerDel
             if field == bioField {
                 (field as! UITextView).delegate = (self as UITextViewDelegate)
                 (field as! UITextView).autocorrectionType = .yes
-                bioField.autocapitalizationType = .none
                 bioField.text = "Bio"
                 bioField.textContainerInset.top = 2
             } else {

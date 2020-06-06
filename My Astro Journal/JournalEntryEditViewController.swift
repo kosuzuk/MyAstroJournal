@@ -161,9 +161,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
                 deleteEntryLeadingCipad.constant = 40
             }
         }
-        acquisitionField.autocapitalizationType = .none
         acquisitionField.autocorrectionType = .yes
-        memoriesField.autocapitalizationType = .none
         memoriesField.autocorrectionType = .yes
         let monthInt = Int(entryDate.prefix(2))!
         let monthStr = monthNames[monthInt - 1]

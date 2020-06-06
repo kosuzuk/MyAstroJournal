@@ -477,11 +477,11 @@
                     </view>
                     <navigationItem key="navigationItem" id="YlV-yF-wCE"/>
                     <connections>
+                        <outlet property="formattedTargetField" destination="AAJ-0x-7OY" id="x9r-ZQ-zYr"/>
                         <outlet property="imageView" destination="GHZ-7L-bPq" id="13S-jf-Gan"/>
                         <outlet property="monthYearField" destination="pDf-Hu-Ew8" id="RhE-B4-TbK"/>
                         <outlet property="seeChallengesButton" destination="1T6-g0-a3a" id="vWP-d2-YIA"/>
                         <outlet property="seeEntriesButton" destination="7VN-ZQ-HFE" id="oiM-FN-avW"/>
-                        <outlet property="targetField" destination="AAJ-0x-7OY" id="7uf-v0-gcG"/>
                         <outlet property="targetToDisplayField" destination="aaR-pn-MwY" id="ana-02-t2c"/>
                         <segue destination="omm-hY-4PJ" kind="show" identifier="monthlyPickerToChallenge" id="LjV-ha-eme"/>
                     </connections>
@@ -1007,7 +1007,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wUd-Jb-4dj">
-                                <rect key="frame" x="320.5" y="73" width="61" height="38"/>
+                                <rect key="frame" x="316.5" y="73" width="61" height="38"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="70" id="Gx8-OD-3sW">
                                         <variation key="heightClass=regular-widthClass=regular" constant="85"/>
@@ -1038,7 +1038,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select a date." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jN6-N8-NWD">
-                                <rect key="frame" x="290.5" y="71" width="105" height="20"/>
+                                <rect key="frame" x="286.5" y="71" width="105" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="DzJ-p0-blK"/>
                                     <constraint firstAttribute="width" constant="105" id="spf-6b-LZD"/>
@@ -1060,7 +1060,7 @@
                                 </variation>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GVJ-eX-dQG">
-                                <rect key="frame" x="313" y="87" width="60" height="21"/>
+                                <rect key="frame" x="309" y="87" width="60" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="07H-9A-13b"/>
                                     <constraint firstAttribute="height" constant="21" id="2nb-jL-WB9"/>
@@ -1588,7 +1588,7 @@
                                 <size key="shadowOffset" width="1" height="1"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="F0E-4c-ZFh">
-                                <rect key="frame" x="36.5" y="74" width="100" height="46"/>
+                                <rect key="frame" x="34.5" y="74" width="100" height="46"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="100" id="Rlg-8R-314"/>
                                     <constraint firstAttribute="height" constant="46" id="f4g-xp-I4o"/>
@@ -1633,7 +1633,7 @@
                             <constraint firstItem="qTG-fp-qgo" firstAttribute="top" secondItem="59c-rB-9bY" secondAttribute="top" id="Qxd-aj-wQz"/>
                             <constraint firstItem="F0E-4c-ZFh" firstAttribute="centerY" secondItem="zVN-cp-TXj" secondAttribute="centerY" constant="5" id="R4H-E9-ZL5"/>
                             <constraint firstItem="sfz-MM-S88" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="RVo-x3-P9c"/>
-                            <constraint firstItem="wUd-Jb-4dj" firstAttribute="trailing" secondItem="pi6-XY-GC6" secondAttribute="trailing" constant="6" id="Rea-nI-oli"/>
+                            <constraint firstItem="wUd-Jb-4dj" firstAttribute="trailing" secondItem="pi6-XY-GC6" secondAttribute="trailing" constant="2" id="Rea-nI-oli"/>
                             <constraint firstItem="QiP-Fe-GdX" firstAttribute="leading" secondItem="PQr-Ze-W5v" secondAttribute="leading" constant="100" id="ScU-pb-OuU"/>
                             <constraint firstItem="qTG-fp-qgo" firstAttribute="trailing" secondItem="dGw-RI-eYG" secondAttribute="trailing" id="SdV-jX-00n"/>
                             <constraint firstItem="xr4-rp-9yj" firstAttribute="top" secondItem="PQr-Ze-W5v" secondAttribute="top" constant="-5" id="Ss8-G1-1uJ"/>
@@ -1666,7 +1666,7 @@
                             <constraint firstItem="wUd-Jb-4dj" firstAttribute="top" secondItem="jN6-N8-NWD" secondAttribute="bottom" constant="-18" id="iYk-jJ-KeO"/>
                             <constraint firstItem="dGw-RI-eYG" firstAttribute="top" secondItem="HH0-DG-Bts" secondAttribute="bottom" constant="-2" id="kfN-Al-60B"/>
                             <constraint firstItem="dGw-RI-eYG" firstAttribute="centerX" secondItem="PQr-Ze-W5v" secondAttribute="centerX" id="lhI-vu-RAP"/>
-                            <constraint firstItem="F0E-4c-ZFh" firstAttribute="leading" secondItem="QiP-Fe-GdX" secondAttribute="leading" constant="-2" id="niM-LH-yHe"/>
+                            <constraint firstItem="F0E-4c-ZFh" firstAttribute="leading" secondItem="QiP-Fe-GdX" secondAttribute="leading" constant="-4" id="niM-LH-yHe"/>
                             <constraint firstItem="sfz-MM-S88" firstAttribute="leading" secondItem="PQr-Ze-W5v" secondAttribute="leading" id="oOT-PI-H6q"/>
                             <constraint firstItem="Bsd-3V-o3Q" firstAttribute="centerX" secondItem="PQr-Ze-W5v" secondAttribute="centerX" id="rGW-Ri-Zby"/>
                             <constraint firstItem="GVJ-eX-dQG" firstAttribute="centerX" secondItem="jN6-N8-NWD" secondAttribute="centerX" id="rpT-rg-F36"/>
@@ -2120,7 +2120,7 @@
                                                 </constraints>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="15"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 <variation key="default">
                                                     <mask key="constraints">
                                                         <exclude reference="OJ7-lY-Ge4"/>
@@ -2269,7 +2269,7 @@
                                                 </constraints>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="15"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 <variation key="default">
                                                     <mask key="constraints">
                                                         <exclude reference="Hxx-Ha-OQa"/>
@@ -6277,7 +6277,7 @@
                                                     </mask>
                                                 </variation>
                                             </imageView>
-                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" text="TOTAL HOURS SPENT IMAGING" translatesAutoresizingMaskIntoConstraints="NO" id="zWb-CK-zvq">
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" scrollEnabled="NO" text="TOTAL HOURS SPENT IMAGING" translatesAutoresizingMaskIntoConstraints="NO" id="zWb-CK-zvq">
                                                 <rect key="frame" x="172" y="1253" width="103" height="60"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <accessibility key="accessibilityConfiguration">
@@ -6415,7 +6415,7 @@
                                                     </mask>
                                                 </variation>
                                             </label>
-                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" text="FEATURED IMAGES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="7wk-wp-U6o">
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" scrollEnabled="NO" text="FEATURED IMAGES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="7wk-wp-U6o">
                                                 <rect key="frame" x="439" y="1253" width="110" height="60"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <accessibility key="accessibilityConfiguration">
@@ -6477,7 +6477,7 @@
                                                     </mask>
                                                 </variation>
                                             </label>
-                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" text="OBJECTS SEEN" translatesAutoresizingMaskIntoConstraints="NO" id="VWU-IG-2NL">
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" scrollEnabled="NO" text="OBJECTS SEEN" translatesAutoresizingMaskIntoConstraints="NO" id="VWU-IG-2NL">
                                                 <rect key="frame" x="172" y="1367" width="105" height="40"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <accessibility key="accessibilityConfiguration">
@@ -6509,7 +6509,7 @@
                                                     </mask>
                                                 </variation>
                                             </textView>
-                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" text="OBJECTS PHOTOGRAPHED" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="dqx-Ze-zxP">
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" scrollEnabled="NO" text="OBJECTS PHOTOGRAPHED" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="dqx-Ze-zxP">
                                                 <rect key="frame" x="439" y="1357" width="108" height="60"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <accessibility key="accessibilityConfiguration">
@@ -8069,7 +8069,7 @@
                                                     <constraint firstAttribute="height" constant="40" id="RHX-5G-1fN"/>
                                                     <constraint firstAttribute="height" constant="40" id="T12-98-SEv"/>
                                                 </constraints>
-                                                <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="22"/>
+                                                <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="19"/>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                                 <variation key="default">
@@ -10063,7 +10063,7 @@
                                 </variation>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xFb-Tg-Zpf">
-                                <rect key="frame" x="159.5" y="44" width="163.5" height="25"/>
+                                <rect key="frame" x="159.5" y="44" width="181.5" height="25"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="25" id="RhB-7C-t0e"/>
                                     <constraint firstAttribute="width" constant="160" id="WhU-R7-ft2">
@@ -10074,7 +10074,7 @@
                                     </constraint>
                                     <constraint firstAttribute="height" constant="25" id="qyC-HR-sPY"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="14"/>
+                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="13"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                                 <variation key="default">
@@ -10204,7 +10204,7 @@
                                 </variation>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jFa-7Y-7h7">
-                                <rect key="frame" x="326" y="55" width="83" height="27"/>
+                                <rect key="frame" x="351" y="55" width="58" height="24"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="90" id="NLS-6W-TxL">
                                         <variation key="heightClass=regular-widthClass=regular" constant="100"/>
@@ -10212,8 +10212,8 @@
                                     <constraint firstAttribute="height" constant="35" id="cDb-pB-1Pv">
                                         <variation key="heightClass=regular-widthClass=regular" constant="32"/>
                                     </constraint>
-                                    <constraint firstAttribute="width" constant="83" id="qS9-uD-zJ2"/>
-                                    <constraint firstAttribute="height" constant="27" id="wbC-pa-ycr"/>
+                                    <constraint firstAttribute="width" constant="58" id="qS9-uD-zJ2"/>
+                                    <constraint firstAttribute="height" constant="24" id="wbC-pa-ycr"/>
                                 </constraints>
                                 <state key="normal" backgroundImage="Profile/logOut">
                                     <color key="titleColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -10527,7 +10527,7 @@
                                 <variation key="heightClass=regular-widthClass=compact" constant="13"/>
                             </constraint>
                             <constraint firstItem="jFa-7Y-7h7" firstAttribute="leading" secondItem="xFb-Tg-Zpf" secondAttribute="trailing" constant="141" id="5hG-h0-W2t">
-                                <variation key="heightClass=regular-widthClass=compact" constant="3"/>
+                                <variation key="heightClass=regular-widthClass=compact" constant="10"/>
                             </constraint>
                             <constraint firstItem="27p-et-2oB" firstAttribute="centerX" secondItem="hpN-b2-ajw" secondAttribute="centerX" id="6Nj-tk-cXg"/>
                             <constraint firstItem="NlX-KA-0lU" firstAttribute="top" secondItem="gD9-h5-Ovd" secondAttribute="bottom" constant="26" id="6Sj-YW-CxI">
@@ -11304,7 +11304,7 @@ MESSAGE TO USERS: This app relies on the honor system for collecting objects and
                                                 </constraints>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="16"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 <variation key="default">
                                                     <mask key="constraints">
                                                         <exclude reference="Yho-6m-wFx"/>
@@ -12454,7 +12454,7 @@ If you find bugs or have questions, let us know:</string>
                                                 </constraints>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 <variation key="default">
                                                     <mask key="constraints">
                                                         <exclude reference="8tl-Sp-27F"/>
@@ -12487,7 +12487,7 @@ If you find bugs or have questions, let us know:</string>
                                                     </constraint>
                                                 </constraints>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                                <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="15"/>
+                                                <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="14"/>
                                                 <textInputTraits key="textInputTraits"/>
                                                 <variation key="default">
                                                     <mask key="constraints">
@@ -15230,7 +15230,7 @@ If you find bugs or have questions, let us know:</string>
                                                 </constraints>
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <fontDescription key="fontDescription" name="Futura-Medium" family="Futura" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits"/>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 <variation key="default">
                                                     <mask key="constraints">
                                                         <exclude reference="42p-K1-IXZ"/>
@@ -16008,13 +16008,13 @@ If you find bugs or have questions, let us know:</string>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="iIs-P8-hk1"/>
+        <segue reference="DGv-rl-oxd"/>
         <segue reference="Lmg-U4-pzL"/>
         <segue reference="bTb-Yw-2PJ"/>
         <segue reference="SAJ-yr-GiJ"/>
         <segue reference="gzg-YT-mnC"/>
         <segue reference="Tla-zu-UTY"/>
-        <segue reference="4G7-LB-6dW"/>
+        <segue reference="LjV-ha-eme"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
     <resources>
