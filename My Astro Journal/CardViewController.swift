@@ -48,7 +48,10 @@ class CardViewController: UIViewController {
                 entryDatesDropDown.selectedTextColor = .white
                 entryDatesDropDown.cellHeight = 34
                 entryDatesDropDown.cornerRadius = 10
-                entryDatesDropDown.bottomOffset = CGPoint(x: -5, y: 28)
+                entryDatesDropDown.bottomOffset = CGPoint(x: -5, y: 24)
+                if screenH > 1000 {
+                    entryDatesDropDown.bottomOffset = CGPoint(x: -5, y: 35)
+                }
                 entryDatesDropDown.dataSource = journalEntryDateFormattedList
                 entryDatesDropDown.selectionAction = {(index: Int, item: String) in
                     let date = self.journalEntryDateList[self.journalEntryDateFormattedList.index(of: item)!]
@@ -118,8 +121,8 @@ class CardViewController: UIViewController {
             imageViewTopC.constant = 17
         }
         else if screenH > 1000 {//ipads
-            entryDatesButton.titleLabel?.font =  entryDatesButton.titleLabel?.font.withSize(22)
-            unlockedDateLabel.font = unlockedDateLabel.font.withSize(18)
+            entryDatesButton.titleLabel?.font =  entryDatesButton.titleLabel?.font.withSize(19)
+            unlockedDateLabel.font = unlockedDateLabel.font.withSize(20)
             if screenW > 1000 {//ipad 12.9
                 imageViewHCipad.constant = 970
             }

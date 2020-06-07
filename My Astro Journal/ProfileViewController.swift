@@ -105,7 +105,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
         }
         if numIconsPresent == 1 {
             websiteLeadingC.constant = websiteLeadingCDefault + iconW * 1.5 + iconGap * 1.5
-            websiteLeadingCipad.constant = websiteLeadingCDefault + iconW * 1.5 + iconGap * 1.5
+            websiteLeadingCipad.constant = websiteLeadingCipadDefault + iconW * 1.5 + iconGap * 1.5
         } else if numIconsPresent == 2 {
             websiteLeadingC.constant = websiteLeadingCDefault + iconW + iconGap
             websiteLeadingCipad.constant = websiteLeadingCipadDefault + iconW + iconGap
@@ -124,10 +124,10 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             websiteTrailingCipad.constant = 0
         } else {
             websiteButton.isHidden = false
-            websiteWC.constant = 21
+            websiteWC.constant = 20
             websiteTrailingC.constant = 10
-            websiteWCipad.constant = 31
-            websiteTrailingCipad.constant = 15
+            websiteWCipad.constant = 28
+            websiteTrailingCipad.constant = 14
         }
         if instaUsername == "" {
             instaButton.isHidden = true
@@ -137,10 +137,10 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             instaTrailingCipad.constant = 0
         } else {
             instaButton.isHidden = false
-            instaWC.constant = 21
+            instaWC.constant = 20
             instaTrailingC.constant = 10
-            instaWCipad.constant = 31
-            instaTrailingCipad.constant = 15
+            instaWCipad.constant = 28
+            instaTrailingCipad.constant = 14
         }
         if youtubeChannel == "" {
             youtubeButton.isHidden = true
@@ -150,10 +150,10 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             youtubeTrailingCipad.constant = 0
         } else {
             youtubeButton.isHidden = false
-            youtubeWC.constant = 21
+            youtubeWC.constant = 20
             youtubeTrailingC.constant = 10
-            youtubeWCipad.constant = 31
-            youtubeTrailingCipad.constant = 15
+            youtubeWCipad.constant = 28
+            youtubeTrailingCipad.constant = 14
         }
         if fbPage == "" {
             fbButton.isHidden = true
@@ -161,14 +161,14 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             fbWCipad.constant = 0
         } else {
             fbButton.isHidden = false
-            fbWC.constant = 21
-            fbWCipad.constant = 31
+            fbWC.constant = 20
+            fbWCipad.constant = 28
         }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
         eqFields = [userTelescope, userTelescope2, userTelescope3, userMount, userMount2, userMount3, userCamera, userCamera2, userCamera3]
-        if (screenH < 600) {//iphone SE, 5s
+        if screenH < 600 {//iphone SE, 5s
             favObjFieldLabel.text = "fav object:"
             equipmentLabel.isHidden = true
             telescopeIcon.isHidden = true
@@ -178,44 +178,19 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                 eq.isHidden = true
             }
             statsBanner.isHidden = true
-            statsHoursLabel.font = UIFont(name: "Pacifica Condensed", size: 14)
+            let font = UIFont(name: "Pacifica Condensed", size: 14)
+            statsHoursLabel.font = font
+            statsFeaturedLabel.font = font
+            statsSeenLabel.font = font
+            statsPhotoLabel.font = font
             statsHoursLabel.textAlignment = .right
-            statsFeaturedLabel.font = UIFont(name: "Pacifica Condensed", size: 14)
-            statsSeenLabel.font = UIFont(name: "Pacifica Condensed", size: 14)
             statsSeenLabel.textAlignment = .right
-            statsPhotoLabel.font = UIFont(name: "Pacifica Condensed", size: 14)
-        }
-        else if (screenH < 700) {//iphone 8
-            circleBottomC.constant = 8
-            statsBanner.isHidden = true
-        } else if (screenH < 750) {//iphone 8 plus
-            userNameTopC.constant = 6
-            dividerTopC.constant = 6
-        } else if (screenH > 820 && screenH < 900) {//11, pro max
-            userNameTopC.constant = 14
-            dividerTopC.constant = 30
-            circleTopC.constant = 45
-            circleBottomC.constant = 45
         } else if screenH > 1000 {//ipads
             background.image = UIImage(named: "Profile/background-ipad")
             mathBackground.image = UIImage(named: "Profile/math-ipad")
             border.image = UIImage(named: "border-ipad")
             userName.font = UIFont(name: userName.font!.fontName, size: 28)
             userLocation.font = UIFont(name: userLocation.font!.fontName, size: 18)
-            if screenH > 1150 {//11 and 12.9
-                userImageTopCipad.constant = 80
-                dividerTopCipad.constant = 40
-                circleTopCipad.constant = 80
-                circleBottomCipad.constant = 80
-                if screenH > 1300 {//12.9
-                    userImageWCipad.constant = 250
-                    userImageLeadingCipad.constant = 110
-                    websiteLeadingCipad.constant = 50
-                    favObjTrailingCipad.constant = 160
-                    dividerTopCipad.constant = 70
-                    eqLabelTopCipad.constant = 40
-                }
-            }
         }
         websiteLeadingCDefault = websiteLeadingC.constant
         websiteLeadingCipadDefault = websiteLeadingCipad.constant
@@ -444,10 +419,34 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             circleTrailingC.constant = 5
             circleLeadingC.constant = 5
             circleBottomC.constant = 30
-        }
-        else if screenH > 1100  && screenH < 1150 {//ipad 10.5
+        } else if screenH < 700 {//iphone 8
+            statsBanner.isHidden = true
+            circleBottomC.constant = 8
+        } else if screenH < 750 {//iphone 8 plus
+            userNameTopC.constant = 6
+            dividerTopC.constant = 6
+        } else if screenH < 900 {//11, pro max
+            userNameTopC.constant = 14
+            dividerTopC.constant = 30
+            circleTopC.constant = 45
+            circleBottomC.constant = 45
+        } else if screenH > 1100 && screenH < 1150 {//10.5
+            userImageLeadingCipad.constant = 75
             circleTopCipad.constant = 60
             circleBottomCipad.constant = 60
+        } else if screenH > 1150 {//11 and 12.9
+            userImageTopCipad.constant = 60
+            dividerTopCipad.constant = 40
+            circleTopCipad.constant = 80
+            circleBottomCipad.constant = 80
+            if screenH > 1300 {//12.9
+                userImageWCipad.constant = 250
+                userImageLeadingCipad.constant = 110
+                websiteLeadingCipad.constant = 48
+                favObjTrailingCipad.constant = 160
+                dividerTopCipad.constant = 70
+                eqLabelTopCipad.constant = 40
+            }
         }
     }
     override func viewDidAppear(_ animated: Bool) {

@@ -96,7 +96,7 @@ class CardBackBackgroundsPopOverViewController: UIViewController, UICollectionVi
             }
             cell.backgroundNameLabel.preferredMaxLayoutWidth = iphoneCellSize.width - 5
             if screenH > 1000 {
-                cell.backgroundNameLabel.font = UIFont(name: "Pacifica Condensed", size: 16)
+                cell.backgroundNameLabel.font = cell.backgroundNameLabel.font.withSize(16)
                 cell.backgroundNameLabel.preferredMaxLayoutWidth = ipadCellSize.width - 8
             }
         } else {

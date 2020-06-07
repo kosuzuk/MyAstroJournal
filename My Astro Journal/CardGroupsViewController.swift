@@ -46,6 +46,10 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
                 loadingIcon.stopAnimating()
                 endNoInput()
                 self.doneLoading = true
+                if catalogVC != nil {
+                    catalogVC!.featuredTargets = featuredTargets
+                    catalogVC!.dictChanged = true
+                }
             }
         }
     }
@@ -169,6 +173,29 @@ class CardGroupsViewController: UIViewController, UIPopoverPresentationControlle
                     self.catalogVC?.photoCardTargetDatesDict = newPhotoCardTargetDates
                     self.catalogVC?.cardTargetDatesDict = newCardTargetDates
                     self.catalogVC?.dictChanged = true
+                }
+                let featureDates = (data["userDataCopyKeys"]! as! [String: String]).keys
+                if self.featuredTargets.count != featureDates.count {
+                    self.featuredTargets = [:]
+                    self.numFeaturedDatesLoaded = 0
+                    self.numFeaturedDates = 0
+                    if featureDates.count != 0 {
+                        for date in featureDates {
+                            if isEarlierDate(date, dateToday) {
+                                self.numFeaturedDates += 1
+                                db.collection("imageOfDayKeys").document(date).getDocument(completion: {(snapshot, Error) in
+                                    if Error != nil {
+                                        print(Error!)
+                                    } else {
+                                        self.featuredTargets[snapshot!.data()!["formattedTarget"] as! String] = date
+                                        self.numFeaturedDatesLoaded += 1
+                                    }
+                                })
+                            }
+                        }
+                    } else {
+                        self.numFeaturedDatesLoaded = 0
+                    }
                 }
                 let packsUnlockedData = (Array((data["packsUnlocked"] as! [String: Bool]).keys).map {Int($0)!}.sorted()).map{String($0)}
                 if packsUnlockedData != self.packsUnlocked {

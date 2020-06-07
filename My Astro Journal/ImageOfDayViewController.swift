@@ -458,12 +458,13 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
             mountFieldWC.constant = 98
             circle1TrailingC.constant = 5
             circle2LeadingC.constant = 5
-            statsHoursLabel.font = UIFont(name: "Pacifica Condensed", size: 14)
+            let font = UIFont(name: "Pacifica Condensed", size: 14)
+            statsHoursLabel.font = font
+            statsFeaturedLabel.font = font
+            statsSeenLabel.font = font
+            statsPhotoLabel.font = font
             statsHoursLabel.textAlignment = .right
-            statsFeaturedLabel.font = UIFont(name: "Pacifica Condensed", size: 14)
-            statsSeenLabel.font = UIFont(name: "Pacifica Condensed", size: 14)
             statsSeenLabel.textAlignment = .right
-            statsPhotoLabel.font = UIFont(name: "Pacifica Condensed", size: 14)
         }
         else if screenH < 670 {//iphone 8 or smaller
             contentViewHC.constant = 1450

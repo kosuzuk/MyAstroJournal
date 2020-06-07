@@ -418,8 +418,8 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
         } else if screenH > 1000 {//ipads
             background.image = UIImage(named: "Welcome/background-ipad")
             border.image = UIImage(named: "border-ipad")
-            welcomeLabel.font = UIFont(name: "Pacifica Condensed", size: 26)
-            myAstroLabel.font = UIFont(name: "Pacifica Condensed", size: 26)
+            welcomeLabel.font = welcomeLabel.font.withSize(26)
+            myAstroLabel.font = myAstroLabel.font.withSize(26)
             forgotEmailTopC.constant = 30
             if screenH > 1050 {//10.5, 11, 12,9
                 paragraphTopCipad.constant = screenH * 0.05

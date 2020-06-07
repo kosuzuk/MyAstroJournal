@@ -13,7 +13,9 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
     @IBOutlet weak var background: UIImageView!
     @IBOutlet weak var bannerImage: UIImageView!
     @IBOutlet weak var border: UIImageView!
-    @IBOutlet weak var unlockedLabel: UILabel!
+    @IBOutlet weak var cardsUnlockedLabel: UILabel!
+    @IBOutlet weak var numUnlockedLabel: UILabel!
+    @IBOutlet weak var numCardsLabel: UILabel!
     @IBOutlet weak var searchField: UITextField!
     @IBOutlet weak var resetButton: UIButton!
     @IBOutlet weak var searchIcon: UIImageView!
@@ -99,7 +101,7 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
                         numUnlockedCards += 1
                     }
                 }
-                self.unlockedLabel.text = "Cards Unlocked: " + String(numUnlockedCards) + "/" + String(availableCards.count)
+                self.numUnlockedLabel.text = String(numUnlockedCards)
                 dictChanged = false
             }
         }
@@ -180,7 +182,8 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
                 numUnlockedCards += 1
             }
         }
-        unlockedLabel.text = "Cards Unlocked: " + String(numUnlockedCards) + "/" + String(availableCards.count)
+        numUnlockedLabel.text = String(numUnlockedCards)
+        numCardsLabel.text = "/" + String(availableCards.count)
         searchField.isHidden = true
         resetButton.isHidden = true
         searchIcon.isHidden = true
@@ -207,7 +210,9 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
             if screenH > 1000 {//ipads
                 background.image = UIImage(named: "Catalog/background-ipad")
                 border.image = UIImage(named: "border-ipad")
-                unlockedLabel.font = unlockedLabel.font.withSize(22)
+                cardsUnlockedLabel.font = cardsUnlockedLabel.font.withSize(26)
+                numUnlockedLabel.font = numUnlockedLabel.font.withSize(38)
+                numCardsLabel.font = numCardsLabel.font.withSize(26)
                 layout.itemSize = CGSize(width: cardCollectionView.bounds.width / 4 - 20, height: (cardCollectionView.bounds.width / 4 - 20) * 1.49)
                 layout.minimumLineSpacing = 50
                 cardCollectionView.collectionViewLayout = layout
