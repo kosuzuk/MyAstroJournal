@@ -162,7 +162,7 @@ class CardViewController: UIViewController {
             websiteLink = "http://www.deepskycolors.com"
         } else {
             if galacticHunterLinkTargets.contains(target) {
-                photographerUserKey = "x"
+                photographerUserKey = "umBiHpK2nJdW1JTVWkHcsz74Hzt2"
             } else if profileLinkTargets[target] != nil {
                 photographerUserKey = profileLinkTargets[target]!
             }
@@ -264,7 +264,7 @@ class CardViewController: UIViewController {
         if websiteLink != "" {
             let webURL = NSURL(string: websiteLink)!
             application.open(webURL as URL)
-        } else if photographerUserKey != "" && photographerUserKey != "x" {
+        } else if photographerUserKey != "" {
             performSegue(withIdentifier: "cardToProfile", sender: self)
         }
     }
