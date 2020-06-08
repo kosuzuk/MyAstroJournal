@@ -409,7 +409,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
         }
         if userDataCopyToChangeKeys.count != 0 {
             for key in userDataCopyToChangeKeys {
-                db.collection("userData").document(key).setData(["userName": newUserName, "websiteName": websiteField.text!, "instaUsername": instaField.text!, "youtubeChannel": youtubeField.text!, "fbPage": fbField.text!, "userBio": bioField.text!], merge: true)
+                db.collection("userDataCopies").document(key).setData(["userName": newUserName, "websiteName": websiteField.text!, "instaUsername": instaField.text!, "youtubeChannel": youtubeField.text!, "fbPage": fbField.text!, "userBio": bioField.text!], merge: true)
             }
         }
         db.collection("userData").document(userKey).setData(newUserData, merge: true)
@@ -448,7 +448,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
                 db.collection("basicUserData").document(userKey).setData(["compressedProfileImageKey": compressedImageKey], merge: true)
                 if userDataCopyToChangeKeys.count != 0 {
                     for key in userDataCopyToChangeKeys {
-                        db.collection("userData").document(key).setData(["profileImageKey": imageKey], merge: true)
+                        db.collection("userDataCopies").document(key).setData(["profileImageKey": imageKey], merge: true)
                     }
                 }
             }
@@ -481,7 +481,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
             db.collection("basicUserData").document(userKey).setData(["compressedProfileImageKey": ""], merge: true)
             if userDataCopyToChangeKeys.count != 0 {
                 for key in userDataCopyToChangeKeys {
-                    db.collection("userData").document(key).setData(["profileImageKey": ""], merge: true)
+                    db.collection("userDataCopies").document(key).setData(["profileImageKey": ""], merge: true)
                 }
             }
             dataRef.delete()

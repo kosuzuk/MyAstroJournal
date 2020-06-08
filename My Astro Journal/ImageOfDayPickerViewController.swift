@@ -262,7 +262,7 @@ class ImageOfDayPickerViewController: UIViewController, UIScrollViewDelegate, UI
             } else {
                 let userData = snapshot!.data()!
                 let userDataCopyKey = (userData["userDataCopyKeys"] as! [String: String])[self.dateToSetAsIod]!
-                db.collection("userData").document(userDataCopyKey).delete()
+                db.collection("userDataCopies").document(userDataCopyKey).delete()
                 var featuredAlertDates = userData["featuredAlertDates"] as! [String]
                 if featuredAlertDates.index(of: self.dateToSetAsIod) != nil {
                     featuredAlertDates.remove(at: featuredAlertDates.index(of: self.dateToSetAsIod)!)
@@ -307,14 +307,14 @@ class ImageOfDayPickerViewController: UIViewController, UIScrollViewDelegate, UI
                 let newUserDataCopy = ["userName": userData["userName"]!, "userBio": userData["userBio"]!, "websiteName": userData["websiteName"]!, "instaUsername": userData["instaUsername"]!, "youtubeChannel": userData["youtubeChannel"]!, "fbPage": userData["fbPage"]!, "profileImageKey": userData["profileImageKey"]!, "obsTargetNum": userData["obsTargetNum"]!, "photoTargetNum": userData["photoTargetNum"]!, "totalHours": userData["totalHours"]!] as [String : Any]
                 //copy data into new doc for iod
                 var newUserDataCopyDocRef: DocumentReference? = nil
-                newUserDataCopyDocRef = db.collection("userData").addDocument(data: newUserDataCopy) {err in
+                newUserDataCopyDocRef = db.collection("userDataCopies").addDocument(data: newUserDataCopy) {err in
                     if let err = err {
                         print("Error adding user data copy document: \(err)")
                     } else {
                         let userDataCopyKey = newUserDataCopyDocRef!.documentID
                         var userDataCopyKeys = userData["userDataCopyKeys"] as! [String: String]
                         userDataCopyKeys[self.dateToSetAsIod] = userDataCopyKey
-                        db.collection("userData").document(userDataCopyKey).setData(["userDataCopyKeys": userDataCopyKeys], merge: true)
+                        db.collection("userDataCopies").document(userDataCopyKey).setData(["userDataCopyKeys": userDataCopyKeys], merge: true)
                         newUserData["userDataCopyKeys"] = userDataCopyKeys
                         db.collection("userData").document(userKey).setData(newUserData, merge: true)
                         let newIodData = ["imageKey": self.entryDataToSetAsIod["mainImageKey"]!, "journalEntryInd": self.entryIndInEntryList, "journalEntryListKey": entryKey, "userKey": userDataCopyKey, "formattedTarget": self.entryDataToSetAsIod["formattedTarget"] as! String]

@@ -470,7 +470,6 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
 //                }
 //            }
 //        })
-        
         if Auth.auth().currentUser != nil {
             db.collection("userData").whereField("email", isEqualTo: Auth.auth().currentUser!.email!).getDocuments(completion: { (QuerySnapshot, Error) in
                 if Error != nil {
@@ -499,7 +498,6 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
 //                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
 //                        let initial = storyboard.instantiateInitialViewController()
 //                        UIApplication.shared.keyWindow?.rootViewController = initial
-                        
                         let data = QuerySnapshot!.documents[0]
                         KeychainWrapper.standard.set(data.documentID, forKey: "dbKey")
                         let userName = data["userName"]
@@ -556,15 +554,9 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
                 } else {
                     self.signUpButton.isHidden = true
                     self.loginButton.isHidden = true
-                    var newDataRef: DocumentReference? = nil
-                    newDataRef = db.collection("userData").addDocument(data: ["email": self.signUpEmailField.text!.lowercased()]) {err in
-                        if let err = err {
-                            print("Error adding document: \(err)")
-                        } else {
-                            let docKey = newDataRef!.documentID
-                            KeychainWrapper.standard.set(docKey, forKey: "dbKey")
-                        }
-                    }
+                    let userKey = user!.user.uid
+                    db.collection("userData").document(userKey).setData(["email": self.signUpEmailField.text!.lowercased()])
+                    KeychainWrapper.standard.set(userKey, forKey: "dbKey")
                     self.email = self.signUpEmailField.text!
                     self.performSegue(withIdentifier: "welcomeToProfileCreation", sender: self)
                 }

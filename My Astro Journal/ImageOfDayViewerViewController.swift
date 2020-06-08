@@ -131,7 +131,7 @@ class ImageOfDayViewerViewController: UIViewController, UICollectionViewDelegate
                 } else {
                     let userData = snapshot!.data()!
                     let userDataCopyKey = (userData["userDataCopyKeys"] as! [String: String])[featuredDate]!
-                    db.collection("userData").document(userDataCopyKey).delete()
+                    db.collection("userDataCopies").document(userDataCopyKey).delete()
                     var featuredAlertDates = userData["featuredAlertDates"] as! [String]
                     if featuredAlertDates.index(of: featuredDate) != nil {
                         featuredAlertDates.remove(at: featuredAlertDates.index(of: featuredDate)!)

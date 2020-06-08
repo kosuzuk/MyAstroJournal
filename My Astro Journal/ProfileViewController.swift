@@ -191,6 +191,9 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             border.image = UIImage(named: "border-ipad")
             userName.font = UIFont(name: userName.font!.fontName, size: 28)
             userLocation.font = UIFont(name: userLocation.font!.fontName, size: 18)
+            if screenH > 1300 {//12.9
+                websiteLeadingCipad.constant = 48
+            }
         }
         websiteLeadingCDefault = websiteLeadingC.constant
         websiteLeadingCipadDefault = websiteLeadingCipad.constant
@@ -425,7 +428,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
         } else if screenH < 750 {//iphone 8 plus
             userNameTopC.constant = 6
             dividerTopC.constant = 6
-        } else if screenH < 900 {//11, pro max
+        } else if screenH > 890 && screenH < 900 {//11 pro max
             userNameTopC.constant = 14
             dividerTopC.constant = 30
             circleTopC.constant = 45
@@ -441,8 +444,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
             circleBottomCipad.constant = 80
             if screenH > 1300 {//12.9
                 userImageWCipad.constant = 250
-                userImageLeadingCipad.constant = 110
-                websiteLeadingCipad.constant = 48
+                userImageLeadingCipad.constant = 95
                 favObjTrailingCipad.constant = 160
                 dividerTopCipad.constant = 70
                 eqLabelTopCipad.constant = 40

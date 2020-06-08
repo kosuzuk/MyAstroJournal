@@ -44,8 +44,6 @@ class CardViewController: UIViewController {
                 entryDatesDropDown.backgroundColor = .darkGray
                 entryDatesDropDown.textColor = .white
                 entryDatesDropDown.textFont = UIFont(name: "Pacifica Condensed", size: 16)!
-                entryDatesDropDown.selectionBackgroundColor = .darkGray
-                entryDatesDropDown.selectedTextColor = .white
                 entryDatesDropDown.cellHeight = 34
                 entryDatesDropDown.cornerRadius = 10
                 entryDatesDropDown.bottomOffset = CGPoint(x: -5, y: 24)
@@ -119,11 +117,12 @@ class CardViewController: UIViewController {
         if screenH < 600 {
             imageViewCenterYC.constant = -20
             imageViewTopC.constant = 17
-        }
-        else if screenH > 1000 {//ipads
+        } else if screenH > 800 && screenH < 1000 {//iphone 11, 11 pro max
+            unlockedDateLabel.font = unlockedDateLabel.font.withSize(14)
+        } else if screenH > 1000 {//ipads
             entryDatesButton.titleLabel?.font =  entryDatesButton.titleLabel?.font.withSize(19)
-            unlockedDateLabel.font = unlockedDateLabel.font.withSize(20)
-            if screenW > 1000 {//ipad 12.9
+            unlockedDateLabel.font = unlockedDateLabel.font.withSize(21)
+            if screenH > 1300 {//ipad 12.9
                 imageViewHCipad.constant = 970
             }
         }

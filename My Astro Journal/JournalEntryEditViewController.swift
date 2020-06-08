@@ -690,7 +690,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         }
         let copyKey = (userData["userDataCopyKeys"] as! [String: String])[featuredDate]!
         db.collection("userData").document(userKey).setData(["featuredAlertDates": alertDates, "userDataCopyKeys": [featuredDate: FieldValue.delete()]], merge: true)
-        db.collection("userData").document(copyKey).delete()
+        db.collection("userDataCopies").document(copyKey).delete()
         
         if isEarlierDate(dateToday, featuredDate) {
             //notify Antoine
@@ -964,7 +964,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         if copyKeys.count != 0 {
             for (date, key) in copyKeys {
                 if date == featuredImageDate || isEarlierDate(dateToday, date) {
-                    db.collection("userData").document(key).setData(["photoTargetNum": userData["photoTargetNum"]!, "obsTargetNum": userData["obsTargetNum"]!, "totalHours": userData["totalHours"]!], merge: true)
+                    db.collection("userDataCopies").document(key).setData(["photoTargetNum": userData["photoTargetNum"]!, "obsTargetNum": userData["obsTargetNum"]!, "totalHours": userData["totalHours"]!], merge: true)
                 }
             }
         }

@@ -222,7 +222,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
             self.cameraDD = checkEqToLink(eqType: "camera", eqFields: eqFieldList, eqFieldValues: eqFieldValueList, iodvc: self, jevc: nil, pvc: nil)
         })
         
-        let iodUserRef = db.collection("userData").document(iodUserKey)
+        let iodUserRef = db.collection("userDataCopies").document(iodUserKey)
         iodUserListener = iodUserRef.addSnapshotListener(includeMetadataChanges: true, listener: {(snapshot, Error) in
             if Error != nil {
                 return
