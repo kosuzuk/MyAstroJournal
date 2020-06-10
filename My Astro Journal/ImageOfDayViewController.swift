@@ -16,8 +16,6 @@ infix operator £
 func £(comment1: Dictionary<String, String>, comment2: Dictionary<String, String>) -> Bool {
     let time1 = String(comment1["userKey"]!.suffix(11))
     let time2 = String(comment2["userKey"]!.suffix(11))
-    print(time1)
-    print(time2)
     let d1 = Int(time1.prefix(2))!
     let d2 = Int(time2.prefix(2))!
     if d1 != d2 {
@@ -129,9 +127,8 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
     var sentEvenNumComments = true
     var locationWidthDefault = CGFloat(0)
     var locationLabelW = CGFloat(0)
-    var commentTextViewHeightDefault = 36
+    var commentTextViewHeightDefault = 33
     var commentInputHeightMax = CGFloat(85)
-    var commentsTableViewWidth = CGFloat(0)
     var commentFontName = "Helvetica Neue"
     var commentFontSize = 14
     var commentFontAttributes: [NSAttributedString.Key : Any]? = nil
@@ -183,7 +180,6 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
                 statsLabelLeadingCipad.constant = screenW * 0.16
             }
         }
-        commentsTableViewWidth = commentsTableView.bounds.width
         
         imageView.image = imageData
         let iodEntryRef = db.collection("journalEntries").document(entryKey)
@@ -492,28 +488,19 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
         }
     }
     func getNumLines(str: String, fontAttr: [NSAttributedString.Key : Any], containerW: CGFloat) -> Int {
-        var strCopy = str
-        var size = "".size(withAttributes: (commentFontAttributes!))
-        var numLines = 0
-        var i = 0
-        for c in str {
-            if c == "\n" {
-                if i == 0 {
-                    numLines += 1
-                } else {
-                    size = String(strCopy.prefix(i)).size(withAttributes: (commentFontAttributes!))
-                    numLines += Int(ceil(size.width / containerW))
-                }
-                strCopy = String(str.suffix(strCopy.count - i - 1))
-                i = 0
-            } else {
-                i += 1
+        var wordList = str.split{$0 == " "}.map(String.init)
+        //add a space after each word in list
+        wordList = wordList.map({ (word: String) -> String in return word + " " })
+        var wordW = "".size(withAttributes: (commentFontAttributes!)).width
+        var curLineW = CGFloat(0)
+        var numLines = 1
+        for word in wordList {
+            wordW = word.size(withAttributes: (commentFontAttributes!)).width
+            curLineW += wordW
+            if curLineW > containerW {
+                numLines += 1
+                curLineW = wordW
             }
-        }
-        numLines += 1
-        if numLines == 1 {
-            size = str.size(withAttributes: (commentFontAttributes!))
-            numLines = Int(ceil(size.width / containerW))
         }
         return numLines
     }
@@ -531,6 +518,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
         cellLayer.masksToBounds = true
         cellLayer.cornerRadius = cell.userImageView.bounds.width / 2
         cell.userNameLabel.text = (basicUserDataDict[userKey]?["userName"] as? String)
+        cell.commentTextView.textContainerInset = UIEdgeInsets(top: 5, left: 1, bottom: 1, right: 1)
         cell.commentTextView.text = (commentsList[indexPath.row]["comment"]!)
         cell.commentTextViewHC.constant = CGFloat(commentTextViewHeightDefault / 2 * (Int(commentsList[indexPath.row]["numLines"]!)! + 1))
         if commentsList[indexPath.row]["userKey"] == currentUserKey && cell.viewWithTag(2) == nil {
@@ -548,8 +536,8 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        let comment = commentsList[indexPath.row]["comment"]! + "kk" //kk to account for padding
-        let numLines = getNumLines(str: comment, fontAttr: commentFontAttributes!, containerW: commentsTableViewWidth)
+        let comment = commentsList[indexPath.row]["comment"]!
+        let numLines = getNumLines(str: comment, fontAttr: commentFontAttributes!, containerW: commentsTableView.bounds.width - 4)
         if commentsList[indexPath.row]["numLines"] == nil {
             commentsList[indexPath.row]["numLines"] = String(numLines)
         }
@@ -647,6 +635,7 @@ class ImageOfDayViewController: UIViewController, UIScrollViewDelegate, UITableV
         }
         sentEvenNumComments = !sentEvenNumComments
         commentInputTextView.text = ""
+        commentInputHC.constant = CGFloat(commentTextViewHeightDefault)
         var timeStamp = format.string(from: Date())
         if timeStamp.suffix(1).lowercased() == "m" {
             let AMorPM = timeStamp.suffix(2).lowercased()

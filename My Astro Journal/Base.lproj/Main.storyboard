@@ -7005,10 +7005,10 @@
                                                 </connections>
                                             </tableView>
                                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="cad-MK-rK8">
-                                                <rect key="frame" x="146" y="928" width="437" height="34"/>
+                                                <rect key="frame" x="146" y="928" width="437" height="33"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="34" id="nbk-Ca-xvI"/>
+                                                    <constraint firstAttribute="height" constant="33" id="nbk-Ca-xvI"/>
                                                 </constraints>
                                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
@@ -7020,7 +7020,7 @@
                                                 </variation>
                                             </textView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZuF-9y-gDl">
-                                                <rect key="frame" x="587" y="928" width="38" height="34"/>
+                                                <rect key="frame" x="587" y="927" width="38" height="34"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="38" id="FSp-1b-RMN"/>
                                                     <constraint firstAttribute="height" constant="34" id="b1P-MZ-PtP"/>
@@ -16012,7 +16012,7 @@ If you find bugs or have questions, let us know:</string>
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="iIs-P8-hk1"/>
-        <segue reference="uqg-ry-XYZ"/>
+        <segue reference="xF0-Pu-Yyn"/>
         <segue reference="sA4-zC-QJb"/>
         <segue reference="WtV-Gn-gke"/>
         <segue reference="gzg-YT-mnC"/>
