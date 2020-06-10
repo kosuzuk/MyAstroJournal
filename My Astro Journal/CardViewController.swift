@@ -81,7 +81,8 @@ class CardViewController: UIViewController {
     var websiteLink = ""
     var photographerUserKey = ""
     var items: [UIView] = []
-    var didDismissFullImage = false {
+    var loaded = false
+    var didDismissMapFullImage = false {
         didSet {
             imageView.isHidden = false
             closeButton.isHidden = false
@@ -178,16 +179,19 @@ class CardViewController: UIViewController {
         }
     }
     override func viewDidAppear(_ animated: Bool) {
-        adjustUnlockedDateLabelPos()
-        nasaButtonTopC.constant = imageView.bounds.height * 0.465
-        if screenH < 670 {
-            nasaButtonTopC.constant -= 10
+        if !loaded {
+            adjustUnlockedDateLabelPos()
+            nasaButtonTopC.constant = imageView.bounds.height * 0.465
+            if screenH < 670 {
+                nasaButtonTopC.constant -= 10
+            }
+            nasaButtonTrailingC.constant = -imageView.bounds.width * 0.06
+            entryDatesButton.isHidden = journalEntryDateList == []
+            unlockedDateLabel.isHidden = unlockedDate == ""
+            featuredIcon.isHidden = featuredDate == ""
+            checkPhotographLogo()
+            loaded = true
         }
-        nasaButtonTrailingC.constant = -imageView.bounds.width * 0.06
-        entryDatesButton.isHidden = journalEntryDateList == []
-        unlockedDateLabel.isHidden = unlockedDate == ""
-        featuredIcon.isHidden = featuredDate == ""
-        checkPhotographLogo()
     }
     
     @IBAction func showEntryDates(_ sender: Any) {

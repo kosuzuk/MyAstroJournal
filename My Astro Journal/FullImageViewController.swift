@@ -61,9 +61,10 @@ class FullImageViewController: UIViewController {
         removeAnimate()
     }
     @IBAction func imageViewTapped(_ sender: Any) {
+        //close map full image
         if cardVC != nil {
             self.view.removeFromSuperview()
-            cardVC!.didDismissFullImage = true
+            cardVC!.didDismissMapFullImage = true
         }
     }
 }

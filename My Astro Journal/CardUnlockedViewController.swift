@@ -20,12 +20,11 @@ class CardUnlockedViewController: UIViewController {
         view.backgroundColor = UIColor.black.withAlphaComponent(0.8)
         if screenH < 600 {//iphone SE, 5s
             imageViewWC.constant = 250
-        }
-        else if screenH > 800 && screenH < 1000 {//iphone 11, pro max
+        } else if screenH > 800 && screenH < 1000 {//iphone 11, pro max
             imageViewWC.constant = 350
-        }
-        else if screenH > 1000 {//ipads
-            unlockedDateLabel.font = unlockedDateLabel.font.withSize(17)
+            unlockedDateLabel.font = unlockedDateLabel.font.withSize(14)
+        } else if screenH > 1000 {//ipads
+            unlockedDateLabel.font = unlockedDateLabel.font.withSize(20)
             if screenH > 1300 {//ipad 12.9
                 imageViewWCipad.constant = 616
             }
