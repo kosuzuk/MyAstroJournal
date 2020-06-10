@@ -640,14 +640,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "My Astro Journal/My Astro Journal.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Z9T4A9386V;
 				INFOPLIST_FILE = "$(SRCROOT)/My Astro Journal/GoogleService-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.GalacticHunter.My-Astro-Journal";
 				PRODUCT_NAME = "My Astro Journal";
 				SWIFT_VERSION = 4.2;
@@ -662,14 +662,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "My Astro Journal/My Astro Journal.entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Z9T4A9386V;
 				INFOPLIST_FILE = "$(SRCROOT)/My Astro Journal/GoogleService-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.GalacticHunter.My-Astro-Journal";
 				PRODUCT_NAME = "My Astro Journal";
 				SWIFT_VERSION = 4.2;
