@@ -342,7 +342,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate, U
                 loadingIcon.stopAnimating()
             }
         }
-        if firstTime {
+        if firstTime && keyForDifferentProfile == "" {
             let alertController = UIAlertController(title: "Tutorial", message: "This is your profile! Add information about yourself and save your equipment for easy access when completing new entries.\nNote that your bio, profile picture, social media links and stats will be visible to the public when one of your images is featured as Image of the Week!", preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
             alertController.addAction(defaultAction)
