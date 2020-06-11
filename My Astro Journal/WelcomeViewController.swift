@@ -499,10 +499,11 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
 //                        let initial = storyboard.instantiateInitialViewController()
 //                        UIApplication.shared.keyWindow?.rootViewController = initial
                         let data = QuerySnapshot!.documents[0]
+                        self.email = data["email"] as! String
                         KeychainWrapper.standard.set(data.documentID, forKey: "dbKey")
+                        KeychainWrapper.standard.set(self.email, forKey: "email")
                         let userName = data["userName"]
                         if userName == nil {
-                            self.email = data["email"] as! String
                             self.performSegue(withIdentifier: "welcomeToProfileCreation", sender: self)
                         } else {
                             KeychainWrapper.standard.set(userName as! String, forKey: "userName")
@@ -556,8 +557,9 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
                     self.loginButton.isHidden = true
                     let userKey = user!.user.uid
                     db.collection("userData").document(userKey).setData(["email": self.signUpEmailField.text!.lowercased()])
+                    self.email = self.signUpEmailField.text!.lowercased()
                     KeychainWrapper.standard.set(userKey, forKey: "dbKey")
-                    self.email = self.signUpEmailField.text!
+                    KeychainWrapper.standard.set(self.email, forKey: "email")
                     self.performSegue(withIdentifier: "welcomeToProfileCreation", sender: self)
                 }
                 endNoInput()
@@ -570,7 +572,6 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
             if error != nil {
                 let alertController = UIAlertController(title: "Error", message: error?.localizedDescription, preferredStyle: .alert)
                 let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-                
                 alertController.addAction(defaultAction)
                 self.present(alertController, animated: true, completion: nil)
             } else {
@@ -580,10 +581,18 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
                     if Error != nil {
                         print(Error!)
                     } else {
+                        if QuerySnapshot!.documents == [] {
+                            let alertController = UIAlertController(title: "Error", message: "User data could not be found. Please use the help button to contact the admin.", preferredStyle: .alert)
+                            let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                            alertController.addAction(defaultAction)
+                            self.present(alertController, animated: true, completion: nil)
+                            return
+                        }
                         let data = QuerySnapshot!.documents[0]
+                        self.email = data["email"] as! String
                         KeychainWrapper.standard.set(data.documentID, forKey: "dbKey")
+                        KeychainWrapper.standard.set(self.email, forKey: "email")
                         if data["userName"] == nil {
-                            self.email = data["email"] as! String
                             self.performSegue(withIdentifier: "welcomeToProfileCreation", sender: self)
                         } else {
                             print("sign-in successful")
@@ -617,12 +626,12 @@ class WelcomeViewController: UIViewController, UITextFieldDelegate, UIScrollView
                 let mailComposerVC = MFMailComposeViewController()
                 mailComposerVC.mailComposeDelegate = (self as MFMailComposeViewControllerDelegate)
                 mailComposerVC.setToRecipients(["nevadaastrophotography@gmail.com"])
-                mailComposerVC.setSubject("Forgot Email")
+                mailComposerVC.setSubject("Forgot Email/Help")
                 mailComposerVC.setMessageBody("", isHTML: false)
                 self.present(mailComposerVC, animated: true, completion: nil)
             }
         }
-        let alertController = UIAlertController(title: "Forgot Email", message: "Please send an email to: nevadaastrophotography@gmail.com to recover your email. Please give us information such as username, description of profile image, etc.", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Forgot Email/Help", message: "Please send us a message to recover your email, to get help logging in or with crashes. Please give us information such as username, email if available, what action caused the crash, etc.", preferredStyle: .alert)
         let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: {(alertAction) in composeEmail()})
         alertController.addAction(defaultAction)
         self.present(alertController, animated: true, completion: nil)

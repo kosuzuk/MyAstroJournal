@@ -134,9 +134,11 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         }
     }
     @IBAction func sendMessageTapped(_ sender: Any) {
+        let userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
+        let email = KeychainWrapper.standard.string(forKey: "email")!
         let userName = KeychainWrapper.standard.string(forKey: "userName")!
         let message = messageField.text!
-        let messageData = ["userName": userName, "date": dateToday, "message": message]
+        let messageData = ["userKey": userKey, "email": email, "userName": userName, "date": dateToday, "message": message]
         let newKey = NSUUID().uuidString
         db.collection("messagesFromUsers").document(newKey).setData(messageData, merge: false)
         messageField.text = ""

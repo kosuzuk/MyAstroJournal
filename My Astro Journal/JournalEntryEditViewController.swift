@@ -117,7 +117,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         return .lightContent
     }
     
-    func setAutoComp(_ textField: UITextField, _ data: [String], _ ddType: Int) {
+    func setAutoComp(_ textField: UITextField, _ data: [String], _ ddType: String) {
         let dropDown = VPAutoComplete()
         dropDown.dataSource = data
         dropDown.onTextField = textField // Your TextField
@@ -136,9 +136,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
                 textField.text = textField.text!.prefix(commaInd + 1) + str
             }
         }
-        if ddType == 0 {
-            dropDown.frame.origin.y = targetField.frame.origin.y + 40
-        } else if ddType == 1 {
+        if ddType == "location" {
             dropDown.frame.origin.y = locationField.frame.origin.y + 36
         } else {
             if screenH < 1000 {
@@ -239,11 +237,12 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         }
         locationsVisited = userData["locationsVisited"] as! [String]
         if entryData.count != 0 {
-            targetField.isUserInteractionEnabled = false
             targetField.borderStyle = UITextField.BorderStyle.none
-            constellationField.isUserInteractionEnabled = false
+            targetField.textColor = UIColor.white.withAlphaComponent(0.8)
+            targetField.isUserInteractionEnabled = false
             
             let entryData = self.entryData
+            targetPlusSign.isHidden = true
             targetField.text = (entryData["target"] as! String)
             constellationField.text = (entryData["constellation"] as! String)
             locationField.text = (entryData["locations"] as! [String]).joined(separator: ", ")
@@ -323,12 +322,11 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
             arrowWC.constant = 130
             mountFieldWC.constant = 98
         }
-        setAutoComp(targetField, ["Messier", "Sharpless", "SH2-", "Milky Way", "Rho Ophiuchi", "XSS J16271-2423", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"], 0)
-        setAutoComp(locationField, locationsVisited, 1)
+        setAutoComp(locationField, locationsVisited, "location")
         let eqData = userData["userEquipment"] as! Dictionary<String, [String]>
-        setAutoComp(telescopeField, eqData["telescopes"]!, 2)
-        setAutoComp(mountField, eqData["mounts"]!, 2)
-        setAutoComp(cameraField, eqData["cameras"]!, 2)
+        setAutoComp(telescopeField, eqData["telescopes"]!, "eq")
+        setAutoComp(mountField, eqData["mounts"]!, "eq")
+        setAutoComp(cameraField, eqData["cameras"]!, "eq")
         loaded = true
     }
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
@@ -368,7 +366,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
                 } else {
                     constellationField.text = ""
                 }
-            } else {
+            } else if entryData.count == 0 {
                 targetPlusSign.isHidden = false
             }
         }
@@ -1032,7 +1030,21 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
     @IBAction func done(_ sender: Any) {
         //if target or constellation was left blank, show alert
         if targetField.text == "" || locationField.text == "" || timeStartField.text == "" || timeEndField.text == "" || (!observedSelected && !photographedSelected) {
-            let alertController = UIAlertController(title: "Error", message: "Target, time, location, and observed or photographed must not be left blank.", preferredStyle: .alert)
+            for field in [targetField!, locationField!, timeStartField!, timeEndField!] {
+                if field.text! == "" {
+                    if field == targetField! {
+                        field.layer.borderWidth = 2
+                    }
+                    field.layer.borderColor = UIColor.red.cgColor
+                } else {
+                    if field == targetField! {
+                        field.layer.borderWidth = 0
+                    }
+                    field.layer.borderColor = UIColor.white.cgColor
+                }
+            }
+            scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: true)
+            let alertController = UIAlertController(title: "Error", message: "Target, time start & end, location, and observed or photographed must be filled out.", preferredStyle: .alert)
             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
             alertController.addAction(defaultAction)
             self.present(alertController, animated: true, completion: nil)
