@@ -1194,7 +1194,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" bouncesZoom="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="s18-4t-hSD">
-                                                    <rect key="frame" x="0.0" y="56" width="560" height="403"/>
+                                                    <rect key="frame" x="0.0" y="57.5" width="560" height="401.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ppw-H2-jyr">
                                                         <size key="itemSize" width="50" height="50"/>
@@ -1337,49 +1337,49 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sun" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uom-qg-0gO">
-                                                    <rect key="frame" x="5" y="36" width="30" height="20"/>
+                                                    <rect key="frame" x="5" y="36" width="23" height="21.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="17"/>
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fri" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ehw-vH-c1X">
-                                                    <rect key="frame" x="276.5" y="36" width="19" height="20"/>
+                                                    <rect key="frame" x="237" y="36" width="19" height="21.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="17"/>
                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thu" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Deg-lU-azy">
-                                                    <rect key="frame" x="237.5" y="36" width="29" height="20"/>
+                                                    <rect key="frame" x="205.5" y="36" width="21.5" height="21.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="17"/>
                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Wed" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lPz-QY-SpM">
-                                                    <rect key="frame" x="177.5" y="36" width="34" height="20"/>
+                                                    <rect key="frame" x="156" y="36" width="23.5" height="21.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="17"/>
                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tue" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hSJ-Xa-ZGv">
-                                                    <rect key="frame" x="112.5" y="36" width="27" height="20"/>
+                                                    <rect key="frame" x="96" y="36" width="22" height="21.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="17"/>
                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Mon" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KB9-cI-mem">
-                                                    <rect key="frame" x="55" y="36" width="34.5" height="20"/>
+                                                    <rect key="frame" x="48" y="36" width="25" height="21.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="17"/>
                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FKt-gJ-wN6">
-                                                    <rect key="frame" x="305.5" y="36" width="26" height="20"/>
+                                                    <rect key="frame" x="266" y="36" width="24.5" height="21.5"/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="17"/>
                                                     <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1469,7 +1469,7 @@
                                 </connections>
                             </tableView>
                             <imageView clipsSubviews="YES" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dGw-RI-eYG">
-                                <rect key="frame" x="80" y="763" width="552" height="100"/>
+                                <rect key="frame" x="80" y="765" width="552" height="98"/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="342" id="9eV-8t-EE3"/>
@@ -1565,7 +1565,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="IMAGE OF THE WEEK" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HH0-DG-Bts">
-                                <rect key="frame" x="235.5" y="737" width="241" height="28"/>
+                                <rect key="frame" x="273.5" y="737" width="165" height="30"/>
                                 <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="24"/>
                                 <color key="textColor" white="0.85886665239726023" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -4537,40 +4537,40 @@
                                 <rect key="frame" x="0.0" y="0.0" width="712" height="878"/>
                             </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Catalogs" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VIR-0c-H75">
-                                <rect key="frame" x="26" y="107" width="100" height="29.5"/>
+                                <rect key="frame" x="26" y="107" width="91.5" height="31.5"/>
                                 <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="25"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Categories" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZUQ-jX-9VA">
-                                <rect key="frame" x="26" y="565" width="121.5" height="29.5"/>
+                                <rect key="frame" x="26" y="567" width="109" height="31.5"/>
                                 <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="25"/>
                                 <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gmN-5c-X1o">
-                                <rect key="frame" x="408" y="742" width="200" height="117.5"/>
+                                <rect key="frame" x="408" y="746" width="200" height="117.5"/>
                                 <state key="normal" image="CardGroups/plantes"/>
                                 <connections>
                                     <action selector="planetsPressed:" destination="I2d-IS-cHC" eventType="touchUpInside" id="aWU-1i-4TK"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Njf-EI-VZL">
-                                <rect key="frame" x="491" y="146.5" width="140" height="184"/>
+                                <rect key="frame" x="491" y="148.5" width="140" height="184"/>
                                 <state key="normal" image="CardGroups/NGC"/>
                                 <connections>
                                     <action selector="NGCPressed:" destination="I2d-IS-cHC" eventType="touchUpInside" id="d5I-Ix-t9h"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GqQ-Sa-fF7">
-                                <rect key="frame" x="286" y="146.5" width="140" height="184"/>
+                                <rect key="frame" x="286" y="148.5" width="140" height="184"/>
                                 <state key="normal" image="CardGroups/IC"/>
                                 <connections>
                                     <action selector="ICPressed:" destination="I2d-IS-cHC" eventType="touchUpInside" id="5Vd-pi-BxG"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fPS-po-xjy">
-                                <rect key="frame" x="81" y="146.5" width="140" height="184"/>
+                                <rect key="frame" x="81" y="148.5" width="140" height="184"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="85" id="8ZZ-lA-KzC">
                                         <variation key="heightClass=regular-widthClass=regular" constant="140"/>
@@ -4600,14 +4600,14 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zgu-Qk-EfL">
-                                <rect key="frame" x="174" y="360.5" width="140" height="184.5"/>
+                                <rect key="frame" x="174" y="362.5" width="140" height="184.5"/>
                                 <state key="normal" image="CardGroups/sharplessLocked"/>
                                 <connections>
                                     <action selector="sharplessPressed:" destination="I2d-IS-cHC" eventType="touchUpInside" id="D7f-PK-nj9"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pss-Ie-fL2">
-                                <rect key="frame" x="104" y="609.5" width="200" height="117.5"/>
+                                <rect key="frame" x="104" y="613.5" width="200" height="117.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="120" id="Ba7-iS-bMt"/>
                                     <constraint firstAttribute="width" secondItem="Pss-Ie-fL2" secondAttribute="height" multiplier="143:84" id="Kiv-Ep-55L"/>
@@ -4637,14 +4637,14 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Jl-fz-Bhx">
-                                <rect key="frame" x="104" y="742" width="200" height="117.5"/>
+                                <rect key="frame" x="104" y="746" width="200" height="117.5"/>
                                 <state key="normal" image="CardGroups/clusters"/>
                                 <connections>
                                     <action selector="clustersPressed:" destination="I2d-IS-cHC" eventType="touchUpInside" id="ONf-BI-LxR"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QZG-Na-nJf">
-                                <rect key="frame" x="542" y="97" width="110" height="50"/>
+                                <rect key="frame" x="542" y="98" width="110" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="55" id="TWY-vm-cOn">
                                         <variation key="heightClass=regular-widthClass=regular" constant="50"/>
@@ -4692,14 +4692,14 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wmy-w3-IGe">
-                                <rect key="frame" x="398" y="360.5" width="140" height="184.5"/>
+                                <rect key="frame" x="398" y="362.5" width="140" height="184.5"/>
                                 <state key="normal" image="CardGroups/othersLocked"/>
                                 <connections>
                                     <action selector="othersPressed:" destination="I2d-IS-cHC" eventType="touchUpInside" id="kyW-xM-emi"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="fill" contentVerticalAlignment="fill" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nUS-JX-Hpx">
-                                <rect key="frame" x="408" y="609.5" width="200" height="117.5"/>
+                                <rect key="frame" x="408" y="613.5" width="200" height="117.5"/>
                                 <state key="normal" image="CardGroups/nebulae"/>
                                 <connections>
                                     <action selector="nebulaePressed:" destination="I2d-IS-cHC" eventType="touchUpInside" id="imV-Yd-LKe"/>
@@ -5038,7 +5038,7 @@
                                 </variation>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="csx-0O-nE4">
-                                <rect key="frame" x="566" y="152" width="102" height="21"/>
+                                <rect key="frame" x="572" y="152" width="90" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="37j-aS-kaN"/>
                                     <constraint firstAttribute="height" constant="21" id="yRm-dl-yvv"/>
@@ -5063,7 +5063,7 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Cards Unlocked:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zMz-5r-06Y">
-                                <rect key="frame" x="65" y="125" width="142.5" height="32"/>
+                                <rect key="frame" x="65" y="125" width="121.5" height="32"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="32" id="dye-hU-oMF"/>
                                     <constraint firstAttribute="height" constant="32" id="w4T-xY-3Sd"/>
@@ -5084,13 +5084,13 @@
                                 </variation>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IFI-4w-5yo">
-                                <rect key="frame" x="214.5" y="123" width="17.5" height="36.5"/>
+                                <rect key="frame" x="193.5" y="121.5" width="14" height="39"/>
                                 <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="31"/>
                                 <color key="textColor" red="1" green="0.6470588235294118" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="/100" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vV8-eg-ZJj">
-                                <rect key="frame" x="235" y="131" width="34.5" height="20"/>
+                                <rect key="frame" x="210.5" y="130.5" width="24.5" height="21.5"/>
                                 <fontDescription key="fontDescription" name="PacificaCondensed" family="Pacifica Condensed" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
@@ -12427,7 +12427,7 @@ If you find bugs or have questions, let us know:</string>
                                                 </variation>
                                             </textField>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nNE-3F-bnc">
-                                                <rect key="frame" x="301" y="866" width="110" height="30"/>
+                                                <rect key="frame" x="301" y="860" width="110" height="30"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="35" id="M83-eA-lVp"/>
                                                     <constraint firstAttribute="width" constant="124" id="RId-vP-0Ka"/>
@@ -12638,7 +12638,7 @@ If you find bugs or have questions, let us know:</string>
                                                 </connections>
                                             </textField>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8aY-TB-DJj">
-                                                <rect key="frame" x="301" y="826" width="110" height="30"/>
+                                                <rect key="frame" x="301" y="820" width="110" height="30"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="124" id="4nw-Us-Cec"/>
                                                     <constraint firstAttribute="width" constant="110" id="8yA-KW-8MV"/>
@@ -13133,7 +13133,6 @@ If you find bugs or have questions, let us know:</string>
                                             <constraint firstItem="OEj-ha-gan" firstAttribute="top" secondItem="qZ4-fc-oow" secondAttribute="top" constant="20" id="XnT-5E-wHD">
                                                 <variation key="heightClass=regular-widthClass=regular" constant="50"/>
                                             </constraint>
-                                            <constraint firstAttribute="bottom" secondItem="nNE-3F-bnc" secondAttribute="bottom" constant="60" id="XtC-PC-Kxs"/>
                                             <constraint firstItem="m0e-e3-xpv" firstAttribute="centerX" secondItem="YcC-G1-FWq" secondAttribute="centerX" id="YnA-3B-wru"/>
                                             <constraint firstItem="hoQ-34-pTU" firstAttribute="width" secondItem="YcC-G1-FWq" secondAttribute="width" id="Yoc-n9-K30"/>
                                             <constraint firstItem="GND-v9-TSI" firstAttribute="height" secondItem="9rO-9N-7WI" secondAttribute="height" id="ZVM-Sh-wrI"/>
@@ -13169,6 +13168,7 @@ If you find bugs or have questions, let us know:</string>
                                             <constraint firstItem="oO0-r5-oEd" firstAttribute="top" secondItem="GHS-YY-M8a" secondAttribute="bottom" id="gkB-XP-nF9"/>
                                             <constraint firstItem="5sA-v8-1CE" firstAttribute="centerY" secondItem="wp7-ps-6aG" secondAttribute="centerY" id="hCc-4d-FZx"/>
                                             <constraint firstItem="YcC-G1-FWq" firstAttribute="centerX" secondItem="enW-La-hgJ" secondAttribute="centerX" id="hqh-Nq-zjG"/>
+                                            <constraint firstItem="8aY-TB-DJj" firstAttribute="top" secondItem="oiB-Tj-jQ9" secondAttribute="bottom" constant="70" id="hvf-xr-oSH"/>
                                             <constraint firstItem="tpQ-EN-21M" firstAttribute="top" secondItem="9rO-9N-7WI" secondAttribute="bottom" constant="4" id="hxY-Uv-gQA"/>
                                             <constraint firstItem="oiB-Tj-jQ9" firstAttribute="top" secondItem="PKl-0h-SbT" secondAttribute="bottom" constant="5" id="iX2-Eg-lir"/>
                                             <constraint firstItem="GHS-YY-M8a" firstAttribute="top" secondItem="sGn-tC-uIo" secondAttribute="bottom" constant="10" id="j9C-Ll-ozE">
@@ -13180,7 +13180,6 @@ If you find bugs or have questions, let us know:</string>
                                             <constraint firstItem="hoQ-34-pTU" firstAttribute="leading" secondItem="xuT-Ii-OI5" secondAttribute="trailing" constant="10" id="jXR-a9-3uY"/>
                                             <constraint firstItem="5sA-v8-1CE" firstAttribute="width" secondItem="enW-La-hgJ" secondAttribute="width" id="jaY-GY-T7I"/>
                                             <constraint firstItem="6sa-FD-aTu" firstAttribute="top" secondItem="2bi-PW-MNh" secondAttribute="bottom" constant="27" id="k3C-Ii-keZ"/>
-                                            <constraint firstAttribute="bottom" secondItem="nNE-3F-bnc" secondAttribute="bottom" constant="84" id="kS0-Fd-dcB"/>
                                             <constraint firstItem="YcC-G1-FWq" firstAttribute="width" secondItem="m0e-e3-xpv" secondAttribute="width" id="kXi-SI-Y2n"/>
                                             <constraint firstItem="DI7-Y4-NYq" firstAttribute="top" secondItem="HTz-QJ-YNL" secondAttribute="bottom" constant="8" id="kjw-JR-hPp"/>
                                             <constraint firstItem="0WW-dj-mjE" firstAttribute="top" secondItem="OEj-ha-gan" secondAttribute="bottom" constant="8" id="mWg-KZ-hhb"/>
@@ -13353,7 +13352,6 @@ If you find bugs or have questions, let us know:</string>
                                                 <exclude reference="5ff-HF-p4g"/>
                                                 <exclude reference="J41-r5-BAu"/>
                                                 <exclude reference="QcQ-RP-sCf"/>
-                                                <exclude reference="kS0-Fd-dcB"/>
                                                 <exclude reference="wNI-6F-Pzt"/>
                                             </mask>
                                         </variation>
@@ -13528,10 +13526,9 @@ If you find bugs or have questions, let us know:</string>
                                                 <exclude reference="936-Pr-dAr"/>
                                                 <include reference="J41-r5-BAu"/>
                                                 <include reference="QcQ-RP-sCf"/>
+                                                <exclude reference="hvf-xr-oSH"/>
                                                 <exclude reference="Gbx-m2-pc5"/>
                                                 <exclude reference="Hoo-M6-qWH"/>
-                                                <exclude reference="XtC-PC-Kxs"/>
-                                                <include reference="kS0-Fd-dcB"/>
                                                 <include reference="wNI-6F-Pzt"/>
                                             </mask>
                                         </variation>
@@ -13600,6 +13597,9 @@ If you find bugs or have questions, let us know:</string>
                             <constraint firstItem="OCO-2J-dMX" firstAttribute="leading" secondItem="47l-wM-Q4R" secondAttribute="leading" id="Gqs-ZT-yAM"/>
                             <constraint firstItem="qZ4-fc-oow" firstAttribute="width" secondItem="47l-wM-Q4R" secondAttribute="width" id="IGp-yP-a0p"/>
                             <constraint firstItem="Oal-Wi-kVR" firstAttribute="top" secondItem="47l-wM-Q4R" secondAttribute="top" id="MrT-Js-cYa"/>
+                            <constraint firstItem="47l-wM-Q4R" firstAttribute="bottom" secondItem="nNE-3F-bnc" secondAttribute="bottom" constant="80" id="OZA-2K-uA4">
+                                <variation key="heightClass=regular-widthClass=regular" constant="90"/>
+                            </constraint>
                             <constraint firstItem="47l-wM-Q4R" firstAttribute="top" secondItem="OCO-2J-dMX" secondAttribute="top" id="PVh-Gi-2Dg"/>
                             <constraint firstItem="OCO-2J-dMX" firstAttribute="bottom" secondItem="nBm-1Y-Pr5" secondAttribute="bottom" id="V3F-hY-vEY"/>
                             <constraint firstItem="47l-wM-Q4R" firstAttribute="trailing" secondItem="OCO-2J-dMX" secondAttribute="trailing" id="Xpb-8t-NIr"/>
@@ -13620,6 +13620,7 @@ If you find bugs or have questions, let us know:</string>
                         <viewLayoutGuide key="safeArea" id="47l-wM-Q4R"/>
                         <variation key="default">
                             <mask key="constraints">
+                                <exclude reference="OZA-2K-uA4"/>
                                 <exclude reference="byX-Vo-TKS"/>
                                 <exclude reference="z17-nv-pUb"/>
                                 <exclude reference="hng-Ce-Qrs"/>
@@ -13633,6 +13634,7 @@ If you find bugs or have questions, let us know:</string>
                         </variation>
                         <variation key="heightClass=regular-widthClass=regular">
                             <mask key="constraints">
+                                <include reference="OZA-2K-uA4"/>
                                 <exclude reference="PVh-Gi-2Dg"/>
                                 <exclude reference="Xpb-8t-NIr"/>
                                 <include reference="byX-Vo-TKS"/>
