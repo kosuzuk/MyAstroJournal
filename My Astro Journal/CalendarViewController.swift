@@ -657,6 +657,22 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         calendarHCipad.constant = calendarSize * 0.83
     }
     override func viewDidAppear(_ animated: Bool) {
+        //check for users with capitals in email
+//        db.collection("userData").getDocuments(completion: {(QuerySnapshot, Error) in
+//        if Error != nil {
+//            print(Error!)
+//        } else {
+//            let data = QuerySnapshot!.documents
+//            for i in data {
+//                for j in i["email"] as! String {
+//                    let a = j.asciiValue!
+//                    if a > 64 && a < 91 {
+//                        print(i["email"])
+//                        break
+//                    }
+//                }
+//            }
+//            }})
         super.viewDidAppear(true)
         jevc = nil
         if imageChangedDate != "" {

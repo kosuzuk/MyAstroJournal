@@ -141,15 +141,16 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
             if index == 0 {
                 let alertController = UIAlertController(title: "Update Email", message: "Enter a new email address:", preferredStyle: .alert)
                 let confirmAction = UIAlertAction(title: "confirm", style: .destructive, handler: {(alertAction) in
+                    let newEmail = alertController.textFields![0].text!.lowercased()
                     let currentUser = Auth.auth().currentUser
-                    currentUser!.updateEmail(to: alertController.textFields![0].text!) {error in
+                    currentUser!.updateEmail(to: newEmail) {error in
                         if error != nil {
                             let alertController = UIAlertController(title: "Error", message: error!.localizedDescription, preferredStyle: .alert)
                             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
                             alertController.addAction(defaultAction)
                             self.present(alertController, animated: true, completion: nil)
                         } else {
-                            db.collection("userData").document(self.userKey).setData(["email": alertController.textFields![0].text!], merge: true)
+                            db.collection("userData").document(self.userKey).setData(["email": newEmail], merge: true)
                             print("email changed")
                             let alertController = UIAlertController(title: "Success", message: "Your email has been successfully updated.", preferredStyle: .alert)
                             let defaultAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
