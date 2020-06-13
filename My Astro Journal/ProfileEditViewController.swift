@@ -62,7 +62,7 @@ class ProfileEditViewController: UIViewController, UINavigationControllerDelegat
             let eqField = (activeField as! UITextField)
             eqField.text = selectedEqName
             selectedEqName = ""
-            popOverController!.dismiss(animated: true, completion: {})
+            popOverController!.dismiss(animated: true, completion: nil)
             popOverController = nil
             eqField.resignFirstResponder()
         }

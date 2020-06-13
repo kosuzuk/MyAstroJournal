@@ -29,6 +29,7 @@ class EquipmentPopOverViewController: UIViewController, UITableViewDelegate, UIT
         } else if eqType == "camera" {
             brandList = cameraBrands
         }
+        brandList.append("custom")
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if displayingBrands {
@@ -39,18 +40,23 @@ class EquipmentPopOverViewController: UIViewController, UITableViewDelegate, UIT
     }
     @objc func cellButtonTapped(_ sender: UIButton) {
         let ind = sender.tag
+        //custom eq that's not in list
         if displayingBrands {
+            if ind == brandList.count - 1 {
+                pevc?.popOverController = nil
+                self.dismiss(animated: true, completion: nil)
+                return
+            }
+            selectedBrand = brandList[ind]
             if eqType == "telescope" {
-                selectedBrand = brandList[ind]
                 nameList = telescopeNames[selectedBrand]!
             } else if eqType == "mount" {
-                selectedBrand = brandList[ind]
                 nameList = mountNames[selectedBrand]!
             } else if eqType == "camera" {
-                selectedBrand = brandList[ind]
                 nameList = cameraNames[selectedBrand]!
             }
             nameList.insert("    back", at: 0)
+            nameList.append("custom")
             displayingBrands = false
             for view in self.view.subviews {view.frame.origin.x += self.viewW}
             self.eqTableView.reloadData()
@@ -59,6 +65,12 @@ class EquipmentPopOverViewController: UIViewController, UITableViewDelegate, UIT
                 for view in self.view.subviews {view.frame.origin.x -= self.viewW}
             }, completion: nil)
         } else {
+            //custom eq that's not in list
+            if ind == nameList.count - 1 {
+                pevc?.popOverController = nil
+                self.dismiss(animated: true, completion: nil)
+                return
+            }
             //first ind is back button
             if ind == 0 {
                 nameList = []
@@ -76,7 +88,7 @@ class EquipmentPopOverViewController: UIViewController, UITableViewDelegate, UIT
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "eqCell", for: indexPath) as! EquipmentPopOverTableViewCell
-        if !displayingBrands && indexPath.row == 0 {
+        if (!displayingBrands && indexPath.row == 0) {
             cell.prevArrowImageView.isHidden = false
         } else {
             cell.prevArrowImageView.isHidden = true
@@ -92,7 +104,11 @@ class EquipmentPopOverViewController: UIViewController, UITableViewDelegate, UIT
         btn.tag = indexPath.row
         if displayingBrands {
             btn.setTitle(brandList[indexPath.row], for: .normal)
-            cell.nextArrowImageView.isHidden = false
+            if indexPath.row != brandList.count - 1 {
+                cell.nextArrowImageView.isHidden = false
+            } else {
+                cell.nextArrowImageView.isHidden = true
+            }
         } else {
             btn.setTitle(nameList[indexPath.row], for: .normal)
             cell.nextArrowImageView.isHidden = true
