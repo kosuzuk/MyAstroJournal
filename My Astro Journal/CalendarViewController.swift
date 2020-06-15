@@ -364,14 +364,14 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             }
         })
         db.collection("imageOfDayKeys").addSnapshotListener(includeMetadataChanges: true, listener: {(snapshot, Error) in
+            self.imageOfDayImageView.isUserInteractionEnabled = false
             if Error != nil {
                 return
             }
-            self.noImageOfDay = false
-            if (snapshot?.metadata.isFromCache)! && isConnected {
+            if (snapshot?.metadata.isFromCache)! {
                 return
             }
-            self.imageOfDayImageView.isUserInteractionEnabled = false
+            self.noImageOfDay = false
             let iodDocs = snapshot!.documents
             //if dropdown is displayed for entry that was just modified in the db, hide it
             func checkDropDown() {
