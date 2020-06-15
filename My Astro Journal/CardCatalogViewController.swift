@@ -297,7 +297,7 @@ class CardCatalogViewController: UIViewController, UICollectionViewDelegate, UIC
         searchField.resignFirstResponder()
         let touch = sender.location(in: cardCollectionView)
         let indexPath = cardCollectionView.indexPathForItem(at: touch)
-        if indexPath == nil {
+        if indexPath == nil || cardCollectionView.visibleCells.count == 0 {
             return
         }
         cardVC = (UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "CardViewController") as! CardViewController)
