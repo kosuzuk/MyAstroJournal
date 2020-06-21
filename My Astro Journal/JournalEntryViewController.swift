@@ -23,6 +23,8 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
     @IBOutlet weak var targetArrow: UIImageView!
     @IBOutlet weak var targetField: UILabel!
     @IBOutlet weak var constellationField: UILabel!
+    @IBOutlet weak var moonImageView: UIImageView!
+    @IBOutlet weak var ilumPercLabel: UILabel!
     @IBOutlet weak var dateField: UILabel!
     @IBOutlet weak var timeField: UILabel!
     @IBOutlet weak var locationField: UILabel!
@@ -92,6 +94,14 @@ class JournalEntryViewController: UIViewController, UICollectionViewDelegate, UI
         entryData = entryList[selectedEntryInd]
         targetField.text = (entryData["target"]! as! String)
         constellationField.text = (entryData["constellation"]! as! String)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let date = dateFormatter.date(from: entryDate.suffix(4) + "-" + entryDate.prefix(2) + "-" + entryDate.prefix(4).suffix(2))!
+        let moonIllumination = suncalc.getMoonIllumination(date: date)
+        let moonPhase = moonIllumination["phase"]!
+        let ilumPerc = moonIllumination["fraction"]!
+        moonImageView.image = moonPhaseValueToImg(moonPhase)
+        ilumPercLabel.text = String(Int(ilumPerc * 100.0)) + "%"
         let monthInt = Int(entryDate.prefix(2))!
         let monthStr = monthNames[monthInt - 1]
         dateField.text = monthStr + " " + String(Int(entryDate.prefix(4).suffix(2))!) + " " + String(entryDate.suffix(4))

@@ -362,6 +362,13 @@ func checkEqToLink(eqType: String, eqFields: [UILabel], eqFieldValues: [String],
     return nil
 }
 
+func moonPhaseValueToImg(_ inpVal: Double) -> UIImage? {
+    var phaseValues = [0, 0.0625, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]
+    phaseValues = phaseValues.map({ (val: Double) -> Double in return abs(val - inpVal) })
+    let phaseInd = phaseValues.index(of: phaseValues.min()!)!
+    return UIImage(named: "Calendar/MoonPhases/" + String(phaseInd))
+}
+
 infix operator ^^
 extension Bool {
     static func ^^ (a: Bool, b: Bool) -> Bool {

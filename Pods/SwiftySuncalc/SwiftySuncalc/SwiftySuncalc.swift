@@ -590,15 +590,7 @@ public class SwiftySuncalc
      */
     public func getMoonIllumination(date: Date) -> Dictionary<String, Double>
     {
-        var d: Double;
-        if date < Date()
-        {
-            d = toDays(date: date)
-        }
-        else
-        {
-            d = toDays(date: Date())
-        }
+        let d = toDays(date: date)
         
         var s: Dictionary<String, Double> = sunCoords(d: d),
         m: Dictionary<String, Double> = moonCoords(d: d),

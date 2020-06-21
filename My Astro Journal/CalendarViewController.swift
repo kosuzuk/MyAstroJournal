@@ -38,6 +38,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var antoinePowersButton: UIButton!
     @IBOutlet weak var bannerHC: NSLayoutConstraint!
     @IBOutlet weak var newEntryButtonTopC: NSLayoutConstraint!
+    @IBOutlet weak var moonImageViewTopC: NSLayoutConstraint!
+    @IBOutlet weak var moonImageViewBottomC: NSLayoutConstraint!
     @IBOutlet weak var yearButtonTopC: NSLayoutConstraint!
     @IBOutlet weak var calendarWC: NSLayoutConstraint!
     @IBOutlet weak var calendarHC: NSLayoutConstraint!
@@ -185,6 +187,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             imageOfDayMainLabel.font = imageOfDayMainLabel.font.withSize(18)
         } else if (screenH == 896) {//iphone 11 pro max
             newEntryButtonTopC.constant = 30
+            moonImageViewTopC.constant = 16
+            moonImageViewBottomC.constant = 16
             yearButtonTopC.constant = 30
             imageOfDayBottomC.constant = 15
         }
@@ -201,10 +205,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         let moonIllumination = suncalc.getMoonIllumination(date: Date())
         let moonPhase = moonIllumination["phase"]!
         let ilumPerc = moonIllumination["fraction"]!
-        var phaseValues = [0, 0.0625, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]
-        phaseValues = phaseValues.map({ (val: Double) -> Double in return abs(val - moonPhase) })
-        let phaseInd = phaseValues.index(of: phaseValues.min()!)!
-        moonImageView.image = UIImage(named: "Calendar/MoonPhases/" + String(phaseInd))
+        moonImageView.image = moonPhaseValueToImg(moonPhase)
         ilumPercLabel.text = String(Int(ilumPerc * 100.0)) + "%"
         
         monthDropDown = DropDown()
@@ -778,16 +779,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBAction func moonTapped(_ sender: Any) {
         moonPopOverController = (self.storyboard!.instantiateViewController(withIdentifier: "MoonForecastPopOverViewController") as! MoonForecastPopOverViewController)
         moonPopOverController!.modalPresentationStyle = .popover
-        var viewW = 290
-        var viewH = 280
-        if screenH > 1000 {//ipads
-            viewW = 370
-            viewH = 340
-            if screenH > 1300 {//ipads
-                viewW = 440
-                viewH = 420
-            }
-        }
+        let viewW = 200
+        let viewH = 280
         moonPopOverController!.preferredContentSize = CGSize(width: viewW, height: viewH)
         let popOverPresentationController = moonPopOverController!.popoverPresentationController!
         popOverPresentationController.permittedArrowDirections = .up

@@ -51,6 +51,8 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
     @IBOutlet weak var targetField: UITextField!
     @IBOutlet weak var targetPlusSign: UILabel!
     @IBOutlet weak var multTargetWarning: UILabel!
+    @IBOutlet weak var moonImageView: UIImageView!
+    @IBOutlet weak var ilumPercLabel: UILabel!
     @IBOutlet weak var constellationField: UILabel!
     @IBOutlet weak var dateField: UILabel!
     @IBOutlet weak var timeStartField: UITextField!
@@ -161,6 +163,15 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         }
         acquisitionField.autocorrectionType = .yes
         memoriesField.autocorrectionType = .yes
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let date = dateFormatter.date(from: entryDate.suffix(4) + "-" + entryDate.prefix(2) + "-" + entryDate.prefix(4).suffix(2))!
+        let moonIllumination = suncalc.getMoonIllumination(date: date)
+        let moonPhase = moonIllumination["phase"]!
+        let ilumPerc = moonIllumination["fraction"]!
+        moonImageView.image = moonPhaseValueToImg(moonPhase)
+        ilumPercLabel.text = String(Int(ilumPerc * 100.0)) + "%"
         let monthInt = Int(entryDate.prefix(2))!
         let monthStr = monthNames[monthInt - 1]
         dateField.text = monthStr + " " + String(Int(entryDate.prefix(4).suffix(2))!) + " " + String(entryDate.suffix(4))

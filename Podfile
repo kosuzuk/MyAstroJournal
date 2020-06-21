@@ -17,7 +17,7 @@ target 'My Astro Journal' do
 	pod 'Firebase/Database'
 	pod 'SwiftKeychainWrapper'
 	pod 'DropDown'
-        pod 'SwiftySuncalc'
+        pod 'SwiftySuncalc', :git => 'https://github.com/kosuzuk/SwiftySuncalc', :commit => '62f1f3f5ea775254671eabf4406316ff0fb37345'
 
   target 'My Astro JournalTests' do
     inherit! :search_paths
