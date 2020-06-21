@@ -18,12 +18,14 @@ extension UINavigationController {
       return topViewController?.preferredStatusBarStyle ?? .default
    }
 }
-class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class CalendarViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate {
     @IBOutlet weak var background: UIImageView!
     @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var newEntryButton: UIButton!
     @IBOutlet weak var selectDateText: UILabel!
     @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var moonImageView: UIImageView!
+    @IBOutlet weak var ilumPercLabel: UILabel!
     @IBOutlet weak var todayButton: UIButton!
     @IBOutlet weak var monthButton: UIButton!
     @IBOutlet weak var yearButton: UIButton!
@@ -48,6 +50,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var imageOfDayLightWC: NSLayoutConstraint!
     var userData: [String: Any]? = nil
     var userKey: String = ""
+    var moonPopOverController: MoonForecastPopOverViewController? = nil
     var firstJournalEntryDate = ""
     var startMonth = 0
     var startYear = 0
@@ -195,6 +198,15 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         }
         imageOfDayImageView.layer.borderColor = astroOrange
         imageOfDayImageView.layer.borderWidth = 1.0
+        let moonIllumination = suncalc.getMoonIllumination(date: Date())
+        let moonPhase = moonIllumination["phase"]!
+        let ilumPerc = moonIllumination["fraction"]!
+        var phaseValues = [0, 0.0625, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]
+        phaseValues = phaseValues.map({ (val: Double) -> Double in return abs(val - moonPhase) })
+        let phaseInd = phaseValues.index(of: phaseValues.min()!)!
+        moonImageView.image = UIImage(named: "Calendar/MoonPhases/" + String(phaseInd))
+        ilumPercLabel.text = String(Int(ilumPerc * 100.0)) + "%"
+        
         monthDropDown = DropDown()
         monthDropDown!.backgroundColor = .darkGray
         monthDropDown!.textColor = .white
@@ -756,6 +768,34 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         calendarsListView.reloadData()
         calendarsListView.scrollToRow(at: NSIndexPath(row: numMonths - 1, section: 0) as IndexPath, at: UITableView.ScrollPosition.top, animated: true)
         numEarlierMonthsAdded += 1
+    }
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
+    func popoverPresentationControllerShouldDismissPopover(_ popoverPresentationController: UIPopoverPresentationController) -> Bool {
+        return true
+    }
+    @IBAction func moonTapped(_ sender: Any) {
+        moonPopOverController = (self.storyboard!.instantiateViewController(withIdentifier: "MoonForecastPopOverViewController") as! MoonForecastPopOverViewController)
+        moonPopOverController!.modalPresentationStyle = .popover
+        var viewW = 290
+        var viewH = 280
+        if screenH > 1000 {//ipads
+            viewW = 370
+            viewH = 340
+            if screenH > 1300 {//ipads
+                viewW = 440
+                viewH = 420
+            }
+        }
+        moonPopOverController!.preferredContentSize = CGSize(width: viewW, height: viewH)
+        let popOverPresentationController = moonPopOverController!.popoverPresentationController!
+        popOverPresentationController.permittedArrowDirections = .up
+        popOverPresentationController.sourceView = self.view
+        let popOverPos = CGRect(x: moonImageView.frame.origin.x, y: moonImageView.frame.origin.y, width: moonImageView.bounds.width, height: moonImageView.bounds.height)
+        popOverPresentationController.sourceRect = popOverPos
+        popOverPresentationController.delegate = self as UIPopoverPresentationControllerDelegate
+        present(moonPopOverController!, animated: true, completion: nil)
     }
     @IBAction func todayButtonTapped(_ sender: Any) {
         self.calendarsListView.scrollToRow(at: NSIndexPath(row: 0, section: 0) as IndexPath, at: UITableView.ScrollPosition.top, animated: true)

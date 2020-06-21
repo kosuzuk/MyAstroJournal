@@ -52,6 +52,8 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
             }
         }
     }
+    let dateFormatter = DateFormatter()
+    var availableMoonPhases = [0, 3, 5, 7]
     var todayCellDateTextColor = UIColor(red: 0.7, green: 0.7, blue: 0.7, alpha: 1)
     var newEntryGreenColor = UIColor(red: 0.7, green: 0.2, blue: 0.2, alpha: 0.3)
     var newEntryRedColor = UIColor(red: 0.2, green: 0.6, blue: 0.2, alpha: 0.3)
@@ -69,6 +71,7 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
         let fontAttributes = [NSAttributedString.Key.font: font]
         sunLabelW = (sunLabel.text! as NSString).size(withAttributes: fontAttributes as [NSAttributedString.Key : Any]).width
         userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
+        dateFormatter.dateFormat = "yyyy-MM-dd"
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize
     {
@@ -83,6 +86,8 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
         return CGSize(width: floor(calendarView.bounds.width / 7), height: floor(calendarView.bounds.height / 6))
     }
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        //reset moon phases
+        availableMoonPhases = [0, 3, 5, 7]
         if numDays + firstDayOffset < 36 {
             return 35
         } else {
@@ -109,6 +114,23 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
             cell.cellLabel.text = cellDate
             if cellDate.count == 1 {
                 cellDate = "0" + cellDate
+            }
+            let date = dateFormatter.date(from: calendarYearString + "-" + calendarMonthString + "-" + cellDate)
+            let moonPhase = suncalc.getMoonIllumination(date: date!)["phase"]!
+            if (moonPhase < 0.03 || abs(moonPhase - 1) < 0.03) && availableMoonPhases.contains(0) {
+                cell.moonPhaseImageView.image = UIImage(named: "Calendar/MoonPhases/0")
+                availableMoonPhases.remove(at: availableMoonPhases.index(of: 0)!)
+            } else if abs(moonPhase - 0.25) < 0.03 && availableMoonPhases.contains(3) {
+                cell.moonPhaseImageView.image = UIImage(named: "Calendar/MoonPhases/3")
+                availableMoonPhases.remove(at: availableMoonPhases.index(of: 3)!)
+            } else if abs(moonPhase - 0.5) < 0.03 && availableMoonPhases.contains(5) {
+               cell.moonPhaseImageView.image = UIImage(named: "Calendar/MoonPhases/5")
+                availableMoonPhases.remove(at: availableMoonPhases.index(of: 5)!)
+            } else if abs(moonPhase - 0.75) < 0.03 && availableMoonPhases.contains(7) {
+               cell.moonPhaseImageView.image = UIImage(named: "Calendar/MoonPhases/7")
+                availableMoonPhases.remove(at: availableMoonPhases.index(of: 7)!)
+            } else {
+                cell.moonPhaseImageView.image = nil
             }
             let dateString = calendarMonthString + cellDate + calendarYearString
             let numEntries = cvc!.numEntriesDict[dateString]
@@ -137,6 +159,7 @@ class CalendarTableViewCell: UITableViewCell, UICollectionViewDelegate, UICollec
             cell.layer.borderWidth = 0.5
             cell.layer.borderColor = UIColor.lightGray.cgColor
             cell.cellLabel.text = ""
+            cell.moonPhaseImageView.image = nil
             cell.numEntries.text = ""
             cell.entryDate = ""
             cell.imageView.image = nil

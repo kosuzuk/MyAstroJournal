@@ -11,6 +11,7 @@ import UIKit
 class CalendarCell: UICollectionViewCell {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var cellLabel: UILabel!
+    @IBOutlet weak var moonPhaseImageView: UIImageView!
     @IBOutlet weak var numEntries: UILabel!
     @IBOutlet weak var newEntryColorView: UIView!
     var entryDate = ""

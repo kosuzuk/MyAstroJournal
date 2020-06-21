@@ -45,6 +45,7 @@
 		60799F7522878AA40018950B /* CardCatalogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60799F7322878AA40018950B /* CardCatalogViewController.swift */; };
 		60799F78228873F00018950B /* CalendarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60799F77228873F00018950B /* CalendarCell.swift */; };
 		607D939A24511B5000F8AC74 /* TouchDownGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607D939924511B5000F8AC74 /* TouchDownGestureRecognizer.swift */; };
+		60A7567F249C4BA700A8F6F8 /* MoonForecastPopOverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A7567E249C4BA700A8F6F8 /* MoonForecastPopOverViewController.swift */; };
 		60B4D4B524672CD5008D2A50 /* CardBackBackgroundsPopOverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B4D4B424672CD5008D2A50 /* CardBackBackgroundsPopOverViewController.swift */; };
 		60B4D4B7246732D4008D2A50 /* CardBackBackgroundsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60B4D4B6246732D4008D2A50 /* CardBackBackgroundsCollectionViewCell.swift */; };
 		60C335F623243776009B4830 /* VPAutoCompleteViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 60C335F323243776009B4830 /* VPAutoCompleteViewCell.xib */; };
@@ -118,6 +119,7 @@
 		60799F7322878AA40018950B /* CardCatalogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCatalogViewController.swift; sourceTree = "<group>"; };
 		60799F77228873F00018950B /* CalendarCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCell.swift; sourceTree = "<group>"; };
 		607D939924511B5000F8AC74 /* TouchDownGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchDownGestureRecognizer.swift; sourceTree = "<group>"; };
+		60A7567E249C4BA700A8F6F8 /* MoonForecastPopOverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoonForecastPopOverViewController.swift; sourceTree = "<group>"; };
 		60B4D4B424672CD5008D2A50 /* CardBackBackgroundsPopOverViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBackBackgroundsPopOverViewController.swift; sourceTree = "<group>"; };
 		60B4D4B6246732D4008D2A50 /* CardBackBackgroundsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardBackBackgroundsCollectionViewCell.swift; sourceTree = "<group>"; };
 		60C335F323243776009B4830 /* VPAutoCompleteViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = VPAutoCompleteViewCell.xib; path = "VPAutoComplete-master/VPAutoComplete/VPAutoComplete-Source/VPAutoCompleteViewCell.xib"; sourceTree = SOURCE_ROOT; };
@@ -196,6 +198,7 @@
 				602345FB224FF0F300C4ED3F /* CalendarViewController.swift */,
 				602AA275229C9C8000CE8E9B /* CalendarTableViewCell.swift */,
 				60799F77228873F00018950B /* CalendarCell.swift */,
+				60A7567E249C4BA700A8F6F8 /* MoonForecastPopOverViewController.swift */,
 				60450B07246CC62100DA2E93 /* MonthlyChallengeViewController.swift */,
 				60450B09246CC73400DA2E93 /* MonthlyChallengeEntryCell.swift */,
 				60450B0B246DB17900DA2E93 /* MonthlyChallengePicker.swift */,
@@ -454,6 +457,7 @@
 				603A2C642256D6E200314706 /* ProfileViewController.swift in Sources */,
 				601EBBAA245E4CF5005BF4D7 /* CardBacksCollectionViewCell.swift in Sources */,
 				602AA276229C9C8000CE8E9B /* CalendarTableViewCell.swift in Sources */,
+				60A7567F249C4BA700A8F6F8 /* MoonForecastPopOverViewController.swift in Sources */,
 				60450B08246CC62100DA2E93 /* MonthlyChallengeViewController.swift in Sources */,
 				601EBBA8245E4CE7005BF4D7 /* PacksCollectionViewCell.swift in Sources */,
 				60D151BD2276161100A578E0 /* ProfileEditViewController.swift in Sources */,

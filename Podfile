@@ -17,6 +17,7 @@ target 'My Astro Journal' do
 	pod 'Firebase/Database'
 	pod 'SwiftKeychainWrapper'
 	pod 'DropDown'
+        pod 'SwiftySuncalc'
 
   target 'My Astro JournalTests' do
     inherit! :search_paths
