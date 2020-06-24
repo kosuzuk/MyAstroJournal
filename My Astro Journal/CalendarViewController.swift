@@ -207,6 +207,14 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         let ilumPerc = moonIllumination["fraction"]!
         moonImageView.image = moonPhaseValueToImg(moonPhase)
         ilumPercLabel.text = String(Int(ilumPerc * 100.0)) + "%"
+        var phaseValues = [0, 0.0625, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]
+        phaseValues = phaseValues.map({ (val: Double) -> Double in return abs(val - moonPhase) })
+        let phaseInd = phaseValues.index(of: phaseValues.min()!)!
+        if phaseInd > 2 && phaseInd < 8 {
+            ilumPercLabel.textColor = UIColor(red: 0.1, green: 0.1, blue: 0.1, alpha: 1)
+        } else {
+            ilumPercLabel.textColor = .white
+        }
         
         monthDropDown = DropDown()
         monthDropDown!.backgroundColor = .darkGray
