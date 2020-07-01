@@ -111,6 +111,7 @@ class MonthlyChallengeViewController: UIViewController, UITableViewDelegate, UIT
                         return
                     }
                     for doc in snapshot!.documents {
+                        if Int(doc.documentID.suffix(8).prefix(2))! != self.curMonth {continue}
                         let entryListData = (doc.data()["data"] as! [[String: Any]])
                         for i in 0..<entryListData.endIndex {
                             if entryListData[i]["formattedTarget"] as! String == self.formattedChallengeTarget && entryListData[i]["mainImageKey"] as! String != "" {
