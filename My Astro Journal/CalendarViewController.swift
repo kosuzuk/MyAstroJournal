@@ -180,6 +180,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+//        db.collection("journalEntries").document("bJCJE2AZvMM6I4Xk3qK04QOtNL9306032020").setData(["dateForOrdering": "20200603"], merge: true)
+        
+        
         view.addSubview(formatLoadingIcon(loadingIcon))
         loadingIcon.startAnimating()
         if (screenH < 670) {//iphone 8, 5s
@@ -648,7 +651,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
         self.addChild(popOverVC)
         popOverVC.view.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
         self.view.addSubview(popOverVC.view)
-        if imagePath.prefix(13) == "UnlockedCards" {//showing card
+        if imagePath.prefix(13) == "UnlockedCards" {//showing card, not add-on pack
             popOverVC.unlockedDateLabel.text = monthNames[Int(unlockedDate.prefix(2))! - 1] + " " + String(Int(unlockedDate.prefix(4).suffix(2))!) + " " + String(unlockedDate.suffix(4))
         } else {
             popOverVC.unlockedDateLabel.isHidden = true
@@ -661,6 +664,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             }
         }
         popOverVC.imageView.image = UIImage(named: imagePath)
+        popOverVC.cvc = self
         popOverVC.didMove(toParent: self)
     }
     override func viewDidLayoutSubviews() {
@@ -721,6 +725,8 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             showUnlockAnimation(imagePath: "UnlockedCards/" + formattedTargetToImageName(target: cardUnlocked))
             unlockedDate = ""
             cardUnlocked = ""
+        } else {
+            checkAskForReview()
         }
         calendarsListView.reloadData()
         endNoInput()
@@ -809,6 +815,25 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     @IBAction func yearButtonTapped(_ sender: Any) {
         yearDropDown!.show()
     }
+    @IBAction func imageTapped(_ sender: Any) {
+        if imageOfDayImageView.image != nil {
+            performSegue(withIdentifier: "calendarToImageOfDay", sender: self)
+        }
+    }
+    func checkAskForReview() {
+        if (userData!["photoTargetNum"] as! [String: Int]).count < 2 || (userData!["obsTargetNum"] as! [String: Int]).count < 2 {
+            return
+        }
+        let todayDateObj = Date()
+        if UserDefaults.standard.object(forKey: "lastAskForReviewDate") != nil {
+            let lastDate = UserDefaults.standard.object(forKey: "lastAskForReviewDate") as! Date
+            if Calendar.current.dateComponents([.month], from: lastDate, to: todayDateObj).month! < 2 {
+                return
+            }
+        }
+        SKStoreReviewController.requestReview()
+        UserDefaults.standard.setValue(todayDateObj, forKey: "lastAskForReviewDate")
+    }
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let vc = segue.destination as? JournalEntryEditViewController
         vc?.entryDate = newEntryDate
@@ -850,11 +875,6 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             vc3!.cvc = self
             self.iodvc = vc3!
             return
-        }
-    }
-    @IBAction func imageTapped(_ sender: Any) {
-        if imageOfDayImageView.image != nil {
-            performSegue(withIdentifier: "calendarToImageOfDay", sender: self)
         }
     }
 }

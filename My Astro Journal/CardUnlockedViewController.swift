@@ -1,4 +1,5 @@
 import UIKit
+
 class CardUnlockedViewController: UIViewController {
     @IBOutlet weak var unlockedLabel: UIImageView!
     @IBOutlet weak var imageView: UIImageView!
@@ -11,6 +12,7 @@ class CardUnlockedViewController: UIViewController {
     @IBOutlet weak var unlockedDateLabelTrailingC: NSLayoutConstraint!
     @IBOutlet weak var unlockedDateLabelBottomCipad: NSLayoutConstraint!
     @IBOutlet weak var unlockedDateLabelTrailingCipad: NSLayoutConstraint!
+    var cvc: CalendarViewController? = nil
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -63,6 +65,7 @@ class CardUnlockedViewController: UIViewController {
             if (finished)
             {
                 self.view.removeFromSuperview()
+                self.cvc?.checkAskForReview()
             }
         })
     }

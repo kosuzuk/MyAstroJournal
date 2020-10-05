@@ -166,7 +166,10 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        let date = dateFormatter.date(from: entryDate.suffix(4) + "-" + entryDate.prefix(2) + "-" + entryDate.prefix(4).suffix(2))!
+        let y = entryDate.suffix(4)
+        let m = entryDate.prefix(2)
+        let d = entryDate.prefix(4).suffix(2)
+        let date = dateFormatter.date(from: y + "-" + m + "-" + d)!
         let moonIllumination = suncalc.getMoonIllumination(date: date)
         let moonPhase = moonIllumination["phase"]!
         let ilumPerc = moonIllumination["fraction"]!

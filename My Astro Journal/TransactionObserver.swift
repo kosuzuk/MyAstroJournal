@@ -8,7 +8,7 @@
 
 import UIKit
 import StoreKit
-    
+
 class TransactionObserver: NSObject, SKPaymentTransactionObserver {
     var addOnsVC: AddOnsViewController? = nil
     var incompletePurchaseProductIDs: [String] = []

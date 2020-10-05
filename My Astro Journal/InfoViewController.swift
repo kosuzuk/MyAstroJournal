@@ -15,26 +15,26 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     @IBOutlet weak var border: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var expandLabel: UILabel!
-    @IBOutlet weak var messageField: UITextView!
-    @IBOutlet weak var sendMessageButton: UIButton!
-    @IBOutlet weak var thankYouMessage: UILabel!
+    @IBOutlet weak var feedbackLink: UIButton!
     @IBOutlet weak var toolbar: UIToolbar!
     @IBOutlet weak var contentViewHC: NSLayoutConstraint!
     @IBOutlet weak var contentViewHCipad: NSLayoutConstraint!
     @IBOutlet weak var howItWorksTopCipad: NSLayoutConstraint!
-    @IBOutlet weak var feedbackWC: NSLayoutConstraint!
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        scrollView.delegate = (self as UIScrollViewDelegate)
+        let attStr = NSAttributedString(string: feedbackLink.titleLabel!.text!, attributes: [NSAttributedString.Key.underlineStyle: NSUnderlineStyle.single.rawValue])
+        feedbackLink.setAttributedTitle(attStr, for: .normal)
+        
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
         if screenH < 600 {//iphone SE, 5s
-            contentViewHC.constant = 2515
             expandLabel.text = "expand catalog"
-            feedbackWC.constant = 300
-        } else if screenW < 400 {//iphone 8, 11
-            contentViewHC.constant = 2320
         } else if screenH > 1000 {//ipads
             background.image = UIImage(named: "Info/background-ipad")
             border.image = UIImage(named: "border-ipad")
@@ -42,21 +42,10 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
                 howItWorksTopCipad.constant = 60
             }
         }
-        messageField.layer.cornerRadius = 5
-        messageField.layer.borderWidth = 1
-        messageField.layer.borderColor = UIColor.white.cgColor
-        messageField.delegate = (self as UITextViewDelegate)
-        scrollView.delegate = (self as UIScrollViewDelegate)
-        sendMessageButton.isHidden = true
-        messageField.autocorrectionType = .yes
-    }
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-        messageField.resignFirstResponder()
-        thankYouMessage.isHidden = true
+        contentViewHC.constant = feedbackLink.frame.origin.y + 70
+        contentViewHCipad.constant = feedbackLink.frame.origin.y + 100
     }
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        messageField.resignFirstResponder()
     }
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
         textView.inputAccessoryView = toolbar
@@ -65,16 +54,6 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     func textViewDidBeginEditing(_ textView: UITextView) {
         let yOffset = contentView.bounds.height - scrollView.bounds.height
         scrollView.setContentOffset(CGPoint(x: 0, y: yOffset), animated: true)
-    }
-    func textViewDidChange(_ textView: UITextView) {
-        if textView.text! != "" {
-            if thankYouMessage.isHidden == false {
-                thankYouMessage.isHidden = true
-            }
-            sendMessageButton.isHidden = false
-        } else {
-            sendMessageButton.isHidden = true
-        }
     }
     func textViewShouldReturn(_ textView: UITextField) -> Bool {
         textView.resignFirstResponder()
@@ -133,19 +112,8 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
             application.open(webURL as URL)
         }
     }
-    @IBAction func sendMessageTapped(_ sender: Any) {
-        let userKey = KeychainWrapper.standard.string(forKey: "dbKey")!
-        let email = KeychainWrapper.standard.string(forKey: "email")!
-        let userName = KeychainWrapper.standard.string(forKey: "userName")!
-        let message = messageField.text!
-        let messageData = ["userKey": userKey, "email": email, "userName": userName, "date": dateToday, "message": message]
-        let newKey = NSUUID().uuidString
-        db.collection("messagesFromUsers").document(newKey).setData(messageData, merge: false)
-        messageField.text = ""
-        sendMessageButton.isHidden = true
-        thankYouMessage.isHidden = false
+    @IBAction func feedbackLinkTapped(_ sender: Any) {
+        let webURL = NSURL(string: feedbackLink.titleLabel!.text!)!
+        application.open(webURL as URL)
     }
 }
-
-
-

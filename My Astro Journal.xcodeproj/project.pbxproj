@@ -51,14 +51,16 @@
 		60C335F623243776009B4830 /* VPAutoCompleteViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 60C335F323243776009B4830 /* VPAutoCompleteViewCell.xib */; };
 		60C335F723243776009B4830 /* VPAutoCompleteViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C335F423243776009B4830 /* VPAutoCompleteViewCell.swift */; };
 		60C335F823243776009B4830 /* VPAutoComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C335F523243776009B4830 /* VPAutoComplete.swift */; };
-		60C335FC232446D1009B4830 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 60C335FB232446D0009B4830 /* Assets.xcassets */; };
 		60D151B5226AEC4300A578E0 /* ImageOfDayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D151B4226AEC4300A578E0 /* ImageOfDayViewController.swift */; };
 		60D151B7226AECBE00A578E0 /* JournalEntryEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D151B6226AECBE00A578E0 /* JournalEntryEditViewController.swift */; };
 		60D151BD2276161100A578E0 /* ProfileEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D151BC2276161100A578E0 /* ProfileEditViewController.swift */; };
 		60D151BF22874F7E00A578E0 /* CardGroupsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D151BE22874F7E00A578E0 /* CardGroupsViewController.swift */; };
+		60D6655524BD249E00CE4179 /* FeedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D6655424BD249E00CE4179 /* FeedViewController.swift */; };
+		60D951A724DB731800B05753 /* FeedEntryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60D951A624DB731800B05753 /* FeedEntryCell.swift */; };
 		60DA3C8C22DD8DB700D10184 /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DA3C8B22DD8DB700D10184 /* InfoViewController.swift */; };
 		60DB0FB3249FD52D00E53C22 /* MoonForecastTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60DB0FB2249FD52D00E53C22 /* MoonForecastTableViewCell.swift */; };
 		60EB899F23540728002B0C38 /* CongratsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EB899E23540728002B0C38 /* CongratsViewController.swift */; };
+		60FD7380252B8DD000557F99 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 60FD737F252B8DCA00557F99 /* Assets.xcassets */; };
 		A9D09D911D197A8DFF93BD22 /* Pods_My_Astro_Journal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53C9C33F43911B1E4700FE7D /* Pods_My_Astro_Journal.framework */; };
 		D28A53C1B94408A94E391756 /* Pods_My_Astro_JournalTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9739A7624A26068E7774CDC9 /* Pods_My_Astro_JournalTests.framework */; };
 /* End PBXBuildFile section */
@@ -126,14 +128,16 @@
 		60C335F323243776009B4830 /* VPAutoCompleteViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = VPAutoCompleteViewCell.xib; path = "VPAutoComplete-master/VPAutoComplete/VPAutoComplete-Source/VPAutoCompleteViewCell.xib"; sourceTree = SOURCE_ROOT; };
 		60C335F423243776009B4830 /* VPAutoCompleteViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VPAutoCompleteViewCell.swift; path = "VPAutoComplete-master/VPAutoComplete/VPAutoComplete-Source/VPAutoCompleteViewCell.swift"; sourceTree = SOURCE_ROOT; };
 		60C335F523243776009B4830 /* VPAutoComplete.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VPAutoComplete.swift; path = "VPAutoComplete-master/VPAutoComplete/VPAutoComplete-Source/VPAutoComplete.swift"; sourceTree = SOURCE_ROOT; };
-		60C335FB232446D0009B4830 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		60D151B4226AEC4300A578E0 /* ImageOfDayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageOfDayViewController.swift; sourceTree = "<group>"; };
 		60D151B6226AECBE00A578E0 /* JournalEntryEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalEntryEditViewController.swift; sourceTree = "<group>"; };
 		60D151BC2276161100A578E0 /* ProfileEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewController.swift; sourceTree = "<group>"; };
 		60D151BE22874F7E00A578E0 /* CardGroupsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardGroupsViewController.swift; sourceTree = "<group>"; };
+		60D6655424BD249E00CE4179 /* FeedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewController.swift; sourceTree = "<group>"; };
+		60D951A624DB731800B05753 /* FeedEntryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedEntryCell.swift; sourceTree = "<group>"; };
 		60DA3C8B22DD8DB700D10184 /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		60DB0FB2249FD52D00E53C22 /* MoonForecastTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoonForecastTableViewCell.swift; sourceTree = "<group>"; };
 		60EB899E23540728002B0C38 /* CongratsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CongratsViewController.swift; sourceTree = "<group>"; };
+		60FD737F252B8DCA00557F99 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		66F346D7E2E61E02B047CF47 /* Pods-My Astro JournalTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-My Astro JournalTests.debug.xcconfig"; path = "Target Support Files/Pods-My Astro JournalTests/Pods-My Astro JournalTests.debug.xcconfig"; sourceTree = "<group>"; };
 		9739A7624A26068E7774CDC9 /* Pods_My_Astro_JournalTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_My_Astro_JournalTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AB118B8644706B66BF4DA70E /* Pods-My Astro Journal.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-My Astro Journal.debug.xcconfig"; path = "Target Support Files/Pods-My Astro Journal/Pods-My Astro Journal.debug.xcconfig"; sourceTree = "<group>"; };
@@ -197,6 +201,8 @@
 				602345F9224FF0F300C4ED3F /* AppDelegate.swift */,
 				604106BE23500C930058CEDD /* WelcomeViewController.swift */,
 				603A2CCE225F895100314706 /* ProfileCreationViewController.swift */,
+				60D6655424BD249E00CE4179 /* FeedViewController.swift */,
+				60D951A624DB731800B05753 /* FeedEntryCell.swift */,
 				602345FB224FF0F300C4ED3F /* CalendarViewController.swift */,
 				602AA275229C9C8000CE8E9B /* CalendarTableViewCell.swift */,
 				60799F77228873F00018950B /* CalendarCell.swift */,
@@ -236,12 +242,12 @@
 				601EBBA9245E4CF5005BF4D7 /* CardBacksCollectionViewCell.swift */,
 				601EBBAD245F7A7C005BF4D7 /* CardBackDescriptionPopOverViewController.swift */,
 				60024D11239059740019B901 /* FullImageViewController.swift */,
-				602345FF224FF0F300C4ED3F /* Main.storyboard */,
-				60234604224FF0F600C4ED3F /* LaunchScreen.storyboard */,
 				60C335F523243776009B4830 /* VPAutoComplete.swift */,
 				60C335F423243776009B4830 /* VPAutoCompleteViewCell.swift */,
 				60C335F323243776009B4830 /* VPAutoCompleteViewCell.xib */,
-				60C335FB232446D0009B4830 /* Assets.xcassets */,
+				60234604224FF0F600C4ED3F /* LaunchScreen.storyboard */,
+				602345FF224FF0F300C4ED3F /* Main.storyboard */,
+				60FD737F252B8DCA00557F99 /* Assets.xcassets */,
 				604579F623E2736400BB27C3 /* Pacifica Condensed.ttf */,
 				602CC52D2355241A008260CC /* GoogleService-Info.plist */,
 				60234607224FF0F600C4ED3F /* Info.plist */,
@@ -357,8 +363,8 @@
 				60C335F623243776009B4830 /* VPAutoCompleteViewCell.xib in Resources */,
 				602CC52E2355241A008260CC /* GoogleService-Info.plist in Resources */,
 				604579F723E2736400BB27C3 /* Pacifica Condensed.ttf in Resources */,
+				60FD7380252B8DD000557F99 /* Assets.xcassets in Resources */,
 				60234601224FF0F300C4ED3F /* Main.storyboard in Resources */,
-				60C335FC232446D1009B4830 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -477,6 +483,8 @@
 				601EBB9C245BB599005BF4D7 /* EquipmentPopOverViewController.swift in Sources */,
 				603A2CCF225F895100314706 /* ProfileCreationViewController.swift in Sources */,
 				603DC27D2433B40300C5A071 /* ImageOfDayPickerViewController.swift in Sources */,
+				60D6655524BD249E00CE4179 /* FeedViewController.swift in Sources */,
+				60D951A724DB731800B05753 /* FeedEntryCell.swift in Sources */,
 				60C335F723243776009B4830 /* VPAutoCompleteViewCell.swift in Sources */,
 				6006EC2622B9F3B90096F6E4 /* JournalEntryImageCell.swift in Sources */,
 				60C335F823243776009B4830 /* VPAutoComplete.swift in Sources */,
