@@ -111,6 +111,7 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
     }
     var newImage: UIImage? = nil
     var imageChangedDate = ""
+    var journalEntered = false
     var cardUnlocked = ""
     var entryToShowDate = ""
     var selectedEntryList: [[String: Any]] = []
@@ -725,8 +726,9 @@ class CalendarViewController: UIViewController, UITableViewDelegate, UITableView
             showUnlockAnimation(imagePath: "UnlockedCards/" + formattedTargetToImageName(target: cardUnlocked))
             unlockedDate = ""
             cardUnlocked = ""
-        } else {
+        } else if journalEntered {
             checkAskForReview()
+            journalEntered = false
         }
         calendarsListView.reloadData()
         endNoInput()

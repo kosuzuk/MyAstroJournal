@@ -42,8 +42,8 @@ class InfoViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
                 howItWorksTopCipad.constant = 60
             }
         }
-        contentViewHC.constant = feedbackLink.frame.origin.y + 70
-        contentViewHCipad.constant = feedbackLink.frame.origin.y + 100
+        contentViewHC.constant = feedbackLink.frame.origin.y + 170
+        contentViewHCipad.constant = feedbackLink.frame.origin.y + 170
     }
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
     }

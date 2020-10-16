@@ -710,6 +710,7 @@ class JournalEntryEditViewController: UIViewController, UICollectionViewDataSour
         }
     }
     func processDone() {
+        cvc?.journalEntered = true
         if !photographedSelected {
             mainImageKey = ""
             mainImage = nil

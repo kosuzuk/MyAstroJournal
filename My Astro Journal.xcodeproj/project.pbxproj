@@ -24,7 +24,6 @@
 		60234611224FF0F700C4ED3F /* Star_JournalTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60234610224FF0F700C4ED3F /* Star_JournalTests.swift */; };
 		602AA2722291F5CC00CE8E9B /* JournalEntryEditImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602AA2712291F5CC00CE8E9B /* JournalEntryEditImageCell.swift */; };
 		602AA276229C9C8000CE8E9B /* CalendarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602AA275229C9C8000CE8E9B /* CalendarTableViewCell.swift */; };
-		602CC52E2355241A008260CC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 602CC52D2355241A008260CC /* GoogleService-Info.plist */; };
 		6032BC87233A7B4B0024776A /* CardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6032BC86233A7B4B0024776A /* CardViewController.swift */; };
 		60386987246FA7C90042FEB0 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60386986246FA7C90042FEB0 /* StoreKit.framework */; };
 		6038698B247599AD0042FEB0 /* TransactionObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6038698A247599AC0042FEB0 /* TransactionObserver.swift */; };
@@ -42,6 +41,7 @@
 		6045D9E0244934EF00C38C7D /* ImageOfDayViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6045D9DF244934EF00C38C7D /* ImageOfDayViewerViewController.swift */; };
 		6045D9E2244935DF00C38C7D /* ImageOfDayViewerCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6045D9E1244935DF00C38C7D /* ImageOfDayViewerCollectionViewCell.swift */; };
 		604E857022CB1BDF002B4D79 /* CardUnlockedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 604E856F22CB1BDF002B4D79 /* CardUnlockedViewController.swift */; };
+		607773A02535888500E40DF0 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6077739F2535888500E40DF0 /* GoogleService-Info.plist */; };
 		60799F7522878AA40018950B /* CardCatalogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60799F7322878AA40018950B /* CardCatalogViewController.swift */; };
 		60799F78228873F00018950B /* CalendarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60799F77228873F00018950B /* CalendarCell.swift */; };
 		607D939A24511B5000F8AC74 /* TouchDownGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607D939924511B5000F8AC74 /* TouchDownGestureRecognizer.swift */; };
@@ -101,7 +101,6 @@
 		60234612224FF0F700C4ED3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		602AA2712291F5CC00CE8E9B /* JournalEntryEditImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalEntryEditImageCell.swift; sourceTree = "<group>"; };
 		602AA275229C9C8000CE8E9B /* CalendarTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarTableViewCell.swift; sourceTree = "<group>"; };
-		602CC52D2355241A008260CC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6032BC86233A7B4B0024776A /* CardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewController.swift; sourceTree = "<group>"; };
 		60386986246FA7C90042FEB0 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		6038698A247599AC0042FEB0 /* TransactionObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionObserver.swift; sourceTree = "<group>"; };
@@ -119,6 +118,7 @@
 		6045D9DF244934EF00C38C7D /* ImageOfDayViewerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageOfDayViewerViewController.swift; sourceTree = "<group>"; };
 		6045D9E1244935DF00C38C7D /* ImageOfDayViewerCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageOfDayViewerCollectionViewCell.swift; sourceTree = "<group>"; };
 		604E856F22CB1BDF002B4D79 /* CardUnlockedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardUnlockedViewController.swift; sourceTree = "<group>"; };
+		6077739F2535888500E40DF0 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		60799F7322878AA40018950B /* CardCatalogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCatalogViewController.swift; sourceTree = "<group>"; };
 		60799F77228873F00018950B /* CalendarCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarCell.swift; sourceTree = "<group>"; };
 		607D939924511B5000F8AC74 /* TouchDownGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchDownGestureRecognizer.swift; sourceTree = "<group>"; };
@@ -249,7 +249,7 @@
 				602345FF224FF0F300C4ED3F /* Main.storyboard */,
 				60FD737F252B8DCA00557F99 /* Assets.xcassets */,
 				604579F623E2736400BB27C3 /* Pacifica Condensed.ttf */,
-				602CC52D2355241A008260CC /* GoogleService-Info.plist */,
+				6077739F2535888500E40DF0 /* GoogleService-Info.plist */,
 				60234607224FF0F600C4ED3F /* Info.plist */,
 			);
 			path = "My Astro Journal";
@@ -361,10 +361,10 @@
 			files = (
 				60234606224FF0F600C4ED3F /* LaunchScreen.storyboard in Resources */,
 				60C335F623243776009B4830 /* VPAutoCompleteViewCell.xib in Resources */,
-				602CC52E2355241A008260CC /* GoogleService-Info.plist in Resources */,
 				604579F723E2736400BB27C3 /* Pacifica Condensed.ttf in Resources */,
 				60FD7380252B8DD000557F99 /* Assets.xcassets in Resources */,
 				60234601224FF0F300C4ED3F /* Main.storyboard in Resources */,
+				607773A02535888500E40DF0 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
